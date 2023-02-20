@@ -4,14 +4,8 @@
 	<a role="button" class="@CssClass" @attributes="UserAttrs"
 	   @onmousedown="HandleOnClickAsync"
 	   @onmousedown:stopPropagation="true">
-		@if (ChildContent != null)
-		{
-			@ChildContent
-		}
-		else
-		{
-			@Title
-		}
+		@Text
+		@ChildContent
 	</a>
 </li>
 

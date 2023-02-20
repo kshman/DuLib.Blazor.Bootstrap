@@ -5,41 +5,22 @@
 	@if (Layout is DropLayout.Standard)
 	{
 		<span role="button" class="@CssClass" @attributes="UserAttrs"
-	   @onclick="HandleOnClickAsync">
-			@if (Display is not null)
-			{
-				@Display
-			}
-			else
-			{
-				@Title
-			}
+		      @onclick="HandleOnClickAsync">
+			@Text
+			@Display
 		</span>
 	}
 	else
 	{
 		<button type="button" class="@CssClass" @attributes="UserAttrs"
 			@onclick="HandleOnClickAsync">
-			@if (Display is not null)
-			{
-				@Display
-			}
-			else
-			{
-				@Title
-			}
+			@Text
+			@Display
 		</button>
 	}
 	<ul class="@MenuCssClass">
 		<CascadingValue Value="this" IsFixed="true">
-			@if (Display is not null)
-			{
-				@List
-			}
-			else
-			{
-				@ChildContent
-			}
+			@(List ?? ChildContent)
 		</CascadingValue>
 	</ul>
 </div>

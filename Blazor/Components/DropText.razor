@@ -3,14 +3,8 @@
 <li class="@ContainerClass">
 	<span class="@CssClass" @attributes="UserAttrs"
 		  @onmousedown="HandleOnClickAsync" @onmousedown:stopPropagation="true">
-		@if (ChildContent != null)
-		{
-			@ChildContent
-		}
-		else
-		{
-			@Title
-		}
+		@Text
+		@ChildContent
 	</span>
 </li>
 

@@ -9,10 +9,10 @@
 	{
 		var ctx = (ContentItem)item;
 		var cur = AlwaysOpen ? ctx.Active : ctx == Current;
-		<div class="accordion-item @ctx.CssClass" @attributes="@ctx.UserAttrs">
+		<div class="@CssCompose.Join("accordion-item", ctx.CssClass)" @attributes="@ctx.UserAttrs">
 			<h2 class="accordion-header">
 				<button type="button" class="@CssCompose.Join("accordion-button", cur.IfFalse("collapsed"))"
-					data-bs-toggle="collapse" data-bs-target="#@ctx.Id" aria-controls="#@ctx.Id" aria-expanded="@cur.ToBootStrap()"
+					data-bs-toggle="collapse" data-bs-target="#@ctx.Id" aria-controls="@ctx.Id" aria-expanded="@cur.ToBootStrap()"
 					@onclick="async () => await HandleOnClickItemAsync(ctx)">
 					@if (ctx.Display is not null)
 					{
@@ -20,7 +20,7 @@
 					}
 					else
 					{
-						@ctx.Title
+						@ctx.Text
 					}
 				</button>
 			</h2>

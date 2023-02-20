@@ -1,8 +1,6 @@
 ﻿namespace Du.Blazor;
 
-/// <summary>
-/// 컴포넌트 크기
-/// </summary>
+/// <summary>컴포넌트 크기</summary>
 public enum ComponentSize
 {
 	Medium,
@@ -10,9 +8,7 @@ public enum ComponentSize
 	Large,
 }
 
-/// <summary>
-/// 컴포넌트 색깔
-/// </summary>
+/// <summary>컴포넌트 색깔</summary>
 public enum ComponentColor
 {
 	Primary,
@@ -26,9 +22,7 @@ public enum ComponentColor
 	Link,
 }
 
-/// <summary>
-/// 오버플로우 일때 처리
-/// </summary>
+/// <summary>오버플로우 일때 처리</summary>
 public enum ComponentOverflow
 {
 	None,
@@ -45,9 +39,14 @@ public enum ComponentPosition
 	//Center,	
 }
 
-/// <summary>
-/// 버튼 기능
-/// </summary>
+/// <summary>방향</summary>
+public enum ComponentDirection
+{
+	Vertical,
+	Horizontal,
+}
+
+/// <summary>버튼 기능</summary>
 public enum ButtonType
 {
 	Button,
@@ -55,9 +54,7 @@ public enum ButtonType
 	Reset,
 }
 
-/// <summary>
-/// 버튼 그룹
-/// </summary>
+/// <summary>버튼 그룹</summary>
 public enum GroupLayout
 {
 	Button,
@@ -65,9 +62,7 @@ public enum GroupLayout
 	Toolbar,
 }
 
-/// <summary>
-/// carousel 재생 방법
-/// </summary>
+/// <summary>carousel 재생 방법</summary>
 public enum CarouselPlay
 {
 	Auto,	// 자동
@@ -75,18 +70,14 @@ public enum CarouselPlay
 	True,	// 한 사이클
 }
 
-/// <summary>
-/// Bit's 피벗 타이틀 레이아웃
-/// </summary>
+/// <summary>Bit's 피벗 타이틀 레이아웃</summary>
 public enum PivotLayout
 {
 	Flat,
 	Box,
 }
 
-/// <summary>
-/// NAV 레이아웃 (탭)
-/// </summary>
+/// <summary>NAV 레이아웃 (탭)</summary>
 public enum NavLayout
 {
 	Standard,
@@ -94,6 +85,7 @@ public enum NavLayout
 	Pills,
 }
 
+/// <summary>드랍 레이아웃</summary>
 public enum DropLayout
 {
 	Standard,
@@ -101,6 +93,7 @@ public enum DropLayout
 	Flat,
 }
 
+/// <summary>드랍 방향</summary>
 public enum DropDirection
 {
 	Down,
@@ -109,6 +102,7 @@ public enum DropDirection
 	End,
 }
 
+/// <summary>드랍 정렬</summary>
 public enum DropAlignment
 {
 	None,
@@ -116,14 +110,16 @@ public enum DropAlignment
 	End,
 }
 
+/// <summary>드랍 자동 닫힘</summary>
 public enum DropAutoClose
 {
 	True,
 	False,
-	Inside,
-	Outside,
+	/* 지원안됨*/ Inside,
+	/* 지원안됨*/ Outside,
 }
 
+/// <summary>배지 레이아웃</summary>
 public enum BadgeLayout
 {
 	Standard,

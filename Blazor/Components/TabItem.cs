@@ -7,9 +7,9 @@ public class TabItem : ComponentParent, IAsyncDisposable
 	[CascadingParameter] public Tab? Group { get; set; }
 
 	/// <summary>타이틀 <see cref="Display"/></summary>
-	[Parameter] public string? Title { get; set; }
+	[Parameter] public string? Text { get; set; }
 
-	/// <summary>헤더 <see cref="Title"/></summary>
+	/// <summary>헤더 <see cref="Text"/></summary>
 	[Parameter] public RenderFragment? Display { get; set; }
 	/// <summary>내용 
 	/// <see cref="Display"/>와 짝꿍<br/>이 내용이 있을 경우,

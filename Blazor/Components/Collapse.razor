@@ -1,0 +1,152 @@
+﻿@inherits ComponentParent
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<div @ref="_reference"
+	 class="@CssClass"
+	 id="@Id"
+	 aria-expanded="@Expanded"
+	 data-bs-parent="@Parent"
+	 @attributes="@UserAttrs">
+	@ChildContent
+</div>
+
+@code {
+	[Parameter] public string? Parent { get; set; }
+	[Parameter] public ComponentDirection Direction { get; set; }
+	[Parameter] public bool Expanded { get; set; }
+
+	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
+
+	//
+	protected override string CssName => "collapse";
+
+	//
+	private ElementReference _reference;
+	private DotNetObjectReference<Collapse>? _drf;
+
+	private bool _expanded;
+	private bool _now_show;
+	private bool _now_hide;
+
+	//
+	public override async Task SetParametersAsync(ParameterView parameters)
+	{
+		await base.SetParametersAsync(parameters);
+		Id = parameters.GetValueOrDefault(nameof(Id), Id);
+	}
+
+	//
+	protected override bool ShouldRender() =>
+		!_now_show && !_now_hide;
+
+	//
+	protected override void OnComponentInitialized() =>
+		_expanded = Expanded;
+
+	//
+	protected override void OnComponentClass(CssCompose css)
+	{
+		css
+			.Add(Direction == ComponentDirection.Horizontal, "collapse-horizontal")
+			.Add(_expanded, "show");
+	}
+
+	//
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (!firstRender)
+			return;
+
+		_drf ??= DotNetObjectReference.Create(this);
+		await JS.InvokeVoidAsync("DUCLPS.init", _reference, _drf, Expanded);
+	}
+
+	//
+	public async Task ShowAsync()
+	{
+		if (_expanded)
+			return;
+
+		_now_show = true;
+		await JS.InvokeVoidAsync("DUCLPS.show", _reference);
+	}
+
+	//
+	public async Task HideAsync()
+	{
+		if (_expanded is false)
+			return;
+
+		_now_hide = true;
+		await JS.InvokeVoidAsync("DUCLPS.hide", _reference);
+	}
+
+	//
+	public async ValueTask DisposeAsync()
+	{
+		await DisposeAsyncCore().ConfigureAwait(false);
+		GC.SuppressFinalize(this);
+	}
+
+	//
+	protected virtual async ValueTask DisposeAsyncCore()
+	{
+		try
+		{
+			await JS.InvokeVoidAsync("DUCLPS.disp", _reference);
+		}
+		catch (JSDisconnectedException)
+		{
+			// 그럴 수도 있음
+		}
+
+		_drf?.Dispose();
+	}
+
+	//
+	[JSInvokable("ivk_clps_bs")]
+	public void InternalHandleShow() => _now_show = true;
+
+	//
+	[JSInvokable("ivk_clps_bsn")]
+	public async Task InternalHandleShownAsync()
+	{
+		bool prev = _now_show;
+
+		_expanded = true;
+		await InvokeExpandedChanged(true);
+
+		_now_show = false;
+		await InvokeOnExpanded(Id, true);
+
+		if (prev)
+			StateHasChanged();
+	}
+
+	//
+	[JSInvokable("ivk_clps_eh")]
+	public void InternalHandleHide() => _now_hide = true;
+
+	//
+	[JSInvokable("ivk_clps_ehn")]
+	public async Task InternalHandleHidden()
+	{
+		bool prev = _now_hide;
+
+		_expanded = false;
+		await InvokeExpandedChanged(false);
+
+		_now_hide = false;
+		await InvokeOnExpanded(Id, false);
+
+		if (prev)
+			StateHasChanged();
+	}
+
+	//
+	private Task InvokeOnExpanded(string id, bool expanded) => 
+		OnExpanded.InvokeAsync(new ExpandedEventArgs(id, expanded));
+	private Task InvokeExpandedChanged(bool e) => ExpandedChanged.InvokeAsync(e);
+}

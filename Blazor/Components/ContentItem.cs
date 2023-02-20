@@ -2,7 +2,7 @@
 
 public class ContentItem : ComponentItem
 {
-	[Parameter] public string? Title { get; set; }
+	[Parameter] public string? Text { get; set; }
 	[Parameter] public RenderFragment? Display { get; set; }
 	[Parameter] public RenderFragment? Content { get; set; }
 
