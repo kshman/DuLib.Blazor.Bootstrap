@@ -1,11 +1,11 @@
 [
   {
-    "outputFile": "wwwroot/Du.Blazor.css",
+    "outputFile": "wwwroot/DuLib.Blazor.css",
     "inputFile": "Blazor/Styles/_styles.scss",
     "style": "Compressed"
   },
   {
-    "outputFile": "wwwroot/ref/Du.Blazor.nested.css",
+    "outputFile": "wwwroot/ref/DuLib.Blazor.nested.css",
     "inputFile": "Blazor/Styles/_styles.scss",
     "style": "Nested"
   }
