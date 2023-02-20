@@ -1,6 +1,6 @@
 ﻿namespace Du.Blazor.Components;
 
-public class CarouselItem : ComponentContainer, IAsyncDisposable
+public class CarouselItem : ComponentParent, IAsyncDisposable
 {
     [CascadingParameter] public Carousel? Group { get; set; }
 

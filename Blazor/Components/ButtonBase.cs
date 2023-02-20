@@ -1,6 +1,6 @@
 ﻿namespace Du.Blazor.Components;
 
-public abstract class ButtonBase : ComponentContainer
+public abstract class ButtonBase : ComponentParent
 {
 	/// <summary>에디트 컨텍스트</summary>
 	[CascadingParameter] public EditContext? EditContext { get; set; }

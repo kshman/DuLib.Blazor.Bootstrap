@@ -43,7 +43,7 @@ public class CssCompose
 	private string InternalJoin(char separator)
 	{
 		var s = string.Join(separator, _sts);
-		var f = string.Join(separator, _fns.Select(x => x()).Where(s => s.IsHave()));
+		var f = string.Join(separator, _fns.Select(x => x()).Where(g => g.IsHave()));
 		return f.Length == 0 ? s : $"{s}{separator}{f}";
 	}
 

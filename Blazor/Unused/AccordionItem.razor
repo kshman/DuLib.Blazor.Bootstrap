@@ -1,4 +1,4 @@
-﻿@inherits ComponentContainer
+﻿@inherits ComponentParent
 
 <div class="@CssClass" @attributes="UserAttrs">
 	<h2 class="accordion-header">
@@ -44,7 +44,7 @@
 	/// <summary>마우스가 눌림</summary>
 	[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 	/// <summary>펼쳐지고 닫힐 때</summary>
-	[Parameter] public EventCallback<AccordionExpandEventArgs> OnActive { get; set; }
+	[Parameter] public EventCallback<ExpandedEventArgs> OnActive { get; set; }
 
 	//
 	protected override string CssName => "accordion-item";
@@ -77,10 +77,10 @@
 		_internal_expanded = !_internal_expanded;
 
 		await Group!.SetActiveAsync(Id, _internal_expanded);
-		await InvokeOnActiveAsync(new AccordionExpandEventArgs(Id, _internal_expanded));
+		await InvokeOnActiveAsync(new ExpandedEventArgs(Id, _internal_expanded));
 	}
 
 	//
 	protected virtual Task InvokeOnClickAsync(MouseEventArgs e) => OnClick.InvokeAsync(e);
-	protected virtual Task InvokeOnActiveAsync(AccordionExpandEventArgs e) => OnActive.InvokeAsync(e);
+	protected virtual Task InvokeOnActiveAsync(ExpandedEventArgs e) => OnActive.InvokeAsync(e);
 }

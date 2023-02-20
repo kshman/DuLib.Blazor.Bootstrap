@@ -10,7 +10,7 @@ public partial class DropDown
 /// <summary>
 /// 드롭 버튼 기본
 /// </summary>
-public abstract class DropDownBase : ComponentContainer
+public abstract class DropDownBase : ComponentParent
 {
 	[Parameter] public bool AutoClose { get; set; } = true;
 	[Parameter] public DropDirection Direction { get; set; }

@@ -7,8 +7,8 @@
 /// 엌... 이거 상속 안되네... 왜 만들엇음<br/>
 /// 얘를 제네릭없이 상속 시키면 됨<br/>
 /// </remarks>
-public abstract class ComponentGroup<T> : ComponentContainer, IAsyncDisposable 
-	where T : ComponentContainer
+public abstract class ComponentGroup<T> : ComponentParent, IAsyncDisposable 
+	where T : ComponentParent
 {
 	[Parameter] public string? Active { get; set; }
 	[Parameter] public EventCallback<string?> ActiveChanged { get; set; }

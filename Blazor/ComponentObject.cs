@@ -80,7 +80,7 @@ public interface IComponentId
 /// <summary>
 /// 자식을 가지는 컴포넌트
 /// </summary>
-public abstract class ComponentContainer : ComponentObject, IComponentId
+public abstract class ComponentParent : ComponentObject, IComponentId
 {
 	/// <summary>자식 콘텐트</summary>
 	[Parameter] public RenderFragment? ChildContent { get; set; }

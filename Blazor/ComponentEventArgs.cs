@@ -18,14 +18,14 @@ public class SelectEventArgs : EventArgs
 }
 
 /// <summary>
-/// 아코디언 펼침 이벤트
+/// 펼침 이벤트
 /// </summary>
-public class AccordionExpandEventArgs : EventArgs
+public class ExpandedEventArgs : EventArgs
 {
 	public string Id { get; set; }
 	public bool Expanded { get; set; }
 
-	public AccordionExpandEventArgs(string id, bool expanded)
+	public ExpandedEventArgs(string id, bool expanded)
 	{
 		Id = id;
 		Expanded = expanded;

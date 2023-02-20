@@ -2,12 +2,13 @@
 {
 	internal static class TypeSupp
 	{
+		#region 아토믹
 		private static int _count = 1;
 
 		internal static int Increment => Interlocked.Increment(ref _count);
+		#endregion
 
 		#region 기본 타입
-
 		internal static bool IsEmpty(this string? s) =>
 			string.IsNullOrEmpty(s);
 
@@ -31,11 +32,9 @@
 
 		internal static bool ShouldAwaitTask(this Task task) =>
 			task.Status is not TaskStatus.RanToCompletion and not TaskStatus.Canceled;
-
 		#endregion 기본 타입
 
 		#region 컴포넌트
-
 		internal static string? ToCss(this ComponentSize size, string lead) => size switch
 		{
 			ComponentSize.Small => $"{lead}-sm",
@@ -77,7 +76,7 @@
 
 		internal static string? ToCss(this GroupLayout layout) => layout switch
 		{
-			GroupLayout.Button or 
+			GroupLayout.Button or
 				GroupLayout.Vertical => "group",
 			GroupLayout.Toolbar => "toolbar",
 			_ => null,
@@ -116,7 +115,6 @@
 			NavLayout.Tabs => "nav-tabs",
 			_ => null,
 		};
-
 		#endregion 컴포넌트
 
 		#region 자바스크립트

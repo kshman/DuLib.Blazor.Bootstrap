@@ -1,0 +1,23 @@
+﻿@inherits ComponentParent
+
+<div>
+	@if (Display is not null)
+	{
+		@Display
+	}
+	else
+	{
+		@Title
+	}
+	
+	@if (Display is not null)
+	{
+		@Content
+	}
+</div>
+
+@code {
+	[Parameter] public string? Title { get; set; }
+	[Parameter] public RenderFragment? Display { get; set; }
+	[Parameter] public RenderFragment? Content { get; set; }
+}
