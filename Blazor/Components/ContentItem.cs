@@ -8,5 +8,13 @@ public class ContentItem : ComponentItem
 
 	//
 	public bool Active { get; set; }
-}
 
+	//
+	public object? Tag { get; set; }
+
+	//
+	public override string ToString()
+	{
+		return $"{Id}: Active={Active}, Css={CssClass}";
+	}
+}

@@ -26,7 +26,7 @@ public class ComponentContainer : ComponentParent, IDisposable
 		if (Current is null)
 		{
 			if (Active.IsHave(true))
-				SelectItem(Active);
+				SelectItemById(Active!);
 			else if (SelectFirst && Items.Count > 0)
 				SelectItem(Items[0]);
 		}
@@ -73,7 +73,11 @@ public class ComponentContainer : ComponentParent, IDisposable
 	}
 
 	//
-	public void SelectItem(ComponentItem? item)
+	public ComponentItem? GetItem(string id) =>
+		Items.FirstOrDefault(x => x.Id == id);
+
+	//
+	public void SelectItem(ComponentItem? item, bool stateChage = false)
 	{
 		if (item == Current)
 			return;
@@ -90,10 +94,10 @@ public class ComponentContainer : ComponentParent, IDisposable
 	}
 
 	//
-	public void SelectItem(string? id)
+	public void SelectItemById(string id, bool stateChage = false)
 	{
 		var item = Items.FirstOrDefault(i => i.Id == id);
-		SelectItem(item);
+		SelectItem(item, stateChage);
 	}
 
 	//

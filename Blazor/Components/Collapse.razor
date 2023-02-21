@@ -2,7 +2,7 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-<div @ref="_reference"
+<div @ref="_self"
 	 class="@CssClass"
 	 id="@Id"
 	 aria-expanded="@Expanded"
@@ -16,6 +16,7 @@
 	[Parameter] public ComponentDirection Direction { get; set; }
 	[Parameter] public bool Expanded { get; set; }
 
+	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanding { get; set; }
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
@@ -23,8 +24,8 @@
 	protected override string CssName => "collapse";
 
 	//
-	private ElementReference _reference;
-	private DotNetObjectReference<Collapse>? _drf;
+	private ElementReference _self;
+	private DotNetObjectReference<Collapse>? _objref;
 
 	private bool _expanded;
 	private bool _now_show;
@@ -38,11 +39,7 @@
 	}
 
 	//
-	protected override bool ShouldRender() =>
-		!_now_show && !_now_hide;
-
-	//
-	protected override void OnComponentInitialized() =>
+	protected override void OnParametersSet() =>
 		_expanded = Expanded;
 
 	//
@@ -59,9 +56,13 @@
 		if (!firstRender)
 			return;
 
-		_drf ??= DotNetObjectReference.Create(this);
-		await JS.InvokeVoidAsync("DUCLPS.init", _reference, _drf, Expanded);
+		_objref ??= DotNetObjectReference.Create(this);
+		await JS.InvokeVoidAsync("DUCLPS.init", _self, _objref, Expanded);
 	}
+
+	//
+	protected override bool ShouldRender() =>
+		!_now_show && !_now_hide;
 
 	//
 	public async Task ShowAsync()
@@ -70,7 +71,7 @@
 			return;
 
 		_now_show = true;
-		await JS.InvokeVoidAsync("DUCLPS.show", _reference);
+		await JS.InvokeVoidAsync("DUCLPS.show", _self);
 	}
 
 	//
@@ -80,7 +81,7 @@
 			return;
 
 		_now_hide = true;
-		await JS.InvokeVoidAsync("DUCLPS.hide", _reference);
+		await JS.InvokeVoidAsync("DUCLPS.hide", _self);
 	}
 
 	//
@@ -95,25 +96,29 @@
 	{
 		try
 		{
-			await JS.InvokeVoidAsync("DUCLPS.disp", _reference);
+			await JS.InvokeVoidAsync("DUCLPS.disp", _self);
 		}
 		catch (JSDisconnectedException)
 		{
 			// 그럴 수도 있음
 		}
 
-		_drf?.Dispose();
+		_objref?.Dispose();
 	}
 
 	//
 	[JSInvokable("ivk_clps_bs")]
-	public void InternalHandleShow() => _now_show = true;
+	public async Task InternalHandleShow()
+	{
+		_now_show = true;
+		await InvokeOnExpanding(Id, true);
+	}
 
 	//
 	[JSInvokable("ivk_clps_bsn")]
 	public async Task InternalHandleShownAsync()
 	{
-		bool prev = _now_show;
+		var prev = _now_show;
 
 		_expanded = true;
 		await InvokeExpandedChanged(true);
@@ -127,13 +132,17 @@
 
 	//
 	[JSInvokable("ivk_clps_eh")]
-	public void InternalHandleHide() => _now_hide = true;
+	public async Task InternalHandleHide()
+	{
+		_now_hide = true;
+		await InvokeOnExpanding(Id, false);
+	}
 
 	//
 	[JSInvokable("ivk_clps_ehn")]
 	public async Task InternalHandleHidden()
 	{
-		bool prev = _now_hide;
+		var prev = _now_hide;
 
 		_expanded = false;
 		await InvokeExpandedChanged(false);
@@ -146,7 +155,9 @@
 	}
 
 	//
-	private Task InvokeOnExpanded(string id, bool expanded) => 
+	private Task InvokeOnExpanding(string id, bool expanded) =>
+		OnExpanding.InvokeAsync(new ExpandedEventArgs(id, expanded));
+	private Task InvokeOnExpanded(string id, bool expanded) =>
 		OnExpanded.InvokeAsync(new ExpandedEventArgs(id, expanded));
 	private Task InvokeExpandedChanged(bool e) => ExpandedChanged.InvokeAsync(e);
 }
