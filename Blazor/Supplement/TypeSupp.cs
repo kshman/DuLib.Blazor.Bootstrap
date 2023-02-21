@@ -1,21 +1,17 @@
-﻿namespace Du.Blazor.Supplement
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Du.Blazor.Supplement
 {
 	internal static class TypeSupp
 	{
-		#region 아토믹
-		private static int _count = 1;
-
-		internal static int Increment => Interlocked.Increment(ref _count);
-		#endregion
-
 		#region 기본 타입
-		internal static bool IsEmpty(this string? s) =>
+		internal static bool IsEmpty([NotNullWhen(false)] this string? s) =>
 			string.IsNullOrEmpty(s);
 
-		internal static bool IsWhiteSpace(this string? s) =>
+		internal static bool IsWhiteSpace([NotNullWhen(false)] this string? s) =>
 			string.IsNullOrWhiteSpace(s);
 
-		internal static bool IsHave(this string? s, bool alsoTestSpace = false) =>
+		internal static bool IsHave([NotNullWhen(true)] this string? s, bool alsoTestSpace = false) =>
 			alsoTestSpace ? !string.IsNullOrWhiteSpace(s) : !string.IsNullOrEmpty(s);
 
 		internal static string? ToCss(this string? value, string rootElement) =>

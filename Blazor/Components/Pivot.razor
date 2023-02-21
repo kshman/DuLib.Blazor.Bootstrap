@@ -1,4 +1,4 @@
-﻿@inherits AbstractPivot
+﻿@inherits ComponentContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -6,26 +6,27 @@
 
 <div role="toolbar" class="@CssClass" id="@Id" @attributes="UserAttrs">
 	<div class="hpvt-hdr" role="tablist">
-		@foreach (var pv in _items)
+		@foreach (var item in Items)
 		{
-			<button type="button" role="tab" class="@pv.CssClass" aria-selected="@((pv == _current).ToBootStrap())" tabindex="@(pv == _current ? 0 : -1)" id="@Id" @attributes="UserAttrs"
+			var pv = (ContentItem)item;
+			var current = pv == Current;
+			<button type="button" role="tab"
+				class="@CssCompose.Join("hpvt-item", current.IfTrue("hpvt-sel"), pv.CssClass)"
+				tabindex="@(current ? 0 : -1)"
+				aria-selected="@current.ToBootStrap()"
+				id="@Id" @attributes="UserAttrs"
 				@onclick="async () => await HandleOnClickAsync(pv)">
-				@if (pv.Display is not null)
-				{
-					<span>@pv.Display</span>
-				}
-				else
-				{
-					<span>@pv.Text</span>
-				}
+				@pv.Text
+				@pv.Display
 			</button>
 		}
 	</div>
 
-	@if (TextOnly is false)
+	@if (PivotOnly is false)
 	{
+		var pv = (ContentItem?)Current;
 		<div role="tabpanel" class="hpvt-ctx" aria-hidden="false" aria-labelledby="@Id">
-			@(_current?.Content ?? _current?.ChildContent)
+			@(pv?.Content ?? pv?.ChildContent)
 		</div>
 	}
 </div>
@@ -35,8 +36,7 @@
 	[Parameter] public ComponentPosition Position { get; set; }
 	[Parameter] public ComponentSize Size { get; set; }
 	[Parameter] public PivotLayout Layout { get; set; }
-
-	[Parameter] public bool TextOnly { get; set; }
+	[Parameter] public bool PivotOnly { get; set; }
 
 	//
 	protected override string CssName => "hpvt";
@@ -76,27 +76,6 @@
 	}
 
 	//
-	protected override Task OnItemAddedAsync(PivotItem item)
-	{
-		if (item == _current)
-			item.Selected = true;
-
-		return Task.CompletedTask;
-	}
-
-	//
-	protected override Task<bool> OnItemSelectedAsync(PivotItem? item, PivotItem? previous)
-	{
-		if (previous is not null)
-			previous.Selected = false;
-
-		if (item is not null)
-			item.Selected = true;
-
-		return Task.FromResult(true);
-	}
-
-	//
-	protected Task HandleOnClickAsync(PivotItem pivot) =>
+	protected Task HandleOnClickAsync(ContentItem pivot) =>
 		SelectItemAsync(pivot);
 }

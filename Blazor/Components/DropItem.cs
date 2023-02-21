@@ -12,11 +12,8 @@ public class DropItem : ComponentParent
 	[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
 	//
-	protected override void OnParametersSet()
-	{
-		if (Group == null)
-			ThrowSupp.InsideComponent(nameof(DropItem), nameof(DropDown));
-	}
+	protected override void OnParametersSet() =>
+		Group.ThrowIfContainerIsNull(this);
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)

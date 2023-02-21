@@ -1,32 +1,30 @@
-﻿@inherits AbstractTab
+﻿@inherits ComponentContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
 </CascadingValue>
 
 <nav class="@CssClass" id="@Id" @attributes="UserAttrs">
-	@foreach (var tab in _items)
+	@foreach (var item in Items)
 	{
-		<a role="button" class="@CssCompose.Join(tab.CssClass, TabClass, (tab == _current).IfTrue("active"))" id="@tab.Id"
-	   @onclick="async () => await HandleOnClickAsync(tab)">
-			@if (tab.Display is not null)
-			{
-				@tab.Display
-			}
-			else
-			{
-				@tab.Text
-			}
+		var tab = (ContentItem)item;
+		var current = tab == Current;
+		<a role="button" class="@CssCompose.Join("nav-link", current.IfTrue("active"), tab.CssClass)" id="@tab.Id"
+		   @onclick="async () => await HandleOnClickAsync(tab)">
+			@tab.Text
+			@tab.Display
 		</a>
 	}
 </nav>
 
-@if (TextOnly is false)
+@if (TabOnly is false)
 {
 	<div class="tab-content">
-		@foreach (var tab in _items)
+		@foreach (var item in Items)
 		{
-			<div class="@CssCompose.Join("tab-pane", (tab == _current).IfTrue("active"))">
+			var tab = (ContentItem)item;
+			var current = tab == Current;
+			<div class="@CssCompose.Join("tab-pane", current.IfTrue("active"))">
 				@(tab.Content ?? tab.ChildContent)
 			</div>
 		}
@@ -34,9 +32,8 @@
 }
 
 @code {
-	[Parameter] public bool TextOnly { get; set; }
 	[Parameter] public NavLayout Layout { get; set; }
-	[Parameter] public string? TabClass { get; set; }
+	[Parameter] public bool TabOnly { get; set; }
 
 	//
 	protected override string CssName => "nav";
@@ -48,6 +45,6 @@
 	}
 
 	//
-	protected Task HandleOnClickAsync(TabItem tab) =>
+	protected Task HandleOnClickAsync(ContentItem tab) =>
 		SelectItemAsync(tab);
 }

@@ -1,9 +1,9 @@
 ﻿@inherits ComponentParent
 
 <div role="@Layout.ToCss()" class="@CssClass" id="@Id" @attributes="UserAttrs">
-	<CascadingValue Value="this" IsFixed="true">
+	@*<CascadingValue Value="this" IsFixed="true">*@
 		@ChildContent
-	</CascadingValue>
+	@*</CascadingValue>*@
 </div>
 
 @code {

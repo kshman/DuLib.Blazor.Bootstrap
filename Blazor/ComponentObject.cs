@@ -69,7 +69,7 @@ public abstract class ComponentObject : ComponentBase
 	}
 
 	//
-	public override string ToString() => CssName;
+	public override string ToString() => $"<{GetType().Name}> {CssName}";
 }
 
 /// <summary>
@@ -88,7 +88,20 @@ public abstract class ComponentParent : ComponentObject, IComponentId
 	/// <summary>자식 콘텐트</summary>
 	[Parameter] public RenderFragment? ChildContent { get; set; }
 	/// <summary>컴포넌트 아이디</summary>
-	[Parameter] public string Id { get; set; } = $"D_Z_{TypeSupp.Increment}";
+	[Parameter] public string Id { get; set; } = $"D_Z_{NextAtomicIndex:X}";
+
+	//
+#if DEBUG
+	internal static uint _atomic_index = uint.MaxValue - 2;
+#else
+	internal static uint _atomic_index =1;
+#endif
+
+	//
+	internal static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
+
+	//
+	public override string ToString() => $"<{GetType().Name}#{Id}> {CssName}";
 }
 
 // 검토

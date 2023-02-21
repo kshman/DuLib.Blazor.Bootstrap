@@ -3,7 +3,7 @@
 /// <summary>
 /// 컴포넌트 컨테이너
 /// </summary>
-public class ComponentContainer : ComponentParent, IDisposable
+public class ComponentContainer : ComponentParent, IAsyncDisposable
 {
 	[Parameter] public string? Active { get; set; }
 	[Parameter] public EventCallback<string?> ActiveChanged { get; set; }
@@ -13,48 +13,66 @@ public class ComponentContainer : ComponentParent, IDisposable
 	//
 	protected ComponentItem? Current { get; set; }
 	//
-	protected virtual bool SelectFirst => false;
+	protected virtual bool SelectFirst => true;
 
-	//
-	protected override void OnAfterRender(bool firstRender)
+	// 
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
-		//base.OnAfterRenderAsync(firstRender);
+		//await base.OnAfterRenderAsync(firstRender);
 
 		if (!firstRender)
 			return;
 
+		//
 		if (Current is null)
 		{
 			if (Active.IsHave(true))
-				SelectItemById(Active!);
+				await SelectItemAsync(Active);
 			else if (SelectFirst && Items.Count > 0)
-				SelectItem(Items[0]);
+				await SelectItemAsync(Items[0]);
 		}
 
-		OnAfterFirstRender();
+		//
+		var task = OnAfterFirstRenderAsync();
+		if (task.ShouldAwaitTask())
+		{
+			try
+			{
+				await task;
+			}
+			catch
+			{
+				if (!task.IsCanceled)
+					throw;
+			}
+		}
 	}
 
-	//
-	public void AddItem(ComponentItem item)
+	/// <summary>아이템 추가</summary>
+	/// <param name="item"></param>
+	/// <returns>비동기 처리한 태스크</returns>
+	internal async Task AddItemAsync(ComponentItem item)
 	{
 		Items.Add(item);
 
 		if (Active is not null)
 		{
 			if (item.Id == Active)
-				SelectItem(item);
+				await SelectItemAsync(item);
 		}
 		else if (SelectFirst && item.Enabled && Current is null)
 		{
-			SelectItem(item);
+			await SelectItemAsync(item);
 		}
 
-		OnItemAdded(item);
-		StateHasChanged();
+		var task = OnItemAddedAsync(item);
+		await StateHasChangedOnAsyncCompletion(task);
 	}
 
-	//
-	public void RemoveItem(ComponentItem item)
+	/// <summary>아이템 삭제</summary>
+	/// <param name="item"></param>
+	/// <returns>비동기 처리한 태스크</returns>
+	internal async Task RemoveItemAsync(ComponentItem item)
 	{
 		if (Current == item)
 			Current = null;
@@ -63,21 +81,27 @@ public class ComponentContainer : ComponentParent, IDisposable
 
 		try
 		{
-			OnItemRemoved(item);
-			StateHasChanged();
+			var task = OnItemRemovedAsync(item);
+			await StateHasChangedOnAsyncCompletion(task);
 		}
 		catch (ObjectDisposedException)
 		{
 			// 헐
+			// 이건 디스포즈하다가 개체가 사라진거겟지
 		}
 	}
 
-	//
-	public ComponentItem? GetItem(string id) =>
+	/// <summary>아이템 얻기</summary>
+	/// <param name="id">찾을 아이디</param>
+	/// <returns>찾은 아이템</returns>
+	internal ComponentItem? GetItem(string id) =>
 		Items.FirstOrDefault(x => x.Id == id);
 
-	//
-	public void SelectItem(ComponentItem? item, bool stateChange = false)
+	/// <summary>아이템 선택/// </summary>
+	/// <param name="item"></param>
+	/// <param name="stateChange"></param>
+	/// <returns>비동기 처리한 태스크</returns>
+	internal async Task SelectItemAsync(ComponentItem? item, bool stateChange = false)
 	{
 		if (item == Current)
 			return;
@@ -85,72 +109,126 @@ public class ComponentContainer : ComponentParent, IDisposable
 		var previous = Current;
 		Current = item;
 
-		OnItemSelected(item, previous);
+		var task = OnItemSelectedAsync(item, previous);
+		if (task.ShouldAwaitTask())
+		{
+			try
+			{
+				await task;
+			}
+			catch
+			{
+				if (task.IsCanceled)
+					return;
+				throw;
+			}
+		}
 
-		if (item is not null)
-			InvokeAsync(async () => await InvokeActiveChangedAsync(item.Id));
+		if (item is not null && task.Result)
+			await InvokeActiveChangedAsync(item.Id);
 
 		if (stateChange)
 			StateHasChanged();
 	}
 
-	//
-	public void SelectItemById(string id, bool stateChange = false)
+	/// <summary>아이디로 아이템 선택</summary>
+	/// <param name="id"></param>
+	/// <param name="stateChange"></param>
+	/// <returns>비동기 처리한 태스크</returns>
+	internal Task SelectItemAsync(string id, bool stateChange = false)
 	{
 		var item = Items.FirstOrDefault(i => i.Id == id);
-		SelectItem(item, stateChange);
+		return SelectItemAsync(item, stateChange);
 	}
 
+	/// <summary>아이템 선택 해제</summary>
+	/// <param name="stateChange"></param>
+	/// <returns>비동기 처리한 태스크</returns>
+	internal Task SelectItemNoneAsync(bool stateChange = false) =>
+		SelectItemAsync((ComponentItem?)null, stateChange);
+
 	//
-	public void Dispose()
+	public async ValueTask DisposeAsync()
 	{
-		Disposing();
+		await DisposeAsyncCore().ConfigureAwait(false);
 		GC.SuppressFinalize(this);
 	}
 
-	//
-	protected virtual void Disposing() { }
+	/// <summary><see cref="DisposeAsync"/>의 처리 메소드</summary>
+	/// <returns>비동기 처리한 태스크</returns>
+	protected virtual ValueTask DisposeAsyncCore() => ValueTask.CompletedTask;
 
-	//
-	protected virtual void OnAfterFirstRender() { }
-	protected virtual void OnItemAdded(ComponentItem item) { }
-	protected virtual void OnItemRemoved(ComponentItem item) { }
-	protected virtual void OnItemSelected(ComponentItem? item, ComponentItem? previous) { }
+	/// <summary>
+	/// <see cref="OnAfterRenderAsync(bool)"/> 메소드가 처리될 때
+	/// 특별하게 firstRender의 경우에만 호출
+	/// </summary>
+	/// <returns>비동기 처리한 태스크</returns>
+	protected virtual Task OnAfterFirstRenderAsync() => Task.CompletedTask;
+
+	/// <summary>
+	/// 아이템 추가될 때
+	/// </summary>
+	/// <param name="item"></param>
+	/// <returns>비동기 처리한 태스크</returns>
+	protected virtual Task OnItemAddedAsync(ComponentItem item) => Task.CompletedTask;
+
+	/// <summary>
+	/// 아이템 삭제할 때 
+	/// </summary>
+	/// <param name="item"></param>
+	/// <returns>비동기 처리한 태스크</returns>
+	protected virtual Task OnItemRemovedAsync(ComponentItem item) => Task.CompletedTask;
+
+	/// <summary>
+	/// 아이템을 선택했을 때
+	/// </summary>
+	/// <param name="item"></param>
+	/// <param name="previous"></param>
+	/// <returns>
+	/// 비동기 처리한 태스크<br/>
+	/// false를 반환하면 그뒤에 기능(InvokeActiveChangedAsync 호출)을 하지 않음
+	/// </returns>
+	protected virtual Task<bool> OnItemSelectedAsync(ComponentItem? item, ComponentItem? previous) => Task.FromResult(true);
+
+	/// <summary>
+	/// <see cref="Active"/> 항목이 변경됐을 때
+	/// </summary>
+	/// <param name="id"></param>
+	/// <returns>비동기 처리한 태스크</returns>
 	protected virtual Task InvokeActiveChangedAsync(string? id) => ActiveChanged.InvokeAsync(id);
 }
 
 /// <summary>
 /// 컴포넌트 아이템
 /// </summary>
-public class ComponentItem : ComponentParent, IDisposable
+public class ComponentItem : ComponentParent, IAsyncDisposable
 {
 	[CascadingParameter] public ComponentContainer? Container { get; set; }
-	
+
 	//
 	internal object? Extend { get; set; }
 
 	//
-	protected override void OnComponentInitialized()
+	protected override Task OnInitializedAsync()
 	{
-		if (Container is null)
-			ThrowSupp.InsideComponent(nameof(ComponentItem));
-
-		Container.AddItem(this);
+		Container.ThrowIfContainerIsNull(this);
+		return Container.AddItemAsync(this);
 	}
 
 	//
-	public void Dispose()
+	public async ValueTask DisposeAsync()
 	{
-		Disposing();
+		await DisposeAsyncCore().ConfigureAwait(false);
 		GC.SuppressFinalize(this);
 	}
 
 	//
-	protected virtual void Disposing() => Container?.RemoveItem(this);
+	protected virtual async ValueTask DisposeAsyncCore()
+	{
+		if (Container is not null)
+			await Container.RemoveItemAsync(this);
+	}
 
 	//
-	public override string ToString()
-	{
-		return $"{Id}: <<{Container}";
-	}
+	public override string ToString() => $"<{GetType().Name}#{Id}> [{Container}]";
 }

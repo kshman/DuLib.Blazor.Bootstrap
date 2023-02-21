@@ -55,18 +55,19 @@
 	//
 	protected override void OnParametersSet()
 	{
-		if (Group is null)
-			ThrowSupp.InsideComponent(nameof(AccordionItem), nameof(Accordion));
+		Group.ThrowIfContainerIsNull(this);
 
-		if (Active is false && Group!.Active == Id)
+		if (Active is false && Group.Active == Id)
 			Active = true;
 	}
 
 	//
 	protected override void OnAfterRender(bool firstRender)
 	{
-		if (firstRender)
-			_internal_expanded = Active;
+		if (!firstRender)
+			return;
+
+		_internal_expanded = Active;
 	}
 
 	//

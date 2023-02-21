@@ -20,7 +20,7 @@ public class CssCompose
 	public CssCompose Add(string? className)
 	{
 		if (className.IsHave())
-			_sts.Add(className!);
+			_sts.Add(className);
 		return this;
 	}
 
@@ -53,9 +53,9 @@ public class CssCompose
 	public string Style =>
 		InternalJoin(style_separator);
 
-	public static string? Join(char sparator, params string?[] args)
+	public static string? Join(char separator, params string?[] args)
 	{
-		var j = string.Join(sparator, args.Where(x => x.IsHave()));
+		var j = string.Join(separator, args.Where(x => x.IsHave()));
 		return j.Length == 0 ? null : j;
 	}
 

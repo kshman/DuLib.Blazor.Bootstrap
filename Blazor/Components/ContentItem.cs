@@ -11,13 +11,11 @@ public class ContentItem : ComponentItem
 	{
 		if (Container is Accordion)
 		{
-			var prm = Extend as Accordion.AcnExtend;
-			return $"ACN#{Id}: {prm?.Expanded}";
+			var extend = Extend as Accordion.AcnExtend;
+			return $"ACN <{GetType().Name}#{Id}> Expanded:{extend?.Expanded}";
 		}
-		else
-		{
-			return base.ToString();
-		}
+
+		return base.ToString();
 	}
 #endif
 }
