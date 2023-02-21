@@ -7,7 +7,7 @@ public class DropItem : ComponentParent
 	[CascadingParameter] public DropDownBase? Group { get; set; }
 
 	[Parameter] public string? ContainerClass { get; set; }
-	[Parameter] public string? Title { get; set; }
+	[Parameter] public string? Text { get; set; }
 
 	[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
@@ -29,7 +29,7 @@ public class DropItem : ComponentParent
 		if (ChildContent is not null)
 			builder.AddContent(5, ChildContent);
 		else
-			builder.AddContent(5, Title);
+			builder.AddContent(5, Text);
 
 		builder.CloseElement();
 	}

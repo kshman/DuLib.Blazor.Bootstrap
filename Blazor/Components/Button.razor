@@ -3,6 +3,7 @@
 @if (Href.IsHave())
 {
 	<a class="@CssClass" href="@Href" target="@Target" id="@Id" @attributes="UserAttrs">
+		@Text
 		@ChildContent
 	</a>
 }
@@ -10,6 +11,7 @@ else
 {
 	<button type="@Type.ToHtml()" class="@CssClass" formtarget="@Target" id="@Id" @attributes="UserAttrs"
 		@onclick="HandleOnClickAsync">
+		@Text
 		@ChildContent
 	</button>
 }

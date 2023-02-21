@@ -5,6 +5,8 @@ public abstract class ButtonBase : ComponentParent
 	/// <summary>에디트 컨텍스트</summary>
 	[CascadingParameter] public EditContext? EditContext { get; set; }
 
+	/// <summary>텍스트</summary>
+	[Parameter] public string? Text { get; set; }
 	/// <summary>버튼 타입. <see cref="ButtonType" /> 참고</summary>
 	[Parameter] public ButtonType? Type { get; set; }
 	/// <summary>레이아웃 타입. <see cref="ComponentColor" /> 참고</summary>

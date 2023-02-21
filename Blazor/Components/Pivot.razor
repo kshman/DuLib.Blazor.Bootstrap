@@ -16,13 +16,13 @@
 				}
 				else
 				{
-					<span>@pv.Title</span>
+					<span>@pv.Text</span>
 				}
 			</button>
 		}
 	</div>
 
-	@if (TitleOnly is false)
+	@if (TextOnly is false)
 	{
 		<div role="tabpanel" class="hpvt-ctx" aria-hidden="false" aria-labelledby="@Id">
 			@(_current?.Content ?? _current?.ChildContent)
@@ -36,7 +36,7 @@
 	[Parameter] public ComponentSize Size { get; set; }
 	[Parameter] public PivotLayout Layout { get; set; }
 
-	[Parameter] public bool TitleOnly { get; set; }
+	[Parameter] public bool TextOnly { get; set; }
 
 	//
 	protected override string CssName => "hpvt";

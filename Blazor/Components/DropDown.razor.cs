@@ -19,7 +19,7 @@ public abstract class DropDownBase : ComponentParent
 	[Parameter] public string? ContainerClass { get; set; }
 	[Parameter] public string? MenuClass { get; set; }
 
-	[Parameter] public string? Title { get; set; }
+	[Parameter] public string? Text { get; set; }
 	[Parameter] public RenderFragment? Display { get; set; }
 	[Parameter] public RenderFragment? List { get; set; }
 
@@ -37,7 +37,7 @@ public abstract class DropDownBase : ComponentParent
 	private bool _handle_click;
 
 	//
-	private async Task SetOpen(bool isOpen)
+	private async Task SetOpenAsync(bool isOpen)
 	{
 		IsOpen = isOpen;
 		await InvokeOnShowHideAsync(isOpen);
@@ -46,22 +46,22 @@ public abstract class DropDownBase : ComponentParent
 
 	//
 	public Task ShowAsync() =>
-		SetOpen(true);
+		SetOpenAsync(true);
 
 	//
 	public Task HideAsync() =>
-		SetOpen(false);
+		SetOpenAsync(false);
 
 	//
 	public Task ToggleAsync() =>
-		SetOpen(!IsOpen);
+		SetOpenAsync(!IsOpen);
 
 	//
 	protected async Task SetSelectedAsync(DropItem item)
 	{
 		SelectedItem = item;
-		await SetOpen(false);
-		await InvokeOnSelectAsync(new SelectEventArgs(item.Id, item.Title));
+		await SetOpenAsync(false);
+		await InvokeOnSelectAsync(new SelectEventArgs(item.Id, item.Text));
 	}
 
 	//

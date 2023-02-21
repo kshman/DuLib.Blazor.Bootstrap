@@ -15,13 +15,13 @@
 			}
 			else
 			{
-				@tab.Title
+				@tab.Text
 			}
 		</a>
 	}
 </nav>
 
-@if (TitleOnly is false)
+@if (TextOnly is false)
 {
 	<div class="tab-content">
 		@foreach (var tab in _items)
@@ -34,7 +34,7 @@
 }
 
 @code {
-	[Parameter] public bool TitleOnly { get; set; }
+	[Parameter] public bool TextOnly { get; set; }
 	[Parameter] public NavLayout Layout { get; set; }
 	[Parameter] public string? TabClass { get; set; }
 
