@@ -127,7 +127,7 @@ public class ComponentItem : ComponentParent, IDisposable
 	[CascadingParameter] public ComponentContainer? Container { get; set; }
 	
 	//
-	public object? Tag { get; set; }
+	internal object? Extend { get; set; }
 
 	//
 	protected override void OnComponentInitialized()

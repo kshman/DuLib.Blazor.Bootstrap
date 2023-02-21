@@ -11,7 +11,7 @@ public class ContentItem : ComponentItem
 	{
 		if (Container is Accordion)
 		{
-			var prm = Tag as Accordion.AcnParam;
+			var prm = Extend as Accordion.AcnExtend;
 			return $"ACN#{Id}: {prm?.Expanded}";
 		}
 		else
