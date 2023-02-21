@@ -8,17 +8,18 @@
 	@foreach (var item in Items)
 	{
 		var acn = (ContentItem)item;
-		var cur = AlwaysOpen ? acn.Active : acn == Current;
+		var prm = (AcnParam)acn.Tag!;
+		var expanded = AlwaysOpen ? prm.Expanded : acn == Current;
 		<div class="@CssCompose.Join("accordion-item", acn.CssClass)" @attributes="@acn.UserAttrs">
 			<h2 class="accordion-header">
-				<button type="button" class="@CssCompose.Join("accordion-button", cur.IfFalse("collapsed"))"
-					data-bs-toggle="collapse" data-bs-target="#@acn.Id" aria-controls="@acn.Id" aria-expanded="@cur.ToBootStrap()">
+				<button type="button" class="@CssCompose.Join("accordion-button", expanded.IfFalse("collapsed"))"
+					data-bs-toggle="collapse" data-bs-target="#@acn.Id" aria-controls="@acn.Id" aria-expanded="@expanded.ToBootStrap()">
 					@acn.Text
 					@acn.Display
 				</button>
 			</h2>
 			<Collapse @ref="((AcnParam)acn.Tag!).Collapse"
-				  Class="@CssCompose.Join("accordion-collapse", cur.IfTrue("show"))"
+				  Class="@CssCompose.Join("accordion-collapse", expanded.IfTrue("show"))"
 				  Parent="@(AlwaysOpen ? null : $"#{Id}")" id="@acn.Id"
 				  OnExpanded="HandleOnExpandedAsync">
 				<div class="accordion-body">
@@ -122,16 +123,22 @@
 			return;
 		}
 
+		var prm = (AcnParam?)acn.Tag;
+		if (prm is null)
+		{
+			// 아니 이럴 수도 없어! 어쩔
+			return;
+		}
+
 		if (AlwaysOpen is false && Current is ContentItem cur && cur != acn)
 		{
-			cur.Active = false;
+			prm.Expanded = false;
 			//언제나 열기가 아닐 대 닫는것도 받으려면 이 주석 지우면됨
 			//await InvokeOnExpanded(new ExpandedEventArgs(cur.Id, false));
 		}
 
-		acn.Active = e.Expanded;
+		prm.Expanded = e.Expanded;
 		await InvokeOnExpanded(e);
-
 
 		SelectItem(acn);
 	}
@@ -143,6 +150,7 @@
 	//
 	internal class AcnParam
 	{
+		internal bool Expanded { get; set; }
 		internal Collapse? Collapse { get; set; }
 	}
 }

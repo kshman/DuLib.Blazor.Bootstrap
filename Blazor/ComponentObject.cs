@@ -67,6 +67,9 @@ public abstract class ComponentObject : ComponentBase
 
 		StateHasChanged();
 	}
+
+	//
+	public override string ToString() => CssName;
 }
 
 /// <summary>

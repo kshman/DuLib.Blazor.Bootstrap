@@ -6,15 +6,18 @@ public class ContentItem : ComponentItem
 	[Parameter] public RenderFragment? Display { get; set; }
 	[Parameter] public RenderFragment? Content { get; set; }
 
-	//
-	public bool Active { get; set; }
-
-	//
-	public object? Tag { get; set; }
-
-	//
+#if DEBUG
 	public override string ToString()
 	{
-		return $"{Id}: Active={Active}, Css={CssClass}";
+		if (Container is Accordion)
+		{
+			var prm = Tag as Accordion.AcnParam;
+			return $"ACN#{Id}: {prm?.Expanded}";
+		}
+		else
+		{
+			return base.ToString();
+		}
 	}
+#endif
 }

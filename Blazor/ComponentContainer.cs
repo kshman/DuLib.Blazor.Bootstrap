@@ -13,7 +13,7 @@ public class ComponentContainer : ComponentParent, IDisposable
 	//
 	protected ComponentItem? Current { get; set; }
 	//
-	protected virtual bool SelectFirst { get; } = false;
+	protected virtual bool SelectFirst => false;
 
 	//
 	protected override void OnAfterRender(bool firstRender)
@@ -77,7 +77,7 @@ public class ComponentContainer : ComponentParent, IDisposable
 		Items.FirstOrDefault(x => x.Id == id);
 
 	//
-	public void SelectItem(ComponentItem? item, bool stateChage = false)
+	public void SelectItem(ComponentItem? item, bool stateChange = false)
 	{
 		if (item == Current)
 			return;
@@ -90,14 +90,15 @@ public class ComponentContainer : ComponentParent, IDisposable
 		if (item is not null)
 			InvokeAsync(async () => await InvokeActiveChangedAsync(item.Id));
 
-		StateHasChanged();
+		if (stateChange)
+			StateHasChanged();
 	}
 
 	//
-	public void SelectItemById(string id, bool stateChage = false)
+	public void SelectItemById(string id, bool stateChange = false)
 	{
 		var item = Items.FirstOrDefault(i => i.Id == id);
-		SelectItem(item, stateChage);
+		SelectItem(item, stateChange);
 	}
 
 	//
@@ -124,13 +125,17 @@ public class ComponentContainer : ComponentParent, IDisposable
 public class ComponentItem : ComponentParent, IDisposable
 {
 	[CascadingParameter] public ComponentContainer? Container { get; set; }
+	
+	//
+	public object? Tag { get; set; }
 
 	//
 	protected override void OnComponentInitialized()
 	{
 		if (Container is null)
 			ThrowSupp.InsideComponent(nameof(ComponentItem));
-		Container!.AddItem(this);
+
+		Container.AddItem(this);
 	}
 
 	//
@@ -142,4 +147,10 @@ public class ComponentItem : ComponentParent, IDisposable
 
 	//
 	protected virtual void Disposing() => Container?.RemoveItem(this);
+
+	//
+	public override string ToString()
+	{
+		return $"{Id}: <<{Container}";
+	}
 }
