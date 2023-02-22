@@ -13,8 +13,8 @@
 		<div class="carousel-indicators">
 			@for (var i = 0; i < Items.Count; i++)
 			{
-				var current = Items[i] == Current;
-				<button type="button" class="@current.IfTrue("active")" data-bs-target="#@Id" data-bs-slide-to="@i" aria-label="Slide @i" aria-current="@current.IfTrue("true")">
+				var selected = Items[i] == SelectedItem;
+				<button type="button" class="@selected.IfTrue("active")" data-bs-target="#@Id" data-bs-slide-to="@i" aria-label="Slide @i" aria-current="@selected.IfTrue("true")">
 				</button>
 			}
 		</div>
@@ -23,8 +23,8 @@
 		@foreach (var item in Items)
 		{
 			var crs = (ContentItem)item;
-			var current = crs == Current;
-			<div class="@CssCompose.Join("carousel-item", current.IfTrue("active"), crs.CssClass)" id="@crs.Id" @attributes="crs.UserAttrs">
+			var selected = crs == SelectedItem;
+			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), crs.CssClass)" id="@crs.Id" @attributes="crs.UserAttrs">
 				@crs.Text
 				@crs.Display
 				@crs.Content

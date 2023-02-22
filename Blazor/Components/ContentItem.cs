@@ -6,6 +6,9 @@ public class ContentItem : ComponentItem
 	[Parameter] public RenderFragment? Display { get; set; }
 	[Parameter] public RenderFragment? Content { get; set; }
 
+	//
+	internal object? Extend { get; set; }
+
 #if DEBUG
 	public override string ToString()
 	{

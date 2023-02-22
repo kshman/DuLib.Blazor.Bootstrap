@@ -8,7 +8,7 @@
 	@foreach (var item in Items)
 	{
 		var tab = (ContentItem)item;
-		var current = tab == Current;
+		var current = tab == SelectedItem;
 		<a role="button" class="@CssCompose.Join("nav-link", current.IfTrue("active"), tab.CssClass)" id="@tab.Id"
 		   @onclick="async () => await HandleOnClickAsync(tab)">
 			@tab.Text
@@ -23,7 +23,7 @@
 		@foreach (var item in Items)
 		{
 			var tab = (ContentItem)item;
-			var current = tab == Current;
+			var current = tab == SelectedItem;
 			<div class="@CssCompose.Join("tab-pane", current.IfTrue("active"))">
 				@(tab.Content ?? tab.ChildContent)
 			</div>

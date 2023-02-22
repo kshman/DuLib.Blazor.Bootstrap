@@ -9,7 +9,7 @@
 	{
 		var acn = (ContentItem)item;
 		var extend = (AcnExtend)acn.Extend!;
-		var expanded = AlwaysOpen ? extend.Expanded : acn == Current;
+		var expanded = AlwaysOpen ? extend.Expanded : acn == SelectedItem;
 		<div class="@CssCompose.Join("accordion-item", acn.CssClass)" @attributes="@acn.UserAttrs">
 			<h2 class="accordion-header">
 				<button type="button" class="@CssCompose.Join("accordion-button", expanded.IfFalse("collapsed"))"
@@ -54,8 +54,8 @@
 	//
 	protected override Task OnAfterFirstRenderAsync()
 	{
-		if (Current is not null && _now_transition is false)
-			return InternalExpandAsync(Current as ContentItem);
+		if (SelectedItem is not null && _now_transition is false)
+			return InternalExpandAsync(SelectedItem as ContentItem);
 		return Task.CompletedTask;
 	}
 
@@ -70,21 +70,20 @@
 
 		acn.Extend = new AcnExtend();
 
-		if (acn != Current)
-			return;
-
-		if (!_now_transition)
+		if (acn == SelectedItem && !_now_transition)
 			await InternalExpandAsync(acn);
 	}
 
 	//
-	public Task ExpandAsync(string id) => InternalExpandAsync(GetItem(id));
+	public Task ExpandAsync(string id) => 
+		InternalExpandAsync(GetItem<ContentItem>(id));
 
 	//
-	public Task CollapseAsync(string id) => InternalCollapseAsync(GetItem(id));
+	public Task CollapseAsync(string id) => 
+		InternalCollapseAsync(GetItem<ContentItem>(id));
 
 	//
-	private Task InternalExpandAsync(ComponentItem? acn)
+	private Task InternalExpandAsync(ContentItem? acn)
 	{
 		if (acn?.Extend is not AcnExtend { Collapse: { } } extend)
 			return Task.CompletedTask;
@@ -94,7 +93,7 @@
 	}
 
 	//
-	private Task InternalCollapseAsync(ComponentItem? acn)
+	private Task InternalCollapseAsync(ContentItem? acn)
 	{
 		if (acn?.Extend is not AcnExtend { Collapse: { } } extend)
 			return Task.CompletedTask;
@@ -127,7 +126,7 @@
 			return;
 		}
 
-		if (AlwaysOpen is false && Current is ContentItem cur && cur != acn)
+		if (AlwaysOpen is false && SelectedItem is ContentItem cur && cur != acn)
 		{
 			extend.Expanded = false;
 			//언제나 열기가 아닐 대 닫는것도 받으려면 이 주석 지우면됨

@@ -2,7 +2,7 @@
 
 namespace Du.Blazor.Components;
 
-public class DropItem : ComponentParent
+public class DropItem : ComponentContent
 {
 	[CascadingParameter] public DropDownBase? Group { get; set; }
 

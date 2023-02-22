@@ -9,7 +9,7 @@
 		@foreach (var item in Items)
 		{
 			var pv = (ContentItem)item;
-			var current = pv == Current;
+			var current = pv == SelectedItem;
 			<button type="button" role="tab"
 				class="@CssCompose.Join("hpvt-item", current.IfTrue("hpvt-sel"), pv.CssClass)"
 				tabindex="@(current ? 0 : -1)"
@@ -24,7 +24,7 @@
 
 	@if (PivotOnly is false)
 	{
-		var pv = (ContentItem?)Current;
+		var pv = (ContentItem?)SelectedItem;
 		<div role="tabpanel" class="hpvt-ctx" aria-hidden="false" aria-labelledby="@Id">
 			@(pv?.Content ?? pv?.ChildContent)
 		</div>
