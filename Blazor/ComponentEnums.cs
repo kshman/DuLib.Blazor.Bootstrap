@@ -80,7 +80,7 @@ public enum PivotLayout
 /// <summary>NAV 레이아웃 (탭)</summary>
 public enum NavLayout
 {
-	Standard,
+	None,
 	Tabs,
 	Pills,
 }
@@ -88,7 +88,7 @@ public enum NavLayout
 /// <summary>드랍 레이아웃</summary>
 public enum DropLayout
 {
-	Standard,
+	None,
 	Button,
 	Flat,
 }
@@ -122,7 +122,7 @@ public enum DropAutoClose
 /// <summary>배지 레이아웃</summary>
 public enum BadgeLayout
 {
-	Standard,
+	None,
 	Pill,
 	Circle,
 }

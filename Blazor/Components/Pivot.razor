@@ -1,4 +1,4 @@
-﻿@inherits ComponentContainer
+﻿@inherits ContentItemContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -8,25 +8,25 @@
 	<div class="hpvt-hdr" role="tablist">
 		@foreach (var item in Items)
 		{
-			var pv = (ContentItem)item;
-			var current = pv == SelectedItem;
-			<button type="button" role="tab"
-				class="@CssCompose.Join("hpvt-item", current.IfTrue("hpvt-sel"), pv.CssClass)"
+			var current = item == SelectedItem;
+			<button 
+				type="button" 
+				role="tab"
+				class="@CssCompose.Join("hpvt-item", current.IfTrue("hpvt-sel"), item.CssClass)"
 				tabindex="@(current ? 0 : -1)"
 				aria-selected="@current.ToBootStrap()"
 				id="@Id" @attributes="UserAttrs"
-				@onclick="async () => await HandleOnClickAsync(pv)">
-				@pv.Text
-				@pv.Display
+				@onclick="async () => await HandleOnClickAsync(item)">
+				@item.Text
+				@item.Display
 			</button>
 		}
 	</div>
 
 	@if (PivotOnly is false)
 	{
-		var pv = (ContentItem?)SelectedItem;
 		<div role="tabpanel" class="hpvt-ctx" aria-hidden="false" aria-labelledby="@Id">
-			@(pv?.Content ?? pv?.ChildContent)
+			@(SelectedItem?.Content ?? SelectedItem?.ChildContent)
 		</div>
 	}
 </div>
@@ -76,6 +76,6 @@
 	}
 
 	//
-	protected Task HandleOnClickAsync(ContentItem pivot) =>
-		SelectItemAsync(pivot);
+	protected Task HandleOnClickAsync(ContentItem item) =>
+		SelectItemAsync(item);
 }

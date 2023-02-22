@@ -106,7 +106,7 @@ namespace Du.Blazor.Supplement
 
 		internal static string? ToCss(this NavLayout nav) => nav switch
 		{
-			NavLayout.Standard => null,
+			NavLayout.None => null,
 			NavLayout.Pills => "nav-pills",
 			NavLayout.Tabs => "nav-tabs",
 			_ => null,

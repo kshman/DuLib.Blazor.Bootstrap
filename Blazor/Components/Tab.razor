@@ -1,4 +1,4 @@
-﻿@inherits ComponentContainer
+﻿@inherits ContentItemContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -7,12 +7,14 @@
 <nav class="@CssClass" id="@Id" @attributes="UserAttrs">
 	@foreach (var item in Items)
 	{
-		var tab = (ContentItem)item;
-		var current = tab == SelectedItem;
-		<a role="button" class="@CssCompose.Join("nav-link", current.IfTrue("active"), tab.CssClass)" id="@tab.Id"
-		   @onclick="async () => await HandleOnClickAsync(tab)">
-			@tab.Text
-			@tab.Display
+		var current = item == SelectedItem;
+		<a 
+			role="button" 
+			class="@CssCompose.Join("nav-link", current.IfTrue("active"), item.CssClass)" 
+			id="@item.Id"
+			@onclick="async () => await HandleOnClickAsync(item)">
+			@item.Text
+			@item.Display
 		</a>
 	}
 </nav>
@@ -22,10 +24,9 @@
 	<div class="tab-content">
 		@foreach (var item in Items)
 		{
-			var tab = (ContentItem)item;
-			var current = tab == SelectedItem;
+			var current = item == SelectedItem;
 			<div class="@CssCompose.Join("tab-pane", current.IfTrue("active"))">
-				@(tab.Content ?? tab.ChildContent)
+				@(item.Content ?? item.ChildContent)
 			</div>
 		}
 	</div>

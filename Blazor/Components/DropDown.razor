@@ -2,7 +2,7 @@
 
 <div class="@CssCompose.Join(Direction.ToCss(), ContainerClass)" id="@Id"
 	 @onfocusout="HandleFocusOutAsync" @onfocusout:stopPropagation="true">
-	@if (Layout is DropLayout.Standard)
+	@if (Layout is DropLayout.None)
 	{
 		<span role="button" class="@CssClass" @attributes="UserAttrs"
 		      @onclick="HandleOnClickAsync">
@@ -45,7 +45,7 @@
 			case DropLayout.Flat:
 				css.Add("block-flat");
 				break;
-			case DropLayout.Standard:
+			case DropLayout.None:
 			default:
 				break;
 		}

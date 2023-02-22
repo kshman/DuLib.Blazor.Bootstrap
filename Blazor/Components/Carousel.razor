@@ -1,20 +1,30 @@
-﻿@inherits ComponentContainer
+﻿@inherits ContentItemContainer
 @inject IJSRuntime JS
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
 </CascadingValue>
 
-<div @ref="_self" class="@CssClass" 
-     data-bs-interval="@(Interval == 0 ? "false" : Interval)" data-bs-touch="@Touch.ToBootStrap()"
-	 id="@Id" @attributes="UserAttrs">
+<div 
+	@ref="_self" 
+	class="@CssClass" 
+	data-bs-interval="@(Interval == 0 ? "false" : Interval)" 
+	data-bs-touch="@Touch.ToBootStrap()"
+	id="@Id"
+	@attributes="UserAttrs">
 	@if (Indicators)
 	{
 		<div class="carousel-indicators">
 			@for (var i = 0; i < Items.Count; i++)
 			{
 				var selected = Items[i] == SelectedItem;
-				<button type="button" class="@selected.IfTrue("active")" data-bs-target="#@Id" data-bs-slide-to="@i" aria-label="Slide @i" aria-current="@selected.IfTrue("true")">
+				<button 
+					type="button" 
+					class="@selected.IfTrue("active")" 
+					data-bs-target="#@Id" 
+					data-bs-slide-to="@i" 
+					aria-label="Slide @i" 
+					aria-current="@selected.IfTrue("true")">
 				</button>
 			}
 		</div>
@@ -22,13 +32,15 @@
 	<div class="carousel-inner">
 		@foreach (var item in Items)
 		{
-			var crs = (ContentItem)item;
-			var selected = crs == SelectedItem;
-			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), crs.CssClass)" id="@crs.Id" @attributes="crs.UserAttrs">
-				@crs.Text
-				@crs.Display
-				@crs.Content
-				@crs.ChildContent
+			var selected = item == SelectedItem;
+			<div 
+				class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass)"
+				id="@item.Id" 
+				@attributes="item.UserAttrs">
+				@item.Text
+				@item.Display
+				@item.Content
+				@item.ChildContent
 			</div>
 		}
 	</div>
@@ -74,10 +86,8 @@
 	private DotNetObjectReference<Carousel>? _drf;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
-	{
+	protected override void OnComponentClass(CssCompose css) =>
 		css.Add(Fade, "carousel-fade");
-	}
 
 	//
 	protected override async Task OnAfterFirstRenderAsync()
@@ -96,13 +106,6 @@
 
 		_drf ??= DotNetObjectReference.Create(this);
 		await JS.InvokeVoidAsync("DUCARS.init", _self, _drf, options);
-	}
-
-	//
-	protected override Task OnItemAddedAsync(ComponentItem item)
-	{
-		_ = item.ThrowIfConvertFail<ContentItem>();
-		return Task.CompletedTask;
 	}
 
 	//
