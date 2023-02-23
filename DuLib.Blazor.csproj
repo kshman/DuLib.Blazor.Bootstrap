@@ -78,4 +78,12 @@
     </None>
   </ItemGroup>
 
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Blazor\Components\Card.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Blazor\Components\Card.razor" />
+  </ItemGroup>
+
 </Project>

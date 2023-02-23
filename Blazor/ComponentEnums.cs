@@ -153,6 +153,7 @@ public enum NavBarExpand
 	Collapsed,
 }
 
+/// <summary>NAV 컨테이너 레이아웃</summary>
 public enum NavContainerLayout
 {
 	None,
@@ -162,4 +163,12 @@ public enum NavContainerLayout
 	Large,
 	ExtraLarge,
 	ExtraExtraLarge,
+}
+
+/// <summary>카드 놓기 위치</summary>
+public enum CardImageLocation
+{
+	Top,
+	Bottom,
+	Overlay,
 }

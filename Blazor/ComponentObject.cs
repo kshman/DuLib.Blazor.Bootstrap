@@ -27,10 +27,10 @@ public abstract class ComponentObject : ComponentBase
 	/// </summary>
 	protected override void OnInitialized()
 	{
+		OnComponentInitialized();
+	
 		OnComponentClass(_css_compose);
 		_css_compose.Add(Class).Register(() => Enabled.IfFalse("disabled"));
-
-		OnComponentInitialized();
 	}
 
 	/// <summary>

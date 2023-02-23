@@ -24,9 +24,9 @@ public class CssCompose
 		return this;
 	}
 
-	public CssCompose AddIf(bool condition, string className)
+	public CssCompose AddIf(bool condition, string? className)
 	{
-		if (condition)
+		if (condition && className.IsHave())
 			_sts.Add(className);
 		return this;
 	}
