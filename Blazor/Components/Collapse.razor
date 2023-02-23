@@ -2,18 +2,43 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
+@*
+@if (NavBar is not null)
+{
+	<div @ref="_self"
+		 class="@CssClass"
+		 id="@Id"
+		 @attributes="@UserAttrs">
+		@ChildContent
+	</div>
+}
+else
+{
+	<div @ref="_self"
+		 class="@CssClass"
+		 id="@Id"
+		 aria-expanded="@Expanded"
+		 data-bs-parent="@ParentId"
+		 @attributes="@UserAttrs">
+		@ChildContent
+	</div>
+}
+*@
+
 <div @ref="_self"
 	 class="@CssClass"
 	 id="@Id"
 	 aria-expanded="@Expanded"
-	 data-bs-parent="@Parent"
+	 data-bs-parent="@ParentId"
 	 @attributes="@UserAttrs">
 	@ChildContent
 </div>
 
 @code {
-	[Parameter] public string? Parent { get; set; }
-	[Parameter] public ComponentDirection Direction { get; set; }
+	[CascadingParameter] public NavBar? NavBar { get; set; }
+
+	[Parameter] public string? ParentId { get; set; }
+	[Parameter] public TagDirection Direction { get; set; } = TagDirection.Vertical;
 	[Parameter] public bool Expanded { get; set; }
 
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanding { get; set; }
@@ -29,10 +54,13 @@
 	private bool _now_hide;
 
 	//
-	public override async Task SetParametersAsync(ParameterView parameters)
+	protected override void OnComponentInitialized()
 	{
-		await base.SetParametersAsync(parameters);
-		Id = parameters.GetValueOrDefault(nameof(Id), Id);
+		if (NavBar is not null)
+		{
+			// 나브바 아래 있을 땐 나브바에서 준 아이디를 쓴다
+			Id = NavBar.CollapseId;
+		}
 	}
 
 	//
@@ -43,8 +71,9 @@
 	protected override void OnComponentClass(CssCompose css)
 	{
 		css
+			.AddIf(NavBar is not null, "navbar-collapse")
 			.Add("collapse")
-			.AddIf(Direction == ComponentDirection.Horizontal, "collapse-horizontal")
+			.AddIf(Direction == TagDirection.Horizontal, "collapse-horizontal")
 			.AddIf(_expanded, "show");
 	}
 

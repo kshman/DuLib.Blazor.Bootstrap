@@ -8,9 +8,9 @@
 
 @code {
 	/// <summary>버튼 그룹 형식</summary>
-	[Parameter] public GroupLayout Layout { get; set; }
-	/// <summary>컴포넌트 크기. <see cref="ComponentSize" /> 참고</summary>
-	[Parameter] public ComponentSize Size { get; set; }
+	[Parameter] public ButtonLayout Layout { get; set; }
+	/// <summary>컴포넌트 크기. <see cref="TagSize" /> 참고</summary>
+	[Parameter] public TagSize Size { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose css)
@@ -18,9 +18,9 @@
 		css
 			.Add(Layout switch
 			{
-				GroupLayout.Button => "btn-group",
-				GroupLayout.Vertical => "btn-group-vertical",
-				GroupLayout.Toolbar => "btn-toolbar",
+				ButtonLayout.Button => "btn-group",
+				ButtonLayout.Vertical => "btn-group-vertical",
+				ButtonLayout.Toolbar => "btn-toolbar",
 				_ => null,
 			})
 			.Add(Size.ToCss("btn-group"));

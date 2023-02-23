@@ -5,23 +5,23 @@
 </span>
 
 @code {
-	[Parameter] public ComponentColor Fore { get; set; } = DefaultSettings.Fore;
-	[Parameter] public ComponentColor Back { get; set; } = DefaultSettings.Back;
-	[Parameter] public BadgeLayout Layout { get; set; } = DefaultSettings.Layout;
+	[Parameter] public TagColor? Fore { get; set; }
+	[Parameter] public TagColor? Back { get; set; }
+	[Parameter] public BadgeLayout? Layout { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose css)
 	{
 		css
 			.Add("badge")
-			.Add(Fore.ToCss("text"))
-			.Add(Back.ToCss("bg"))
-			.Add(Layout switch
+			.Add((Fore ?? DefaultSettings.Fore).ToCss("text"))
+			.Add((Back ?? DefaultSettings.Back).ToCss("bg"))
+			.Add((Layout ?? DefaultSettings.Layout) switch
 			{
 				BadgeLayout.Pill => "rounded-pill",
 				BadgeLayout.Circle => "rounded-circle",
 				_ => null
 			})
-			.Add(DefaultSettings.Css);
+			.Add(DefaultSettings.AdditionalCss);
 	}
 }

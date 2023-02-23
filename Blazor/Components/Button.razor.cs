@@ -1,5 +1,29 @@
 ﻿namespace Du.Blazor.Components;
 
+/// <summary>버튼</summary>
+/// <seealso cref="Du.Blazor.Components.ButtonBase" />
+public partial class Button
+{
+	public class Settings
+	{
+		public ButtonType Type { get; set; }
+		public TagColor Color { get; set; }
+		public TagSize Size { get; set; }
+		public bool Outline { get; set; }
+	}
+
+	public static Settings DefaultSettings { get; set; } = new Settings()
+	{
+		Type = ButtonType.Button,
+		Color = TagColor.Primary,
+		Size = TagSize.Medium,
+		Outline = false
+	};
+}
+
+
+/// <summary>버튼 베이스</summary>
+/// <seealso cref="Du.Blazor.ComponentContent" />
 public abstract class ButtonBase : ComponentContent
 {
 	/// <summary>에디트 컨텍스트</summary>
@@ -9,12 +33,12 @@ public abstract class ButtonBase : ComponentContent
 	[Parameter] public string? Text { get; set; }
 	/// <summary>버튼 타입. <see cref="ButtonType" /> 참고</summary>
 	[Parameter] public ButtonType? Type { get; set; }
-	/// <summary>레이아웃 타입. <see cref="ComponentColor" /> 참고</summary>
-	[Parameter] public ComponentColor Color { get; set; }
-	/// <summary>컴포넌트 크기. <see cref="ComponentSize" /> 참고</summary>
-	[Parameter] public ComponentSize Size { get; set; }
+	/// <summary>레이아웃 타입. <see cref="TagColor" /> 참고</summary>
+	[Parameter] public TagColor? Color { get; set; }
+	/// <summary>컴포넌트 크기. <see cref="TagSize" /> 참고</summary>
+	[Parameter] public TagSize? Size { get; set; }
 	/// <summary>아웃라인 적용.</summary>
-	[Parameter] public bool Outline { get; set; }
+	[Parameter] public bool? Outline { get; set; }
 
 	/// <summary>마우스 눌린 이벤트 지정.</summary>
 	[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
@@ -22,6 +46,12 @@ public abstract class ButtonBase : ComponentContent
 	[Parameter] public EventCallback<MouseEventArgs> OnValidClick { get; set; }
 	/// <summary>에디트 폼 InvalidClick.</summary>
 	[Parameter] public EventCallback<MouseEventArgs> OnInvalidClick { get; set; }
+
+	//
+	protected ButtonType ActualType => Type ?? Button.DefaultSettings.Type;
+	protected TagColor ActualColor => Color ?? Button.DefaultSettings.Color;
+	protected TagSize ActualSize => Size ?? Button.DefaultSettings.Size;
+	protected bool ActualOutline => Outline ?? Button.DefaultSettings.Outline;
 
 	//
 	private bool _handle_click;

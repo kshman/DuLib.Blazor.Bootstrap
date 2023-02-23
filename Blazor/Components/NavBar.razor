@@ -1,0 +1,47 @@
+@inherits ComponentContent
+
+<nav class="@CssClass" id="@Id" @attributes="UserAttrs">
+	<div class="@ContainerCssClass">
+		@if (Brand is not null)
+		{
+			<a class="@BrandCssClass" href="@Href">
+				@Brand
+			</a>
+		}
+		<CascadingValue Value="this" IsFixed="true">
+			@ChildContent
+		</CascadingValue>
+	</div>
+</nav>
+
+@code
+{
+	// 나브
+	[Parameter] public NavBarExpand Expand { get; set; } = NavBarExpand.Large;
+	[Parameter] public TagColor Color { get; set; } = TagColor.None;
+
+	// 컨테이너
+	[Parameter] public string? ContainerClass { get; set; }
+	[Parameter] public NavContainerLayout ContainerLayout { get; set; } = NavContainerLayout.Fluid;
+
+	// 브랜드
+	[Parameter] public string? BrandClass { get; set; }
+	[Parameter] public string? Href { get; set; }
+	[Parameter] public RenderFragment? Brand { get; set; }
+
+	//
+	public string CollapseId => Id + "_collapse";
+
+	//
+	private string? ContainerCssClass => CssCompose.Join(ContainerLayout.ToCss(), ContainerClass);
+	private string? BrandCssClass => CssCompose.Join("navbar-brand", BrandClass);
+
+	//
+	protected override void OnComponentClass(CssCompose css)
+	{
+		css
+			.Add("navbar")
+			.Add(Expand.ToCss())
+			.Add(Color.ToCss("bg"));
+	}
+}

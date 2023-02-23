@@ -30,7 +30,7 @@ else
 	}
 	else
 	{
-		<button type="@Type.ToHtml()" class="@CssClass" formtarget="@Target" id="@Id" @attributes="UserAttrs"
+		<button type="@ActualType.ToHtml()" class="@CssClass" formtarget="@Target" id="@Id" @attributes="UserAttrs"
 		@onclick="HandleOnClickAsync">
 			@Text
 			@ChildContent
@@ -55,15 +55,14 @@ else
 		{
 			css
 				.Add("btn")
-				.Add(Color.ToButtonCss(Outline));
+				.Add(ActualColor.ToButtonCss(ActualOutline));
 		}
 		else
 		{
 			css
-				.Add("dropdown-item")
-				.Add(Size.ToCss("btn"));
+				.Add("dropdown-item");
 		}
 
-		css.Add(Size.ToCss("btn"));
+		css.Add(ActualSize.ToCss("btn"));
 	}
 }

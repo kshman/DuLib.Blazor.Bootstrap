@@ -32,11 +32,11 @@
 </div>
 
 @code {
-	[Parameter] public PivotLayout Layout { get; set; }
-	[Parameter] public PivotPosition Position { get; set; }
-	[Parameter] public ComponentOverflow Overflow { get; set; }
-	[Parameter] public ComponentSize Size { get; set; }
-	[Parameter] public bool PivotOnly { get; set; }
+	[Parameter] public PivotLayout Layout { get; set; } = PivotLayout.Flat;
+	[Parameter] public PivotPosition Position { get; set; } = PivotPosition.Top;
+	[Parameter] public TagOverflow Overflow { get; set; } = TagOverflow.None;
+	[Parameter] public TagSize Size { get; set; } = TagSize.Medium;
+	[Parameter] public bool PivotOnly { get; set; } //= false;
 
 	//
 	protected override void OnComponentClass(CssCompose css)
@@ -45,9 +45,9 @@
 			.Add("hpvt")
 			.Add(Size switch
 			{
-				ComponentSize.Medium or
-				ComponentSize.Small => "hpvt-nm",
-				ComponentSize.Large => "hpvt-lg",
+				TagSize.Medium or
+				TagSize.Small => "hpvt-nm",
+				TagSize.Large => "hpvt-lg",
 				_ => null
 			})
 			.Add(Layout switch
@@ -58,9 +58,9 @@
 			})
 			.Add(Overflow switch
 			{
-				ComponentOverflow.None => null,
-				ComponentOverflow.Menu => null,
-				ComponentOverflow.Scroll => "hpvt-scrl",
+				TagOverflow.None => null,
+				TagOverflow.Menu => null,
+				TagOverflow.Scroll => "hpvt-scrl",
 				_ => null
 			})
 			.Add(Position switch

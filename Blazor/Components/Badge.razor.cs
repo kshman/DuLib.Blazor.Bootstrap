@@ -1,20 +1,22 @@
 ﻿namespace Du.Blazor.Components;
 
+/// <summary>뺏지...는 배지</summary>
+/// <seealso cref="Du.Blazor.ComponentContent" />
 public partial class Badge
 {
-    public record Settings
-    {
-        public ComponentColor Fore { get; set; }
-        public ComponentColor Back { get; set; }
-        public BadgeLayout Layout { get; set; }
-        public string? Css { get; set; }
-    }
+	public class Settings
+	{
+		public TagColor Fore { get; set; }
+		public TagColor Back { get; set; }
+		public BadgeLayout Layout { get; set; }
+		public string? AdditionalCss { get; set; }
+	}
 
-    public static Settings DefaultSettings { get; set; } = new()
-    {
-        Fore = ComponentColor.Light,
-        Back = ComponentColor.Primary,
+	public static Settings DefaultSettings { get; set; } = new()
+	{
+		Fore = TagColor.Light,
+		Back = TagColor.Primary,
 		Layout = BadgeLayout.None,
-        Css = null,
-    };
+		AdditionalCss = null,
+	};
 }
