@@ -1,23 +1,24 @@
 ﻿@inherits ComponentContent
 
-<div>
-	@if (Display is not null)
-	{
-		@Display
-	}
-	else
-	{
-		@Title
-	}
-	
-	@if (Display is not null)
-	{
-		@Content
-	}
-</div>
+@if (Parent is not null)
+{
+	<li>
+		<div class="@CssClass" @attributes="@UserAttrs">
+			@Text
+			@ChildContent
+		</div>
+	</li>
+}
+else
+{
+	<div class="@CssClass" @attributes="@UserAttrs">
+		@Text
+		@ChildContent
+	</div>
+}
 
 @code {
-	[Parameter] public string? Title { get; set; }
-	[Parameter] public RenderFragment? Display { get; set; }
-	[Parameter] public RenderFragment? Content { get; set; }
+	[Parameter] public string? Text { get; set; }
+
+	[CascadingParameter] public ComponentContent? Parent { get; set; }
 }

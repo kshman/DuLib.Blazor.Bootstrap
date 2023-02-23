@@ -21,9 +21,6 @@
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
 	//
-	protected override string CssName => "collapse";
-
-	//
 	private ElementReference _self;
 	private DotNetObjectReference<Collapse>? _objref;
 
@@ -46,8 +43,9 @@
 	protected override void OnComponentClass(CssCompose css)
 	{
 		css
-			.Add(Direction == ComponentDirection.Horizontal, "collapse-horizontal")
-			.Add(_expanded, "show");
+			.Add("collapse")
+			.AddIf(Direction == ComponentDirection.Horizontal, "collapse-horizontal")
+			.AddIf(_expanded, "show");
 	}
 
 	//

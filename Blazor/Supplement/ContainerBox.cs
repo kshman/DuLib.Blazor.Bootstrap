@@ -33,7 +33,7 @@ public class ContainerBox<TItem>
 			return;
 
 		if (activeId.IsHave(true))
-			SelectById(activeId);
+			Select(activeId);
 		else if (selectFirstWhenNoActive && Items.Count > 0)
 			Select(Items[0]);
 	}
@@ -82,11 +82,11 @@ public class ContainerBox<TItem>
 	}
 
 	//
-	public void SelectById(string id) =>
-		Select(GetItemById(id));
+	public void Select(string id) =>
+		Select(GetItem(id));
 
 	//
-	public TItem? GetItemById(string id) =>
+	public TItem? GetItem(string id) =>
 		Items.FirstOrDefault(x => x.Id == id);
 
 	//

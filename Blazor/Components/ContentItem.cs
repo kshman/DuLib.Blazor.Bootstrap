@@ -1,15 +1,23 @@
-﻿namespace Du.Blazor.Components;
+﻿using Microsoft.Extensions.Logging;
+
+namespace Du.Blazor.Components;
 
 /// <summary>콘텐트 아이템 컨테이너</summary>
+/// <remarks>
+/// 이 컴포넌트를 상속 받는 애들은 <see cref="ContentItem"/> 컴포넌트로
+/// 콘텐트를 구성해야 함
+/// </remarks>
 /// <seealso cref="Accordion"/>
 /// <seealso cref="Carousel"/>
 /// <seealso cref="Pivot"/>
 /// <seealso cref="Tab"/>
-public class ContentItemContainer : ComponentContainer<ContentItem>
+public abstract class ContentItemContainer : ComponentContainer<ContentItem>
 {
 }
 
+
 /// <summary>콘텐트 아이템</summary>
+/// <remarks>자체적으로 렌더링 하는 기능은 없음</remarks>
 public class ContentItem : ComponentContent, IAsyncDisposable
 {
 	[CascadingParameter] public ComponentStorage<ContentItem>? Container { get; set; }
@@ -17,6 +25,9 @@ public class ContentItem : ComponentContent, IAsyncDisposable
 	[Parameter] public string? Text { get; set; }
 	[Parameter] public RenderFragment? Display { get; set; }
 	[Parameter] public RenderFragment? Content { get; set; }
+
+	//
+	[Inject] protected ILogger<ContentItem> Logger { get; set; } = default!;
 
 	//
 	internal object? Extend { get; set; }
@@ -29,10 +40,17 @@ public class ContentItem : ComponentContent, IAsyncDisposable
 	}
 
 	//
+	protected virtual void CheckContainer()
+	{
+		LogIf.ContainerIsNull(Logger, Container);
+	}
+
+	//
 	protected override Task OnInitializedAsync()
 	{
-		Container.ThrowIfContainerIsNull(this);
-		return Container.AddItemAsync(this);
+		CheckContainer();
+
+		return Container is null ? Task.CompletedTask : Container.AddItemAsync(this);
 	}
 
 	//
@@ -43,20 +61,16 @@ public class ContentItem : ComponentContent, IAsyncDisposable
 	}
 
 	//
-	protected virtual async Task DisposeAsyncCore()
-	{
-		if (Container is not null)
-			await Container.RemoveItemAsync(this);
-	}
+	protected virtual Task DisposeAsyncCore() =>
+		Container is not null ? Container.RemoveItemAsync(this) : Task.CompletedTask;
 
 #if DEBUG
 	//
 	public override string ToString()
 	{
-		if (Container is Accordion)
-			return $"ACN <{GetType().Name}#{Id}> Expanded:{AcnExtend?.Expanded}";
-
-		return base.ToString();
+		return Container is Accordion 
+			? $"ACN <{GetType().Name}#{Id}> Expanded:{AcnExtend?.Expanded}" 
+			: base.ToString();
 	}
 #endif
 }

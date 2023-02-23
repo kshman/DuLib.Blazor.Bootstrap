@@ -19,14 +19,12 @@ else
 }
 
 @code {
-	[CascadingParameter] public DropDownBase? DropDown { get; set; }
+	[CascadingParameter] public DropMenu? DropDown { get; set; }
 
 	[Parameter] public NavLinkMatch Match { get; set; }
 	[Parameter] public string? Link { get; set; }
 
 	[Parameter] public string? ContainerClass { get; set; }
-
-	protected override string CssName => DropDown is null ? "nav-link" : "dropdown-item";
 
 	//
 	private bool _is_active;
@@ -41,7 +39,9 @@ else
 	//
 	protected override void OnComponentClass(CssCompose css)
 	{
-		css.Register(() => _is_active ? "active" : null);
+		css
+			.Add(DropDown is null ? "nav-link" : "dropdown-item")
+			.Register(() => _is_active ? "active" : null);
 	}
 
 	//
@@ -62,8 +62,7 @@ else
 			StateHasChanged();
 		}
 
-		if (DropDown is not null)
-			InvokeAsync(DropDown.HideAsync);
+		//if (DropDown is not null) InvokeAsync(DropDown.HideAsync);
 	}
 
 	//

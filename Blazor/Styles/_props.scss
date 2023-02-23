@@ -1,31 +1,51 @@
 ﻿.cursor-pointer {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .ff-column {
-	flex-flow: column;
+    flex-flow: column;
 }
 
 .ff-column-reverse {
-	flex-flow: column-reverse;
+    flex-flow: column-reverse;
 }
 
 .ff-row {
-	flex-flow: row;
+    flex-flow: row;
 }
 
 .ff-row-reverse {
-	flex-flow: row-reverse;
+    flex-flow: row-reverse;
 }
 
 .border-none {
-	border-style: none !important;
+    border-style: none !important;
+}
+
+.pos-static {
+    position: static;
+}
+
+.pos-relative {
+    position: relative;
+}
+
+.pos-absolute {
+    position: absolute;
+}
+
+.pos-fixed {
+    position: fixed;
+}
+
+.pos-sticky {
+    position: sticky;
 }
 
 .block-flat {
-	//display: inline-block;
-	color: var(--bs-body-color);
-	background-color: var(--bs-body-bg);
-	border-style: none;
-	text-align: start;
+    //display: inline-block;
+    color: var(--bs-body-color);
+    background-color: var(--bs-body-bg);
+    border-style: none;
+    text-align: start;
 }

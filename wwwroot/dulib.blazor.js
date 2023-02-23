@@ -63,7 +63,7 @@ DUCARS = {
 
 // collapse
 DUCLPS = {
-  init: function(e, orf, tg) {
+  init: function (e, orf, tg) {
     if (!e) return;
     e.orf = orf;
     e.addEventListener('show.bs.collapse', this.es);
@@ -72,7 +72,7 @@ DUCLPS = {
     e.addEventListener('hidden.bs.collapse', this.ehn);
     e.c = new bootstrap.Collapse(e, { toggle: tg });
   },
-  disp: function(e) {
+  disp: function (e) {
     if (!e) return;
     e.removeEventListener('show.bs.collapse', this.es);
     e.removeEventListener('shown.bs.collapse', this.esn);
@@ -81,14 +81,40 @@ DUCLPS = {
     e.orf = null;
     e.c?.dispose();
   },
-  show: function(e) {
+  show: function (e) {
     e.c?.show();
   },
-  hide: function(e) {
+  hide: function (e) {
     e.c?.hide();
   },
   es: (e) => e.target.orf.invokeMethodAsync('ivk_clps_bs'),
   esn: (e) => e.target.orf.invokeMethodAsync('ivk_clps_bsn'),
   eh: (e) => e.target.orf.invokeMethodAsync('ivk_clps_eh'),
   ehn: (e) => e.target.orf.invokeMethodAsync('ivk_clps_ehn')
+}
+
+// dropdown toggle
+DUDROP = {
+  init: function (e, orf) {
+    if (!e) return;
+    e.orf = orf;
+    e.addEventListener('shown.bs.dropdown', this.ds);
+    e.addEventListener('hidden.bs.dropdown', this.dh);
+    e.c = new bootstrap.Dropdown(e);
+  },
+  disp: function (e) {
+    if (!e) return;
+    e.addEventListener('shown.bs.dropdown', this.ds);
+    e.addEventListener('hidden.bs.dropdown', this.dh);
+    e.orf = null;
+    e.c?.dispose();
+  },
+  show: function (e) {
+    e.c?.show();
+  },
+  hide: function (e) {
+    e.c?.hide();
+  },
+  ds: (e) => e.target.orf.invokeMethodAsync('ivk_drop_show'),
+  dh: (e) => e.target.orf.invokeMethodAsync('ivk_drop_hide')
 }

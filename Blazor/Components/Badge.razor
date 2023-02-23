@@ -10,12 +10,10 @@
 	[Parameter] public BadgeLayout Layout { get; set; } = DefaultSettings.Layout;
 
 	//
-	protected override string CssName => "badge";
-
-	//
 	protected override void OnComponentClass(CssCompose css)
 	{
 		css
+			.Add("badge")
 			.Add(Fore.ToCss("text"))
 			.Add(Back.ToCss("bg"))
 			.Add(Layout switch

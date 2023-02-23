@@ -56,17 +56,29 @@ namespace Du.Blazor.Supplement
 			return $"{lead}-{cs}";
 		}
 
-		internal static string ToButtonCss(this ComponentColor color, bool outline) => color switch
+		internal static string? ToButtonCss(this ComponentColor color, bool outline) => color switch
 		{
+			ComponentColor.None => null,
 			ComponentColor.Link => "btn-link",
 			_ => color.ToCss(outline ? "btn-outline" : "btn"),
 		};
 
+		internal static string? ToCss(this ComponentPosition pos) => pos switch
+		{
+			ComponentPosition.Static => "pos-static",
+			ComponentPosition.Relative => "pos-relative",
+			ComponentPosition.Absolute => "pos-absolute",
+			ComponentPosition.Fixed => "pos-fixed",
+			ComponentPosition.Sticky => "pos-sticky",
+			ComponentPosition.None or
+			_ => null,
+		};
+
 		internal static string ToHtml(this ButtonType? button) => button switch
 		{
-			//ButtonType.Button => "button",
 			ButtonType.Submit => "submit",
 			ButtonType.Reset => "reset",
+			ButtonType.Button or
 			_ => "button",
 		};
 

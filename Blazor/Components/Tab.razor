@@ -37,12 +37,11 @@
 	[Parameter] public bool TabOnly { get; set; }
 
 	//
-	protected override string CssName => "nav";
-
-	//
 	protected override void OnComponentClass(CssCompose css)
 	{
-		css.Add(Layout.ToCss());
+		css
+			.Add("nav")
+			.Add(Layout.ToCss());
 	}
 
 	//

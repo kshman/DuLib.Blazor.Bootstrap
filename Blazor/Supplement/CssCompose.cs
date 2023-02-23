@@ -24,10 +24,16 @@ public class CssCompose
 		return this;
 	}
 
-	public CssCompose Add(bool condition, string className)
+	public CssCompose AddIf(bool condition, string className)
 	{
 		if (condition)
 			_sts.Add(className);
+		return this;
+	}
+
+	public CssCompose AddSelect(bool condition, string trueName, string falseName)
+	{
+		_sts.Add(condition ? trueName : falseName);
 		return this;
 	}
 

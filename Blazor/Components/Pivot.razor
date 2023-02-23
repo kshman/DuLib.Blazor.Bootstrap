@@ -32,19 +32,17 @@
 </div>
 
 @code {
-	[Parameter] public ComponentOverflow Overflow { get; set; }
-	[Parameter] public ComponentPosition Position { get; set; }
-	[Parameter] public ComponentSize Size { get; set; }
 	[Parameter] public PivotLayout Layout { get; set; }
+	[Parameter] public PivotPosition Position { get; set; }
+	[Parameter] public ComponentOverflow Overflow { get; set; }
+	[Parameter] public ComponentSize Size { get; set; }
 	[Parameter] public bool PivotOnly { get; set; }
-
-	//
-	protected override string CssName => "hpvt";
 
 	//
 	protected override void OnComponentClass(CssCompose css)
 	{
 		css
+			.Add("hpvt")
 			.Add(Size switch
 			{
 				ComponentSize.Medium or
@@ -67,10 +65,10 @@
 			})
 			.Add(Position switch
 			{
-				ComponentPosition.Top => "ff-column",
-				ComponentPosition.Right => "ff-row-reverse",
-				ComponentPosition.Bottom => "ff-column-reverse",
-				ComponentPosition.Left => "ff-row",
+				PivotPosition.Top => "ff-column",
+				PivotPosition.Right => "ff-row-reverse",
+				PivotPosition.Bottom => "ff-column-reverse",
+				PivotPosition.Left => "ff-row",
 				_ => null
 			});
 	}

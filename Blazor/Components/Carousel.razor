@@ -5,26 +5,24 @@
 	@ChildContent
 </CascadingValue>
 
-<div 
-	@ref="_self" 
-	class="@CssClass" 
-	data-bs-interval="@(Interval == 0 ? "false" : Interval)" 
-	data-bs-touch="@Touch.ToBootStrap()"
-	id="@Id"
-	@attributes="UserAttrs">
+<div @ref="_self"
+	 class="@CssClass"
+	 data-bs-interval="@(Interval == 0 ? "false" : Interval)"
+	 data-bs-touch="@Touch.ToBootStrap()"
+	 id="@Id"
+	 @attributes="UserAttrs">
 	@if (Indicators)
 	{
 		<div class="carousel-indicators">
 			@for (var i = 0; i < Items.Count; i++)
 			{
 				var selected = Items[i] == SelectedItem;
-				<button 
-					type="button" 
-					class="@selected.IfTrue("active")" 
-					data-bs-target="#@Id" 
-					data-bs-slide-to="@i" 
-					aria-label="Slide @i" 
-					aria-current="@selected.IfTrue("true")">
+				<button type="button"
+				class="@selected.IfTrue("active")"
+				data-bs-target="#@Id"
+				data-bs-slide-to="@i"
+				aria-label="Slide @i"
+				aria-current="@selected.IfTrue("true")">
 				</button>
 			}
 		</div>
@@ -33,10 +31,9 @@
 		@foreach (var item in Items)
 		{
 			var selected = item == SelectedItem;
-			<div 
-				class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass)"
-				id="@item.Id" 
-				@attributes="item.UserAttrs">
+			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass)"
+			 id="@item.Id"
+			 @attributes="item.UserAttrs">
 				@item.Text
 				@item.Display
 				@item.Content
@@ -79,30 +76,32 @@
 	[Parameter] public EventCallback<CarouselSlideEventArgs> OnEndSlide { get; set; }
 
 	//
-	protected override string CssName => "carousel slide"; // slide 까지가 포함됨
-
-	//
 	private ElementReference _self;
 	private DotNetObjectReference<Carousel>? _drf;
 
 	//
-	protected override void OnComponentClass(CssCompose css) =>
-		css.Add(Fade, "carousel-fade");
+	protected override void OnComponentClass(CssCompose css)
+	{
+		css
+			.Add("carousel")
+			.Add("slide")
+			.AddIf(Fade, "carousel-fade");
+	}
 
 	//
 	protected override async Task OnAfterFirstRenderAsync()
 	{
 		var options = new Dictionary<string, object>
-		{
-			["ride"] = Play switch
 			{
-				CarouselPlay.Auto => "carousel",
-				CarouselPlay.True => true,
-				CarouselPlay.False or
-					_ => false
+				["ride"] = Play switch
+				{
+					CarouselPlay.Auto => "carousel",
+					CarouselPlay.True => true,
+					CarouselPlay.False or
+						_ => false
 				},
-			["pause"] = Hover ? "hover" : false,
-		};
+				["pause"] = Hover ? "hover" : false,
+			};
 
 		_drf ??= DotNetObjectReference.Create(this);
 		await JS.InvokeVoidAsync("DUCARS.init", _self, _drf, options);

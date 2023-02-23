@@ -42,7 +42,6 @@
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
 
 	//
-	protected override string CssName => "accordion";
 	protected override bool SelectFirst => false; // 처음 아이템이 열리지 않게 함
 
 	//
@@ -51,7 +50,9 @@
 	//
 	protected override void OnComponentClass(CssCompose css)
 	{
-		css.Add(Flush, "accordion-flush");
+		css
+			.Add("accordion")
+			.AddIf(Flush, "accordion-flush");
 	}
 
 	//
@@ -69,7 +70,7 @@
 	//
 	protected override async Task OnItemAddedAsync(ContentItem item)
 	{
-		item.Extend = new AcnExtend();
+		item.AcnExtend = new AcnExtend();
 
 		if (item == SelectedItem && !_now_transition)
 			await InternalExpandAsync(item);
