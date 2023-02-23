@@ -1,9 +1,9 @@
-﻿@inherits ComponentParent
+﻿@inherits ComponentContent
 
 <div role="@Layout.ToCss()" class="@CssClass" id="@Id" @attributes="UserAttrs">
-	<CascadingValue Value="this" IsFixed="true">
-		@ChildContent
-	</CascadingValue>
+	@*<CascadingValue Value="this" IsFixed="true">*@
+	@ChildContent
+	@*</CascadingValue>*@
 </div>
 
 @code {
@@ -13,17 +13,16 @@
 	[Parameter] public ComponentSize Size { get; set; }
 
 	//
-	protected override string CssName =>  Layout switch
-	{
-		GroupLayout.Button => "btn-group",
-		GroupLayout.Vertical => "btn-group-vertical",
-		GroupLayout.Toolbar => "btn-toolbar",
-		_ => "",
-	};
-
-	//
 	protected override void OnComponentClass(CssCompose css)
 	{
-		css.Add(Size.ToCss("btn-group"));
+		css
+			.Add(Layout switch
+			{
+				GroupLayout.Button => "btn-group",
+				GroupLayout.Vertical => "btn-group-vertical",
+				GroupLayout.Toolbar => "btn-toolbar",
+				_ => null,
+			})
+			.Add(Size.ToCss("btn-group"));
 	}
 }

@@ -1,35 +1,69 @@
 ﻿@inherits ButtonBase
 
-@if (Href.IsHave())
+@if (DropMenu is not null)
 {
-	<a class="@CssClass" href="@Href" target="@Target" id="@Id" @attributes="UserAttrs">
-		@Text
-		@ChildContent
-	</a>
+	<li class="@ListClass">
+		@if (Href.IsHave())
+		{
+			<a class="@CssClass" href="@Href" target="@Target" id="@Id" @attributes="UserAttrs">
+				@Text
+				@ChildContent
+			</a>
+		}
+		else
+		{
+			<a role="button" class="@CssClass" id="@Id" @attributes="UserAttrs" @onclick="HandleOnClickAsync">
+				@Text
+				@ChildContent
+			</a>
+		}
+	</li>
 }
 else
 {
-	<button type="@Type.ToHtml()" class="@CssClass" formtarget="@Target" id="@Id" @attributes="UserAttrs"
+	if (Href.IsHave())
+	{
+		<a class="@CssClass" href="@Href" target="@Target" id="@Id" @attributes="UserAttrs">
+			@Text
+			@ChildContent
+		</a>
+	}
+	else
+	{
+		<button type="@Type.ToHtml()" class="@CssClass" formtarget="@Target" id="@Id" @attributes="UserAttrs"
 		@onclick="HandleOnClickAsync">
-		@Text
-		@ChildContent
-	</button>
+			@Text
+			@ChildContent
+		</button>
+	}
 }
 
 @code {
+	[CascadingParameter] public DropMenu? DropMenu { get; set; }
+
 	/// <summary>URL 링크 지정.</summary>
 	[Parameter] public string? Href { get; set; }
 	/// <summary>타겟 지정.</summary>
 	[Parameter] public string? Target { get; set; }
 
-	//
-	protected override string CssName => "btn";
+	[Parameter] public string? ListClass { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose css)
 	{
-		css
-			.Add(Color.ToButtonCss(Outline))
-			.Add(Size.ToCss("btn"));
+		if (DropMenu is null)
+		{
+			css
+				.Add("btn")
+				.Add(Color.ToButtonCss(Outline));
+		}
+		else
+		{
+			css
+				.Add("dropdown-item")
+				.Add(Size.ToCss("btn"));
+		}
+
+		css.Add(Size.ToCss("btn"));
 	}
 }

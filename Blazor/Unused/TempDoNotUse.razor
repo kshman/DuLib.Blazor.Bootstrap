@@ -1,23 +1,22 @@
-﻿@inherits ComponentParent
+﻿@inherits ComponentContent
 
-<div>
-	@if (Display is not null)
-	{
-		@Display
-	}
-	else
-	{
-		@Title
-	}
-	
-	@if (Display is not null)
-	{
-		@Content
-	}
-</div>
+<button @ref="_self"
+        type="button"
+        class="@CssClass"
+        data-bs-toggle="dropdown"
+        data-bs-auto-close="@AutoClose.ToCss()"
+        aria-expanded="false"
+        @attributes="@UserAttrs">
+	@Text
+	@ChildContent
+</button>
+
 
 @code {
-	[Parameter] public string? Title { get; set; }
-	[Parameter] public RenderFragment? Display { get; set; }
-	[Parameter] public RenderFragment? Content { get; set; }
+	[Parameter] public string? Text { get; set; }
+
+	[CascadingParameter] public ComponentContent? Parent { get; set; }
+	[Parameter] public DropAutoClose AutoClose { get; set; }
+
+	private ElementReference _self;
 }

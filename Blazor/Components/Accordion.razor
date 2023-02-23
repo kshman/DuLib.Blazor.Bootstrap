@@ -1,4 +1,4 @@
-﻿@inherits ComponentContainer
+﻿@inherits ContentItemContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -7,23 +7,27 @@
 <div class="@CssClass" id="@Id" @attributes="@UserAttrs">
 	@foreach (var item in Items)
 	{
-		var acn = (ContentItem)item;
-		var extend = (AcnExtend)acn.Extend!;
-		var expanded = AlwaysOpen ? extend.Expanded : acn == Current;
-		<div class="@CssCompose.Join("accordion-item", acn.CssClass)" @attributes="@acn.UserAttrs">
+		var expanded = AlwaysOpen ? item.AcnExtend!.Expanded : item == SelectedItem;
+		<div class="@CssCompose.Join("accordion-item", item.CssClass)" @attributes="@item.UserAttrs">
 			<h2 class="accordion-header">
-				<button type="button" class="@CssCompose.Join("accordion-button", expanded.IfFalse("collapsed"))"
-					data-bs-toggle="collapse" data-bs-target="#@acn.Id" aria-controls="@acn.Id" aria-expanded="@expanded.ToBootStrap()">
-					@acn.Text
-					@acn.Display
+				<button type="button"
+					class="@CssCompose.Join("accordion-button", expanded.IfFalse("collapsed"))"
+					data-bs-toggle="collapse"
+					data-bs-target="#@item.Id"
+					aria-controls="@item.Id"
+					aria-expanded="@expanded.ToBootStrap()">
+					@item.Text
+					@item.Display
 				</button>
 			</h2>
-			<Collapse @ref="((AcnExtend)acn.Extend!).Collapse"
+			<Collapse @ref="item.AcnExtend!.Collapse"
 				  Class="@CssCompose.Join("accordion-collapse", expanded.IfTrue("show"))"
-				  Parent="@(AlwaysOpen ? null : $"#{Id}")" id="@acn.Id"
+				  Parent="@(AlwaysOpen ? null : $"#{Id}")"
+				  Id="@item.Id"
+				  OnExpanding="HandleOnExpandingAsync"
 				  OnExpanded="HandleOnExpandedAsync">
 				<div class="accordion-body">
-					@(acn.Content ?? acn.ChildContent)
+					@(item.Content ?? item.ChildContent)
 				</div>
 			</Collapse>
 		</div>
@@ -38,8 +42,7 @@
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
 
 	//
-	protected override string CssName => "accordion";
-	protected override bool SelectFirst => false;
+	protected override bool SelectFirst => false; // 처음 아이템이 열리지 않게 함
 
 	//
 	private bool _now_transition;
@@ -47,14 +50,17 @@
 	//
 	protected override void OnComponentClass(CssCompose css)
 	{
-		css.Add(Flush, "accordion-flush");
+		css
+			.Add("accordion")
+			.AddIf(Flush, "accordion-flush");
 	}
 
 	//
-	protected override void OnAfterFirstRender()
+	protected override Task OnAfterFirstRenderAsync()
 	{
-		if (Current is not null && _now_transition is false)
-			InternalExpand(Current as ContentItem);
+		if (SelectedItem is not null && _now_transition is false)
+			return InternalExpandAsync(SelectedItem);
+		return Task.CompletedTask;
 	}
 
 	//
@@ -62,51 +68,44 @@
 		!_now_transition;
 
 	//
-	protected override void OnItemAdded(ComponentItem item)
+	protected override async Task OnItemAddedAsync(ContentItem item)
 	{
-		if (item is not ContentItem acn)
-		{
-			ThrowSupp.MustBeComponent(nameof(item), nameof(ContentItem));
-			return; // 널체크 회피
-		}
+		item.AcnExtend = new AcnExtend();
 
-		acn.Extend = new AcnExtend();
-
-		if (acn != Current)
-			return;
-
-		if (!_now_transition)
-			InternalExpand(acn);
+		if (item == SelectedItem && !_now_transition)
+			await InternalExpandAsync(item);
 	}
 
 	//
-	public void Expand(string id) => InternalExpand(GetItem(id) as ContentItem);
+	public Task ExpandAsync(string id) =>
+		InternalExpandAsync(GetItem(id));
 
 	//
-	public void Collapse(string id) => InternalCollapse(GetItem(id) as ContentItem);
+	public Task CollapseAsync(string id) =>
+		InternalCollapseAsync(GetItem(id));
 
 	//
-	private void InternalExpand(ContentItem? acn)
+	private Task InternalExpandAsync(ContentItem? item)
 	{
-		if (acn?.Extend is not AcnExtend { Collapse: { } } extend)
-			return;
+		if (item?.AcnExtend?.Collapse is null)
+			return Task.CompletedTask;
 
 		_now_transition = true;
-		InvokeAsync(async () => await extend.Collapse.ShowAsync());
+		return item.AcnExtend.Collapse.ShowAsync();
 	}
 
 	//
-	private void InternalCollapse(ContentItem? acn)
+	private Task InternalCollapseAsync(ContentItem? item)
 	{
-		if (acn?.Extend is not AcnExtend { Collapse: { } } extend)
-			return;
+		if (item?.AcnExtend?.Collapse is null)
+			return Task.CompletedTask;
 
 		_now_transition = true;
-		InvokeAsync(async () => await extend.Collapse.HideAsync());
+		return item.AcnExtend.Collapse.HideAsync();
 	}
 
 	//
-	private async Task TaskHandleOnExpadingAsync(ExpandedEventArgs e)
+	private async Task HandleOnExpandingAsync(ExpandedEventArgs e)
 	{
 		_now_transition = true;
 		await InvokeOnExpanding(e);
@@ -117,40 +116,27 @@
 	{
 		_now_transition = false;
 
-		if (GetItem(e.Id) is not ContentItem acn)
+		var item = GetItem(e.Id);
+		if (item?.AcnExtend is null)
 		{
 			// 아니 이럴수가 있나. 걍 무시
 			return;
 		}
 
-		var extend = (AcnExtend?)acn.Extend;
-		if (extend is null)
+		if (AlwaysOpen is false && item != SelectedItem)
 		{
-			// 아니 이럴 수도 없어! 어쩔
-			return;
-		}
-
-		if (AlwaysOpen is false && Current is ContentItem cur && cur != acn)
-		{
-			extend.Expanded = false;
+			item.AcnExtend.Expanded = false;
 			//언제나 열기가 아닐 대 닫는것도 받으려면 이 주석 지우면됨
 			//await InvokeOnExpanded(new ExpandedEventArgs(cur.Id, false));
 		}
 
-		extend.Expanded = e.Expanded;
+		item.AcnExtend.Expanded = e.Expanded;
 		await InvokeOnExpanded(e);
 
-		SelectItem(acn);
+		await SelectItemAsync(item);
 	}
 
 	//
 	private Task InvokeOnExpanding(ExpandedEventArgs e) => OnExpanding.InvokeAsync(e);
 	private Task InvokeOnExpanded(ExpandedEventArgs e) => OnExpanded.InvokeAsync(e);
-
-	//
-	internal class AcnExtend
-	{
-		internal bool Expanded { get; set; }
-		internal Collapse? Collapse { get; set; }
-	}
 }

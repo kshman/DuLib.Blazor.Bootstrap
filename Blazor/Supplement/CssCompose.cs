@@ -20,14 +20,20 @@ public class CssCompose
 	public CssCompose Add(string? className)
 	{
 		if (className.IsHave())
-			_sts.Add(className!);
+			_sts.Add(className);
 		return this;
 	}
 
-	public CssCompose Add(bool condition, string className)
+	public CssCompose AddIf(bool condition, string className)
 	{
 		if (condition)
 			_sts.Add(className);
+		return this;
+	}
+
+	public CssCompose AddSelect(bool condition, string trueName, string falseName)
+	{
+		_sts.Add(condition ? trueName : falseName);
 		return this;
 	}
 
@@ -40,22 +46,22 @@ public class CssCompose
 	public bool Test(string className) 
 		=> _sts.Contains(className);
 
-	private string InternalJoin(char separator)
+	private string? InternalJoin(char separator)
 	{
 		var s = string.Join(separator, _sts);
 		var f = string.Join(separator, _fns.Select(x => x()).Where(g => g.IsHave()));
-		return f.Length == 0 ? s : $"{s}{separator}{f}";
+        return s.Length == 0 ? f.Length == 0 ? null : f : f.Length == 0 ? s : $"{s}{separator}{f}";
 	}
 
-	public string Class =>
+	public string? Class =>
 		InternalJoin(class_separator);
 
-	public string Style =>
+	public string? Style =>
 		InternalJoin(style_separator);
 
-	public static string? Join(char sparator, params string?[] args)
+	public static string? Join(char separator, params string?[] args)
 	{
-		var j = string.Join(sparator, args.Where(x => x.IsHave()));
+		var j = string.Join(separator, args.Where(x => x.IsHave()));
 		return j.Length == 0 ? null : j;
 	}
 

@@ -20,6 +20,7 @@ public enum ComponentColor
 	Light,
 	Dark,
 	Link,
+	None,
 }
 
 /// <summary>오버플로우 일때 처리</summary>
@@ -30,20 +31,30 @@ public enum ComponentOverflow
 	Scroll,
 }
 
-public enum ComponentPosition
-{
-	Top,
-	Right,
-	Bottom, 
-	Left, 
-	//Center,	
-}
-
 /// <summary>방향</summary>
 public enum ComponentDirection
 {
 	Vertical,
 	Horizontal,
+}
+
+/// <summary>position 속성</summary>
+public enum ComponentPosition
+{
+	None,
+	Static,
+	Relative,
+	Absolute,
+	Fixed,
+	Sticky,
+}
+
+/// <summary>배지 레이아웃</summary>
+public enum BadgeLayout
+{
+	None,
+	Pill,
+	Circle,
 }
 
 /// <summary>버튼 기능</summary>
@@ -77,20 +88,31 @@ public enum PivotLayout
 	Box,
 }
 
+/// <summary>피벗 위치</summary>
+public enum PivotPosition
+{
+	Top,
+	Right,
+	Bottom, 
+	Left, 
+	//Center,	
+}
+
 /// <summary>NAV 레이아웃 (탭)</summary>
 public enum NavLayout
 {
-	Standard,
+	None,
 	Tabs,
 	Pills,
 }
 
-/// <summary>드랍 레이아웃</summary>
-public enum DropLayout
+/// <summary>토글 레이아웃</summary>
+public enum ToggleLayout
 {
-	Standard,
 	Button,
-	Flat,
+	Div,
+	Span,
+	A,
 }
 
 /// <summary>드랍 방향</summary>
@@ -115,14 +137,6 @@ public enum DropAutoClose
 {
 	True,
 	False,
-	/* 지원안됨*/ Inside,
-	/* 지원안됨*/ Outside,
-}
-
-/// <summary>배지 레이아웃</summary>
-public enum BadgeLayout
-{
-	Standard,
-	Pill,
-	Circle,
+	Inside,
+	Outside,
 }

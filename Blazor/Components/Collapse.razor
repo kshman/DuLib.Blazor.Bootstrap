@@ -1,4 +1,4 @@
-﻿@inherits ComponentParent
+﻿@inherits ComponentContent
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
@@ -19,9 +19,6 @@
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanding { get; set; }
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
-
-	//
-	protected override string CssName => "collapse";
 
 	//
 	private ElementReference _self;
@@ -46,8 +43,9 @@
 	protected override void OnComponentClass(CssCompose css)
 	{
 		css
-			.Add(Direction == ComponentDirection.Horizontal, "collapse-horizontal")
-			.Add(_expanded, "show");
+			.Add("collapse")
+			.AddIf(Direction == ComponentDirection.Horizontal, "collapse-horizontal")
+			.AddIf(_expanded, "show");
 	}
 
 	//

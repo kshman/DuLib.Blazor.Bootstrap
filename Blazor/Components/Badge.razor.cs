@@ -14,7 +14,7 @@ public partial class Badge
     {
         Fore = ComponentColor.Light,
         Back = ComponentColor.Primary,
-		Layout = BadgeLayout.Standard,
+		Layout = BadgeLayout.None,
         Css = null,
     };
 }

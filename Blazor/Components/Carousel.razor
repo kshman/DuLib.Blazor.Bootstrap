@@ -1,11 +1,11 @@
-﻿@inherits AbstractCarousel
+﻿@inherits ContentItemContainer
 @inject IJSRuntime JS
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
 </CascadingValue>
 
-<div @ref="Reference"
+<div @ref="_self"
 	 class="@CssClass"
 	 data-bs-interval="@(Interval == 0 ? "false" : Interval)"
 	 data-bs-touch="@Touch.ToBootStrap()"
@@ -14,26 +14,30 @@
 	@if (Indicators)
 	{
 		<div class="carousel-indicators">
-			@for (var i = 0; i < _items.Count; i++)
+			@for (var i = 0; i < Items.Count; i++)
 			{
-				if (_items[i] == _current)
-				{
-					<button type="button" data-bs-target="#@Id" data-bs-slide-to="@i" aria-label="Slide @i" class="active" aria-current="true">
-					</button>
-				}
-				else
-				{
-					<button type="button" data-bs-target="#@Id" data-bs-slide-to="@i" aria-label="Slide @i">
-					</button>
-				}
+				var selected = Items[i] == SelectedItem;
+				<button type="button"
+				class="@selected.IfTrue("active")"
+				data-bs-target="#@Id"
+				data-bs-slide-to="@i"
+				aria-label="Slide @i"
+				aria-current="@selected.IfTrue("true")">
+				</button>
 			}
 		</div>
 	}
 	<div class="carousel-inner">
-		@foreach (var crs in _items)
+		@foreach (var item in Items)
 		{
-			<div class="@CssCompose.Join(crs.CssClass, (crs == _current).IfTrue("active"))" id="@crs.Id" @attributes="crs.UserAttrs">
-				@crs.ChildContent
+			var selected = item == SelectedItem;
+			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass)"
+			 id="@item.Id"
+			 @attributes="item.UserAttrs">
+				@item.Text
+				@item.Display
+				@item.Content
+				@item.ChildContent
 			</div>
 		}
 	</div>
@@ -72,18 +76,16 @@
 	[Parameter] public EventCallback<CarouselSlideEventArgs> OnEndSlide { get; set; }
 
 	//
-	protected override string CssName => "carousel slide"; // slide 까지가 포함됨
-
-	//
-	protected ElementReference Reference { get; set; }
-
-	//
+	private ElementReference _self;
 	private DotNetObjectReference<Carousel>? _drf;
 
 	//
 	protected override void OnComponentClass(CssCompose css)
 	{
-		css.Add(Fade, "carousel-fade");
+		css
+			.Add("carousel")
+			.Add("slide")
+			.AddIf(Fade, "carousel-fade");
 	}
 
 	//
@@ -96,13 +98,13 @@
 					CarouselPlay.Auto => "carousel",
 					CarouselPlay.True => true,
 					CarouselPlay.False or
-					_ => false
+						_ => false
 				},
 				["pause"] = Hover ? "hover" : false,
 			};
 
 		_drf ??= DotNetObjectReference.Create(this);
-		await JS.InvokeVoidAsync("DUCARS.init", Reference, _drf, options);
+		await JS.InvokeVoidAsync("DUCARS.init", _self, _drf, options);
 	}
 
 	//
@@ -110,7 +112,7 @@
 	{
 		try
 		{
-			await JS.InvokeVoidAsync("DUCARS.disp", Reference);
+			await JS.InvokeVoidAsync("DUCARS.disp", _self);
 		}
 		catch (JSDisconnectedException)
 		{
@@ -122,23 +124,23 @@
 
 	//
 	public async Task MoveToAsync(int index) =>
-		await JS.InvokeVoidAsync("DUCARS.to", Reference, index);
+		await JS.InvokeVoidAsync("DUCARS.to", _self, index);
 
 	//
 	public async Task MovePreviousAsync() =>
-		await JS.InvokeVoidAsync("DUCARS.prev", Reference);
+		await JS.InvokeVoidAsync("DUCARS.prev", _self);
 
 	//
 	public async Task MoveNextAsync() =>
-		await JS.InvokeVoidAsync("DUCARS.next", Reference);
+		await JS.InvokeVoidAsync("DUCARS.next", _self);
 
 	//
 	public async Task CycleAsync() =>
-		await JS.InvokeVoidAsync("DUCARS.cycle", Reference);
+		await JS.InvokeVoidAsync("DUCARS.cycle", _self);
 
 	//
 	public async Task PauseAsync() =>
-		await JS.InvokeVoidAsync("DUCARS.pause", Reference);
+		await JS.InvokeVoidAsync("DUCARS.pause", _self);
 
 	// 반드시 public
 	[JSInvokable("ivk_cars_bs")]

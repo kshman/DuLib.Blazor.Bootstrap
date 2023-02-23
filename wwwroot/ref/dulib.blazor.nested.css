@@ -21,6 +21,21 @@
 .border-none {
   border-style: none !important; }
 
+.pos-static {
+  position: static; }
+
+.pos-relative {
+  position: relative; }
+
+.pos-absolute {
+  position: absolute; }
+
+.pos-fixed {
+  position: fixed; }
+
+.pos-sticky {
+  position: sticky; }
+
 .block-flat {
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);

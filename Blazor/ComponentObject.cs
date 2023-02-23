@@ -9,13 +9,13 @@ public abstract class ComponentObject : ComponentBase
 	[Parameter] public bool Enabled { get; set; } = true;
 	/// <summary>클래스 지정</summary>
 	[Parameter] public string? Class { get; set; }
+	/// <summary>컴포넌트 아이디</summary>
+	[Parameter] public string Id { get; set; } = $"D_Z_{NextAtomicIndex:X}";
 	/// <summary>사용자가 설정한 속성 지정</summary>
 	[Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? UserAttrs { get; set; }
 
-	/// <summary>CSS 클래스 이름</summary>
-	protected virtual string CssName => string.Empty;
 	/// <summary>만들어진 최종 CSS 클래스</summary>
-	public string CssClass => _css_compose.Class;
+	public string? CssClass => _css_compose.Class;
 
 	/// <summary>CSS 작성 도움꾼</summary>
 	private readonly CssCompose _css_compose = new();
@@ -27,7 +27,6 @@ public abstract class ComponentObject : ComponentBase
 	/// </summary>
 	protected override void OnInitialized()
 	{
-		_css_compose.Add(CssName);
 		OnComponentClass(_css_compose);
 		_css_compose.Add(Class).Register(() => Enabled.IfFalse("disabled"));
 
@@ -69,27 +68,29 @@ public abstract class ComponentObject : ComponentBase
 	}
 
 	//
-	public override string ToString() => CssName;
+#if DEBUG
+	internal static uint _atomic_index = uint.MaxValue - 2;
+#else
+	internal static uint _atomic_index =1;
+#endif
+
+	//
+	internal static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
+
+	//
+	public override string ToString() => $"<{GetType().Name}#{Id}>";
 }
 
-/// <summary>
-/// 자식을 가지는 컴포넌트 인터페이스
-/// </summary>
-public interface IComponentId
-{
-	string Id { get; set; }
-}
 
 /// <summary>
-/// 자식을 가지는 컴포넌트
+/// 자식 콘텐트를 가지는 컴포넌트
 /// </summary>
-public abstract class ComponentParent : ComponentObject, IComponentId
+public abstract class ComponentContent : ComponentObject
 {
 	/// <summary>자식 콘텐트</summary>
 	[Parameter] public RenderFragment? ChildContent { get; set; }
-	/// <summary>컴포넌트 아이디</summary>
-	[Parameter] public string Id { get; set; } = $"D_Z_{TypeSupp.Increment}";
 }
+
 
 // 검토
 // 팝업/다이얼로그

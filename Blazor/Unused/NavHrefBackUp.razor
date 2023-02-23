@@ -55,7 +55,7 @@ else
 	private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
 	{
 		var active = ShouldMatch(e.Location);
-		
+
 		if (active != _is_active)
 		{
 			_is_active = active;
