@@ -109,8 +109,10 @@ public enum NavLayout
 /// <summary>토글 레이아웃</summary>
 public enum ToggleLayout
 {
-	None,
 	Button,
+	Div,
+	Span,
+	A,
 }
 
 /// <summary>드랍 방향</summary>

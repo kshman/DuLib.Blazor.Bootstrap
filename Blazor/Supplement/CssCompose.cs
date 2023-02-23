@@ -46,17 +46,17 @@ public class CssCompose
 	public bool Test(string className) 
 		=> _sts.Contains(className);
 
-	private string InternalJoin(char separator)
+	private string? InternalJoin(char separator)
 	{
 		var s = string.Join(separator, _sts);
 		var f = string.Join(separator, _fns.Select(x => x()).Where(g => g.IsHave()));
-		return f.Length == 0 ? s : $"{s}{separator}{f}";
+        return s.Length == 0 ? f.Length == 0 ? null : f : f.Length == 0 ? s : $"{s}{separator}{f}";
 	}
 
-	public string Class =>
+	public string? Class =>
 		InternalJoin(class_separator);
 
-	public string Style =>
+	public string? Style =>
 		InternalJoin(style_separator);
 
 	public static string? Join(char separator, params string?[] args)

@@ -15,7 +15,7 @@ public abstract class ComponentObject : ComponentBase
 	[Parameter(CaptureUnmatchedValues = true)] public Dictionary<string, object>? UserAttrs { get; set; }
 
 	/// <summary>만들어진 최종 CSS 클래스</summary>
-	public string CssClass => _css_compose.Class;
+	public string? CssClass => _css_compose.Class;
 
 	/// <summary>CSS 작성 도움꾼</summary>
 	private readonly CssCompose _css_compose = new();
