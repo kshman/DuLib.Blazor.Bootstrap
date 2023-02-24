@@ -14,7 +14,9 @@ internal static class LogIf
 		if (container is not null)
 			return;
 
-		logger.LogError("{item}: No container found. This component must be contained within <{container}> component.", typeof(TItem), typeof(TContainer));
+		logger.LogError(ComponentObject.UseLocaleMesg
+			? "{item}: 컨테이너가 없어요. 이 컴포넌트는 반드시 <{container}> 컨테이너 아래 있어야 해요."
+			: "{item}: No container found. This component must be contained within <{container}> component.", typeof(TItem), typeof(TContainer));
 	}
 
 	//
@@ -23,8 +25,11 @@ internal static class LogIf
 		if (containers.Any(c => c is not null))
 			return;
 
-		var names = from c in containers where c is not null select c.GetType().Name;
-		logger.LogError("{item}: No container found. This component must be contained within <{containers}> components.", typeof(TItem), string.Join(" or ", names));
+		var names = (from c in containers where c is not null select c.GetType().Name).ToList();
+		var join = string.Join(ComponentObject.UseLocaleMesg ? "또는 " : " or ", names);
+		logger.LogError(ComponentObject.UseLocaleMesg
+			? "{item}: 컨테이너가 없어요. 이 컴포넌트는 반드시 <{containers}> 컨테이너 아래 있어야 해요."
+			: "{item}: No container found. This component must be contained within <{containers}> components.", typeof(TItem), join);
 	}
 
 	//

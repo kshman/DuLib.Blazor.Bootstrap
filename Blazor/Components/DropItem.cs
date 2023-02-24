@@ -3,20 +3,20 @@
 namespace Du.Blazor.Components;
 
 /// <summary>DIV 아이템</summary>
-public class DivItem : TagItem
+public class DropDiv : DropItem
 {
 }
 
 
 /// <summary>SPAN 아이템</summary>
-public class SpanItem : TagItem
+public class DropSpan : DropItem
 {
 	protected override string Tag => "span";
 }
 
 
 /// <summary>태그 아이템. 기본은 그냥 DIV 감싸기</summary>
-public class TagItem : ContentItem
+public class DropItem : ContentItem
 {
 	[CascadingParameter] public DropMenu? DropMenu { get; set; }
 
@@ -99,7 +99,7 @@ public class TagItem : ContentItem
 	public override string ToString()
 	{
 		return DropMenu is not null
-			? $"DROPCONTENT <{{GetType().Name}}#{{Id}}>"
+			? $"DROPITEM <{GetType().Name}#{{Id}}>"
 			: base.ToString();
 	}
 }

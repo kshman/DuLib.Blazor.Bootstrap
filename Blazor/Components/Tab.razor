@@ -33,8 +33,8 @@
 }
 
 @code {
-	[Parameter] public NavLayout Layout { get; set; }
-	[Parameter] public bool TabOnly { get; set; }
+	[Parameter] public NavLayout Layout { get; set; } = NavLayout.None;
+	[Parameter] public bool TabOnly { get; set; } //= false;
 
 	//
 	protected override void OnComponentClass(CssCompose css)

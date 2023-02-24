@@ -1,0 +1,14 @@
+﻿@inherits ComponentContent
+
+<a class="@CssClass" href="@Link">
+	@ChildContent
+</a>
+
+@code
+{
+	[Parameter] public string? Link { get; set; }
+
+	//
+	protected override void OnComponentClass(CssCompose css) =>
+		css.Add("navbar-brand");
+}

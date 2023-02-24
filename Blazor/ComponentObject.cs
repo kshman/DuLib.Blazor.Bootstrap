@@ -27,10 +27,10 @@ public abstract class ComponentObject : ComponentBase
 	/// </summary>
 	protected override void OnInitialized()
 	{
+		OnComponentInitialized();
+
 		OnComponentClass(_css_compose);
 		_css_compose.Add(Class).Register(() => Enabled.IfFalse("disabled"));
-
-		OnComponentInitialized();
 	}
 
 	/// <summary>
@@ -68,14 +68,11 @@ public abstract class ComponentObject : ComponentBase
 	}
 
 	//
-#if DEBUG
-	internal static uint _atomic_index = uint.MaxValue - 2;
-#else
-	internal static uint _atomic_index =1;
-#endif
+	internal static uint _atomic_index = 1;
+	internal static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
 
 	//
-	internal static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
+	public static bool UseLocaleMesg => true;
 
 	//
 	public override string ToString() => $"<{GetType().Name}#{Id}>";

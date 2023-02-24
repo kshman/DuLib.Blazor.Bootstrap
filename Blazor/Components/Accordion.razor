@@ -22,7 +22,7 @@
 			</h2>
 			<Collapse @ref="item.AcnExtend!.Collapse"
 				  Class="@CssCompose.Join("accordion-collapse", expanded.IfTrue("show"))"
-				  Parent="@(AlwaysOpen ? null : $"#{Id}")"
+				  ParentId="@(AlwaysOpen ? null : $"#{Id}")"
 				  Id="@item.Id"
 				  OnExpanding="HandleOnExpandingAsync"
 				  OnExpanded="HandleOnExpandedAsync">

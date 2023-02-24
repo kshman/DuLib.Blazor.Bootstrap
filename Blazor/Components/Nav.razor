@@ -1,0 +1,28 @@
+﻿@inherits ComponentContent
+
+<nav class="@CssClass" id="@Id" @attributes="UserAttrs">
+	<CascadingValue Value="this" IsFixed="true">
+		@ChildContent
+	</CascadingValue>
+</nav>
+
+@code {
+	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
+
+	[Parameter] public TagDirection Direction { get; set; } = TagDirection.Horizontal;
+	[Parameter] public NavLayout Layout { get; set; } = NavLayout.None;
+
+	//
+	protected override void OnComponentClass(CssCompose css)
+	{
+		css
+			.AddSelect(NavBar is null, "nav", "navbar-nav")
+			.Add(Direction switch
+			{
+				TagDirection.Vertical => "flex-column",
+				TagDirection.Horizontal or
+					_ => null,
+			}).
+			Add(Layout.ToCss());
+	}
+}

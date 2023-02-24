@@ -9,7 +9,7 @@
     <RootNamespace>Du</RootNamespace>
 
     <RepositoryUrl>https://github.com/kshman/DuLib.Blazor</RepositoryUrl>
-    <Version>0.1.1</Version>
+    <Version>0.1.2</Version>
     <Title>DuLib.Blazor</Title>
     <PackageId>DuLib.Blazor</PackageId>
     <Product>DuLib.Blazor</Product>
@@ -76,6 +76,14 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Blazor\Components\Card.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Blazor\Components\Card.razor" />
   </ItemGroup>
 
 </Project>

@@ -7,10 +7,10 @@
 </TagElement>
 
 @code {
-	[CascadingParameter] public DropDown? DropDown { get; set; }
+	[CascadingParameter(Name = "DropDown")] public DropDown? DropDown { get; set; }
 
 	[Parameter] public DropAlignment Alignment { get; set; }
-	[Parameter] public ComponentPosition Position { get; set; } = ComponentPosition.Static;
+	[Parameter] public TagPosition Position { get; set; } = TagPosition.Static;
 
 	/// <summary>태그를 지정할 수 있습니다</summary>
 	/// <remarks>기본값은 ul</remarks>

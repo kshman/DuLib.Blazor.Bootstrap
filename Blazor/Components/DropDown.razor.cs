@@ -38,8 +38,8 @@ public partial class DropDown
 /// 내부에서 쓸수 있는 컴포넌트:
 /// <list type="table">
 /// <listheader><term>컴포넌트</term><description>설명</description></listheader>
-/// <item><term><see cref="SpanItem"/></term><description>SPAN 태그 제공</description></item>
-/// <item><term><see cref="DivItem"/></term><description>DIV 태그 제공</description></item>
+/// <item><term><see cref="DropSpan"/></term><description>SPAN 태그 제공</description></item>
+/// <item><term><see cref="DropDiv"/></term><description>DIV 태그 제공</description></item>
 /// <item><term><see cref="Button"/></term><description>버튼 표시</description></item>
 /// <item><term><see cref="Divider"/></term><description>구분 가로줄 표시</description></item>
 /// </list>

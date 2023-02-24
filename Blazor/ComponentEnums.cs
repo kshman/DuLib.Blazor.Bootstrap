@@ -1,7 +1,7 @@
 ﻿namespace Du.Blazor;
 
 /// <summary>컴포넌트 크기</summary>
-public enum ComponentSize
+public enum TagSize
 {
 	Medium,
 	Small,
@@ -9,8 +9,9 @@ public enum ComponentSize
 }
 
 /// <summary>컴포넌트 색깔</summary>
-public enum ComponentColor
+public enum TagColor
 {
+	None,
 	Primary,
 	Secondary,
 	Success,
@@ -20,11 +21,10 @@ public enum ComponentColor
 	Light,
 	Dark,
 	Link,
-	None,
 }
 
 /// <summary>오버플로우 일때 처리</summary>
-public enum ComponentOverflow
+public enum TagOverflow
 {
 	None,
 	Menu,
@@ -32,14 +32,14 @@ public enum ComponentOverflow
 }
 
 /// <summary>방향</summary>
-public enum ComponentDirection
+public enum TagDirection
 {
 	Vertical,
 	Horizontal,
 }
 
 /// <summary>position 속성</summary>
-public enum ComponentPosition
+public enum TagPosition
 {
 	None,
 	Static,
@@ -66,7 +66,7 @@ public enum ButtonType
 }
 
 /// <summary>버튼 그룹</summary>
-public enum GroupLayout
+public enum ButtonLayout
 {
 	Button,
 	Vertical,
@@ -96,14 +96,6 @@ public enum PivotPosition
 	Bottom, 
 	Left, 
 	//Center,	
-}
-
-/// <summary>NAV 레이아웃 (탭)</summary>
-public enum NavLayout
-{
-	None,
-	Tabs,
-	Pills,
 }
 
 /// <summary>토글 레이아웃</summary>
@@ -139,4 +131,44 @@ public enum DropAutoClose
 	False,
 	Inside,
 	Outside,
+}
+
+/// <summary>NAV 레이아웃 (탭)</summary>
+public enum NavLayout
+{
+	None,
+	Tabs,
+	Pills,
+}
+
+/// <summary>NAVBAR 확장</summary>
+public enum NavBarExpand
+{
+	None,
+	Small,
+	Medium,
+	Large,
+	ExtraLarge,
+	ExtraExtraLarge,
+	Collapsed,
+}
+
+/// <summary>NAV 컨테이너 레이아웃</summary>
+public enum NavContainerLayout
+{
+	None,
+	Fluid,
+	Small,
+	Medium,
+	Large,
+	ExtraLarge,
+	ExtraExtraLarge,
+}
+
+/// <summary>카드 놓기 위치</summary>
+public enum CardImageLocation
+{
+	Top,
+	Bottom,
+	Overlay,
 }

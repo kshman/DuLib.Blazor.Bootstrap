@@ -1,0 +1,68 @@
+﻿@inherits ComponentContent
+
+<div class="@CssClass" @attributes="@UserAttrs">
+	@if (Header is not null)
+	{
+		<div class="@HeaderCssClass">
+			@Header
+		</div>
+	}
+	@if (Image.IsHave(true) && IsTopImage)
+	{
+		<img src="@Image" alt="@Alt" width="@Width" height="@Height" class="@(Location== CardImageLocation.Top ? "card-img-top" : "card-img")" />
+	}
+	@if (Content is not null)
+	{
+		<div class="@ContentCssClass">
+			@Content
+		</div>
+	}
+	@ChildContent
+	@if (Image.IsHave(true) && IsBottomImage)
+	{
+		<img src="@Image" alt="@Alt" width="@Width" height="@Height" class="card-img-bottom" />
+	}
+	@if (Footer is not null)
+	{
+		<div class="@FooterCssClass">
+			@Footer
+		</div>
+	}
+</div>
+
+@code {
+	[Parameter] public RenderFragment? Header { get; set; }
+	[Parameter] public RenderFragment? Content { get; set; }
+	[Parameter] public RenderFragment? Footer { get; set; }
+
+	[Parameter] public string? HeaderClass { get; set; }
+	[Parameter] public string? ContentClass { get; set; }
+	[Parameter] public string? FooterClass { get; set; }
+
+	[Parameter] public string? Image { get; set; }
+	[Parameter] public string? Alt { get; set; }
+	[Parameter] public int? Width { get; set; }
+	[Parameter] public int? Height { get; set; }
+	[Parameter] public CardImageLocation Location { get; set; }
+
+	//
+	public string? HeaderCssClass => CssCompose.Join(
+		"card-header",
+		HeaderClass ?? DefaultSettings.HeaderClass);
+	public string? ContentCssClass => CssCompose.Join(
+		Location is CardImageLocation.Overlay ? "card-img-overlay" : "card-body",
+		ContentClass ?? DefaultSettings.ContentClass);
+	public string? FooterCssClass => CssCompose.Join(
+		"card-footer",
+		FooterClass ?? DefaultSettings.FooterClass);
+	public bool IsTopImage => Location is CardImageLocation.Top or CardImageLocation.Overlay;
+	public bool IsBottomImage => Location is CardImageLocation.Bottom;
+
+	//
+	protected override void OnComponentClass(CssCompose css)
+	{
+		css
+			.Add("card")
+			.AddIf(Class is null, DefaultSettings.Class);
+	}
+}

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Microsoft.Extensions.Logging;
 
 namespace Du.Blazor.Supplement;
@@ -11,22 +12,38 @@ internal static class ThrowIf
 	/// <param name="container">컨테이너</param>
 	/// <param name="item">컨테이너를 갖고 있는 컴포넌트</param>
 	/// <exception cref="InvalidOperationException">컨테이너가 널이면 예외</exception>
-	internal static void ContainerIsNull<TContainer, TItem>([NotNull] TContainer? container, TItem item)
+	internal static void ContainerIsNull<TContainer, TItem>(TItem item, [NotNull] TContainer? container)
 	{
 		if (container is not null)
 			return;
 
-		throw new InvalidOperationException(
-			$"{typeof(TItem)}: No container found. This component must be contained within <{typeof(TContainer)}> container component.");
+		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+			? $"{typeof(TItem)}: 컨테이너가 없어요. 이 컴포넌트는 반드시 <{typeof(TContainer)}> 컨테이너 아래 있어야 해요."
+			: $"{typeof(TItem)}: No container found. This component must be contained within <{typeof(TContainer)}> container component.");
 	}
 
-	internal static void ContainerIsNull<TContainer1, TContainer2, TItem>(TContainer1? container1, TContainer2? container2, TItem item)
+	//
+	internal static void ContainerIsNull<TItem>(TItem item, params object?[] containers)
 	{
-		if (container1 is not null || container2 is not null)
+		if (containers.Any(c => c is not null))
 			return;
 
-		throw new InvalidOperationException(
-			$"{typeof(TItem)}: No container found. This component must be contained within <{typeof(TContainer1)}> or <{typeof(TContainer2)}> component.");
+		var names = from c in containers where c is not null select c.GetType().Name;
+		var join = string.Join(ComponentObject.UseLocaleMesg ? "또는 " :" or ", names);
+		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+			? $"{typeof(TItem)}: 컨테이너가 없어요. 이 컴포넌트는 반드시 <{join}> 컨테이너 아래 있어야 해요."
+			: $"{typeof(TItem)}: No container found. This component must be contained within <{join}> components");
+	}
+
+	//
+	internal static void ItemNotNull<TItem>(TItem? item)
+	{
+		if (item is null)
+			return;
+
+		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+			? $"{typeof(TItem)}, {nameof(item)}: 여기서는 반드시 널이어야 해요."
+			: $"{typeof(TItem)}, {nameof(item)}: Must be null here");
 	}
 
 	/// <summary>컴포넌트 캐스트가 안되면 예외</summary>
@@ -40,8 +57,9 @@ internal static class ThrowIf
 			return converted;
 
 		var nameComponent = component is null ? nameof(component) : component.GetType().ToString();
-		throw new InvalidOperationException(
-			$"{nameComponent}: Invalid component casting. Must be <{typeof(TConv)}>.");
+		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+			? $"{nameComponent}: 잘못된 컴포넌트 캐스팅이예요. 반드시 <{typeof(TConv)}> 이어야해요."
+			: $"{nameComponent}: Invalid component casting. Must be <{typeof(TConv)}>.");
 	}
 
 
@@ -50,7 +68,9 @@ internal static class ThrowIf
 		if (condition)
 			return;
 
-		throw new InvalidOperationException("Condition failed!");
+		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+			? "조건이 실패했어요!"
+			: "Condition failed!");
 	}
 
 	internal static void NotImplementedWithCondition<TType>([DoesNotReturnIf(false)] bool condition)
@@ -58,6 +78,8 @@ internal static class ThrowIf
 		if (condition)
 			return;
 
-		throw new NotImplementedException($"{typeof(TType)}: Not implementate in such a condition yet.");
+		throw new NotImplementedException(ComponentObject.UseLocaleMesg
+			? $"{typeof(TType)}: 이러한 조건에서 수행할 기능이 아직 만들어지지 않았어요."
+			: $"{typeof(TType)}: Not implementate in such a condition yet.");
 	}
 }
