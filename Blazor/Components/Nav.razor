@@ -8,7 +8,7 @@
 
 @code {
 	/// <summary>나브바. 이게 캐스케이딩되면 나브바에 맞춰 컴포넌트를 설정</summary>
-	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
+	[CascadingParameter] public NavBar? NavBar { get; set; }
 
 	/// <summary>표시 방향 <see cref="TagDirection"/></summary>
 	[Parameter] public TagDirection Direction { get; set; } = TagDirection.Horizontal;

@@ -36,7 +36,7 @@ else
 
 @code {
 	/// <summary>윗단에 놓이는 나브바</summary>
-	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
+	[CascadingParameter] public NavBar? NavBar { get; set; }
 
 	/// <summary>부모 아이디</summary>
 	[Parameter] public string? ParentId { get; set; }

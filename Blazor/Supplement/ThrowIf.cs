@@ -17,7 +17,7 @@ internal static class ThrowIf
 		if (container is not null)
 			return;
 
-		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+		throw new InvalidOperationException(Settings.UseLocaleMesg
 			? $"{typeof(TItem)}: 컨테이너가 없어요. 이 컴포넌트는 반드시 <{typeof(TContainer)}> 컨테이너 아래 있어야 해요."
 			: $"{typeof(TItem)}: No container found. This component must be contained within <{typeof(TContainer)}> container component.");
 	}
@@ -29,8 +29,8 @@ internal static class ThrowIf
 			return;
 
 		var names = from c in containers where c is not null select c.GetType().Name;
-		var join = string.Join(ComponentObject.UseLocaleMesg ? "또는 " : " or ", names);
-		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+		var join = string.Join(Settings.UseLocaleMesg ? "또는 " : " or ", names);
+		throw new InvalidOperationException(Settings.UseLocaleMesg
 			? $"{typeof(TItem)}: 컨테이너가 없어요. 이 컴포넌트는 반드시 <{join}> 컨테이너 아래 있어야 해요."
 			: $"{typeof(TItem)}: No container found. This component must be contained within <{join}> components");
 	}
@@ -41,7 +41,7 @@ internal static class ThrowIf
 		if (item is null)
 			return;
 
-		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+		throw new InvalidOperationException(Settings.UseLocaleMesg
 			? $"{typeof(TItem)}, {nameof(item)}: 여기서는 반드시 널이어야 해요."
 			: $"{typeof(TItem)}, {nameof(item)}: Must be null here");
 	}
@@ -57,7 +57,7 @@ internal static class ThrowIf
 			return converted;
 
 		var nameComponent = component is null ? nameof(component) : component.GetType().ToString();
-		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+		throw new InvalidOperationException(Settings.UseLocaleMesg
 			? $"{nameComponent}: 잘못된 컴포넌트 캐스팅이예요. 반드시 <{typeof(TConv)}> 이어야해요."
 			: $"{nameComponent}: Invalid component casting. Must be <{typeof(TConv)}>.");
 	}
@@ -68,7 +68,7 @@ internal static class ThrowIf
 		if (condition)
 			return;
 
-		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
+		throw new InvalidOperationException(Settings.UseLocaleMesg
 			? "조건이 실패했어요!"
 			: "Condition failed!");
 	}
@@ -78,8 +78,18 @@ internal static class ThrowIf
 		if (condition)
 			return;
 
-		throw new NotImplementedException(ComponentObject.UseLocaleMesg
+		throw new NotImplementedException(Settings.UseLocaleMesg
 			? $"{typeof(TType)}: 이러한 조건에서 수행할 기능이 아직 만들어지지 않았어요."
 			: $"{typeof(TType)}: Not implementate in such a condition yet.");
+	}
+
+	internal static void ArgumentNull<TItem>([NotNull] TItem? obj, string objName)
+	{
+		if (obj is not null)
+			return;
+
+		throw new ArgumentNullException(Settings.UseLocaleMesg
+			? $"{objName}:{typeof(TItem)} 인수는 비어있으면 안됩니다."
+			: $"{objName}:{typeof(TItem)} must not be null.");
 	}
 }

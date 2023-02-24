@@ -72,9 +72,6 @@ public abstract class ComponentObject : ComponentBase
 	internal static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
 
 	//
-	public static bool UseLocaleMesg => true;
-
-	//
 	public override string ToString() => $"<{GetType().Name}#{Id}>";
 }
 

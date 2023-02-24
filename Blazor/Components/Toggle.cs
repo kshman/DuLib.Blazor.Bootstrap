@@ -18,9 +18,9 @@ public class Toggle : ComponentContent, IAsyncDisposable
 	// 한편, 나브바와 붕괴가 같이 있으면... 안된다. 동작이 제대로 안됨
 
 	/// <summary>드랍다운</summary>
-	[CascadingParameter(Name = "DropDown")] public DropDown? DropDown { get; set; }
+	[CascadingParameter] public DropDown? DropDown { get; set; }
 	/// <summary>나브바</summary>
-	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
+	[CascadingParameter] public NavBar? NavBar { get; set; }
 	/// <summary>붕괴 아이디. 나브바가 지정될 경우 나브바에서 가져옴</summary>
 	[Parameter] public string? CollapseId { get; set; }
 
@@ -97,7 +97,7 @@ public class Toggle : ComponentContent, IAsyncDisposable
 			// 콜랩스 모드
 			if (Split) // 스플릿 못씀
 			{
-				Logger.LogCritical(UseLocaleMesg
+				Logger.LogCritical(Settings.UseLocaleMesg
 						? "{name}: 붕괴?! 컨트롤의 분리 기능과 나브바를 함께 쓰면 안되요."
 						: "{name}: Cannot use with Collapse control or NavBar.", 
 						nameof(Split));
@@ -110,7 +110,7 @@ public class Toggle : ComponentContent, IAsyncDisposable
 
 				if (Layout is not ToggleLayout.Button) // 버튼만 됨
 				{
-					Logger.LogCritical(UseLocaleMesg
+					Logger.LogCritical(Settings.UseLocaleMesg
 						? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
 						: "{name}: Must be {type} when contained within NavBar.", 
 						nameof(Layout), nameof(ToggleLayout.Button));
@@ -132,14 +132,14 @@ public class Toggle : ComponentContent, IAsyncDisposable
 
 		if (Split && Layout is not ToggleLayout.Button)
 		{
-			Logger.LogError(UseLocaleMesg
+			Logger.LogError(Settings.UseLocaleMesg
 				? "{name}: 스플릿 모드를 쓰려거든 레이아웃을 반드시 버튼으로 하세요."
 				: "{name}: Layout must be button when split mode.", 
 				nameof(Split));
 			Layout = ToggleLayout.Button;
 		}
 
-		Logger.LogTrace(UseLocaleMesg
+		Logger.LogTrace(Settings.UseLocaleMesg
 			? "{name}: 성공적으로 초기화 했어요."
 			: "{name}: initialized successfully.", 
 			nameof(Toggle));
