@@ -8,12 +8,14 @@
 *@
 
 <div class="@CssClass" id="@Id" @attributes="UserAttrs">
-	<CascadingValue Value="this" IsFixed="true">
+	<CascadingValue Value="this" IsFixed="true" Name="DropDown">
 		@ChildContent
 	</CascadingValue>
 </div>
 
 @code {
+	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
+
 	[Parameter] public DropDirection Direction { get; set; }
 
 	[Parameter] public bool Expanded { get; set; }
@@ -24,7 +26,7 @@
 	{
 		css
 			.Add(Direction.ToCss())
-			.Add("btn-group");
+			.AddIf(NavBar is null, "btn-group");
 	}
 
 	//

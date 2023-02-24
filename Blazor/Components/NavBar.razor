@@ -2,13 +2,7 @@
 
 <nav class="@CssClass" id="@Id" @attributes="UserAttrs">
 	<div class="@ContainerCssClass">
-		@if (Brand is not null)
-		{
-			<a class="@BrandCssClass" href="@Href">
-				@Brand
-			</a>
-		}
-		<CascadingValue Value="this" IsFixed="true">
+		<CascadingValue Value="this" IsFixed="true" Name="NavBar">
 			@ChildContent
 		</CascadingValue>
 	</div>
@@ -24,17 +18,12 @@
 	[Parameter] public string? ContainerClass { get; set; }
 	[Parameter] public NavContainerLayout ContainerLayout { get; set; } = NavContainerLayout.Fluid;
 
-	// ºê·£µå
-	[Parameter] public string? BrandClass { get; set; }
-	[Parameter] public string? Href { get; set; }
-	[Parameter] public RenderFragment? Brand { get; set; }
-
 	//
 	public string CollapseId => Id + "_collapse";
+	public string? ToggleId { get; set; }
 
 	//
 	private string? ContainerCssClass => CssCompose.Join(ContainerLayout.ToCss(), ContainerClass);
-	private string? BrandCssClass => CssCompose.Join("navbar-brand", BrandClass);
 
 	//
 	protected override void OnComponentClass(CssCompose css)

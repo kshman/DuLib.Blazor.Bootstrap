@@ -7,7 +7,7 @@
 </nav>
 
 @code {
-	[CascadingParameter] NavBar? NavBar { get; set; }
+	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
 
 	[Parameter] public TagDirection Direction { get; set; } = TagDirection.Horizontal;
 	[Parameter] public NavLayout Layout { get; set; } = NavLayout.None;

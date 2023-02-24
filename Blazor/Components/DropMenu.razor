@@ -7,7 +7,7 @@
 </TagElement>
 
 @code {
-	[CascadingParameter] public DropDown? DropDown { get; set; }
+	[CascadingParameter(Name = "DropDown")] public DropDown? DropDown { get; set; }
 
 	[Parameter] public DropAlignment Alignment { get; set; }
 	[Parameter] public TagPosition Position { get; set; } = TagPosition.Static;

@@ -67,4 +67,6 @@ public class CssCompose
 
 	public static string? Join(params string?[] args) =>
 		Join(class_separator, args);
+
+	public override string ToString() => $"({_sts.Count}/{_fns.Count}) {Class}";
 }

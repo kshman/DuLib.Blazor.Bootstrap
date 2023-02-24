@@ -28,7 +28,7 @@ public abstract class ComponentObject : ComponentBase
 	protected override void OnInitialized()
 	{
 		OnComponentInitialized();
-	
+
 		OnComponentClass(_css_compose);
 		_css_compose.Add(Class).Register(() => Enabled.IfFalse("disabled"));
 	}
@@ -68,13 +68,7 @@ public abstract class ComponentObject : ComponentBase
 	}
 
 	//
-#if DEBUG
-	internal static uint _atomic_index = uint.MaxValue - 2;
-#else
-	internal static uint _atomic_index =1;
-#endif
-
-	//
+	internal static uint _atomic_index = 1;
 	internal static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
 
 	//

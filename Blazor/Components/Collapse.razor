@@ -35,7 +35,7 @@ else
 </div>
 
 @code {
-	[CascadingParameter] public NavBar? NavBar { get; set; }
+	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
 
 	[Parameter] public string? ParentId { get; set; }
 	[Parameter] public TagDirection Direction { get; set; } = TagDirection.Vertical;

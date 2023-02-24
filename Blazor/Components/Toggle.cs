@@ -10,13 +10,21 @@ namespace Du.Blazor.Components;
 /// <seealso cref="DropDown" />
 public class Toggle : ComponentContent, IAsyncDisposable
 {
-	[CascadingParameter] public NavBar? NavBar { get; set; }
-	[CascadingParameter] public DropDown? DropDown { get; set; }
+	// 우선순위
+	//	1. 드랍다운			=> nav-link dropdown-toggle
+	//	2. 나브바			=> navbar-toggler
+	//	3. 붕괴(=나브바)	=> (none)
+	// 우선 순위를 지키지 않으면 나브바 아래 드랍다운이 동작안한다
+	// 한편, 나브바와 붕괴가 같이 있으면... 안된다. 동작이 제대로 안됨
+
+	[CascadingParameter(Name = "DropDown")] public DropDown? DropDown { get; set; }
+	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
 	[Parameter] public string? CollapseId { get; set; }
 
 	[Parameter] public string? Tag { get; set; }
 
 	[Parameter] public string? Text { get; set; }
+	[Parameter] public string? AriaLabel { get; set; }
 	[Parameter] public ToggleLayout Layout { get; set; } = ToggleLayout.Button;
 	[Parameter] public DropAutoClose AutoClose { get; set; } = DropAutoClose.True;
 	[Parameter] public TagColor? Color { get; set; }
@@ -46,10 +54,27 @@ public class Toggle : ComponentContent, IAsyncDisposable
 	//
 	protected override void OnComponentInitialized()
 	{
+		// 나브바가 있네
 		if (NavBar is not null)
 		{
-			// 나브바에서 아이디 셋팅
-			CollapseId ??= NavBar.CollapseId;
+			// 드랍이 있음
+			if (DropDown is not null)
+			{
+				// 이럴 때는 링크만사용
+				Layout = ToggleLayout.A;
+			}
+			// 드랍이 없고, 나브바엔 토글이 없음 
+			else if (NavBar.ToggleId.IsWhiteSpace())
+			{
+				// 토글이 여러개면 곤란하다 하나만
+				// 아니면, 토글 내 드랍에서 캐치하는 것도 곤란
+				NavBar.ToggleId = Id;
+
+				// 나브바에서 아이디 셋팅
+				CollapseId ??= '#' + NavBar.CollapseId;
+
+				AriaLabel ??= "Toggle navigation"; // 이거 지정안하면 브라우저에서 욕함
+			}
 		}
 
 		if (CollapseId.IsHave(true))
@@ -58,7 +83,7 @@ public class Toggle : ComponentContent, IAsyncDisposable
 			if (Split) // 스플릿 못씀
 			{
 				Logger.LogCritical(UseLocaleMesg
-						? "{name}: 붕괴?! 컨트롤이나 나브바와 함께 쓰면 안되요."
+						? "{name}: 붕괴?! 컨트롤의 분리 기능과 나브바를 함께 쓰면 안되요."
 						: "{name}: Cannot use with Collapse control or NavBar.", nameof(Split));
 				Split = false;
 			}
@@ -81,7 +106,8 @@ public class Toggle : ComponentContent, IAsyncDisposable
 		else
 		{
 			// 클랩스가 아닌데 나브바면 이상하쟎아. 예컨데 아이디가 잘못됐다든가
-			ThrowIf.ItemNotNull(NavBar);
+			// 나브바 밑에 드랍이면 있다.
+			//ThrowIf.ItemNotNull(NavBar);
 
 			// 이 경우엔 반드시 드랍다운이어야 함
 			ThrowIf.ContainerIsNull(this, DropDown);
@@ -104,8 +130,17 @@ public class Toggle : ComponentContent, IAsyncDisposable
 	protected override void OnComponentClass(CssCompose css)
 	{
 		if (NavBar is not null)
-			css.Add("navbar-toggle");
-		
+		{
+			if (DropDown is null)
+				css.Add("navbar-toggler");
+			else
+			{
+				css
+					.Add("nav-link")
+					.Add("dropdown-toggle"); // 밑에도 나오지만, 그때는 _use_collapse가 false임 여긴 true
+			}
+		}
+
 		if (Layout == ToggleLayout.Button)
 		{
 			css
@@ -160,7 +195,7 @@ public class Toggle : ComponentContent, IAsyncDisposable
 		builder.AddAttribute(1, Layout == ToggleLayout.Button ? "type" : "role", "button");
 		builder.AddAttribute(2, "class", CssClass);
 
-		if (_use_collapse)
+		if (_use_collapse && DropDown is null)
 		{
 			// 붕괴 또는 나브바 일 떄
 			builder.AddAttribute(3, "data-bs-toggle", "collapse");
@@ -176,12 +211,13 @@ public class Toggle : ComponentContent, IAsyncDisposable
 		}
 
 		builder.AddAttribute(8, "aria-expanded", "false");
-		builder.AddMultipleAttributes(9, UserAttrs);
+		builder.AddAttribute(9, "aria-label", AriaLabel);
+		builder.AddMultipleAttributes(10, UserAttrs);
 
 		if (_use_collapse is false)
 		{
 			// 리퍼런스는 자바스크립트에서 쓰는데 드랍다운에서만 씀
-			builder.AddElementReferenceCapture(10, e => _self = e);
+			builder.AddElementReferenceCapture(11, e => _self = e);
 		}
 
 		if (Text.IsHave() || ChildContent is not null)
