@@ -5,6 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>DIV 아이템</summary>
 public class DropDiv : DropItem
 {
+	protected override string Tag => "div";
 }
 
 
@@ -15,23 +16,20 @@ public class DropSpan : DropItem
 }
 
 
-/// <summary>태그 아이템. 기본은 그냥 DIV 감싸기</summary>
-public class DropItem : ContentItem
+/// <summary>태그 아이템. 기본은 그냥 P 감싸기</summary>
+public class DropItem : TagItem
 {
+	/// <summary>드랍메뉴</summary>
 	[CascadingParameter] public DropMenu? DropMenu { get; set; }
 
+	/// <summary>참일 경우 드랍 텍스트로 출력한다 (마우스로 활성화되지 않는 기능)</summary>
 	[Parameter] public bool DropText { get; set; }
 
+	/// <summary>드랍메뉴가 있을 경우 리스트(li)에 사용할 css클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
 	/// <summary>사용할 태그 지정</summary>
-	protected virtual string Tag => "div";
-
-	//
-	protected override void CheckContainer()
-	{
-		LogIf.ContainerIsNull(Logger, Container, DropMenu);
-	}
+	protected virtual string Tag => "p";
 
 	//
 	protected override void OnComponentClass(CssCompose css)
@@ -75,19 +73,8 @@ public class DropItem : ContentItem
 		builder.AddAttribute(3, "class", CssClass);
 		builder.AddMultipleAttributes(4, UserAttrs);
 
-		if (Text is not null)
-			builder.AddContent(5, Text);
-		if (Display is not null)
-		{
-			builder.AddContent(6, Display);
-
-			if (Content is not null)
-				builder.AddContent(7, Content);
-		}
-		else if (Content is not null)
-			builder.AddContent(8, Content);
-		else if (ChildContent is not null)
-			builder.AddContent(9, ChildContent);
+		builder.AddContent(5, Text);
+		builder.AddContent(6, ChildContent);
 
 		builder.CloseElement(); // span or div
 
@@ -96,10 +83,7 @@ public class DropItem : ContentItem
 	}
 
 	//
-	public override string ToString()
-	{
-		return DropMenu is not null
+	public override string ToString() => DropMenu is not null
 			? $"DROPITEM <{GetType().Name}#{{Id}}>"
 			: base.ToString();
-	}
 }

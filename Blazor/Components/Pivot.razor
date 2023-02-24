@@ -32,10 +32,15 @@
 </div>
 
 @code {
+	/// <summary>피벗 레이아웃. <see cref="PivotLayout"/></summary>
 	[Parameter] public PivotLayout Layout { get; set; } = PivotLayout.Flat;
+	/// <summary>피벗 위치. <see cref="PivotPosition"/></summary>
 	[Parameter] public PivotPosition Position { get; set; } = PivotPosition.Top;
+	/// <summary>피벗이 범위를 넘어서면 처리할 방법. <see cref="TagOverflow"/></summary>
 	[Parameter] public TagOverflow Overflow { get; set; } = TagOverflow.None;
+	/// <summary>피벗 크기. <see cref="TagSize"/></summary>
 	[Parameter] public TagSize Size { get; set; } = TagSize.Medium;
+	/// <summary>피벗만 보이고 콘텐트는 보이지 않게함</summary>
 	[Parameter] public bool PivotOnly { get; set; } //= false;
 
 	//

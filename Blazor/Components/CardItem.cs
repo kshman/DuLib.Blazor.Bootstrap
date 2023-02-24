@@ -18,16 +18,10 @@ public class CardSpan : CardItem
 
 /// <summary>카드 아이템</summary>
 /// <seealso cref="Du.Blazor.ComponentContent" />
-public class CardItem : ContentItem
+public class CardItem : TagItem
 {
 	/// <summary>사용할 태그 지정</summary>
 	protected virtual string Tag => "p";
-
-	//
-	protected override void CheckContainer()
-	{
-		// 카드는 안감싸므로 체크 안함
-	}
 
 	//
 	protected override void OnComponentClass(CssCompose css) =>
@@ -48,19 +42,8 @@ public class CardItem : ContentItem
 		builder.AddAttribute(1, "class", CssClass);
 		builder.AddMultipleAttributes(2, UserAttrs);
 
-		if (Text is not null)
-			builder.AddContent(3, Text);
-		if (Display is not null)
-		{
-			builder.AddContent(4, Display);
-
-			if (Content is not null)
-				builder.AddContent(5, Content);
-		}
-		else if (Content is not null)
-			builder.AddContent(6, Content);
-		else if (ChildContent is not null)
-			builder.AddContent(7, ChildContent);
+		builder.AddContent(3, Text);
+		builder.AddContent(4, ChildContent);
 
 		builder.CloseElement(); // p - span - div
 	}

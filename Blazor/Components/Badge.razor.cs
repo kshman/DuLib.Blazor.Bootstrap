@@ -4,6 +4,7 @@
 /// <seealso cref="Du.Blazor.ComponentContent" />
 public partial class Badge
 {
+	/// <summary>배지 설정</summary>
 	public class Settings
 	{
 		public TagColor Fore { get; set; }
@@ -12,6 +13,7 @@ public partial class Badge
 		public string? AdditionalCss { get; set; }
 	}
 
+	/// <summary>배지 기본값</summary>
 	public static Settings DefaultSettings { get; set; } = new()
 	{
 		Fore = TagColor.Light,

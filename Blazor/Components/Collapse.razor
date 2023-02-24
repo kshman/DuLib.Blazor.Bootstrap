@@ -35,14 +35,21 @@ else
 </div>
 
 @code {
-	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
+	/// <summary>윗단에 놓이는 나브바</summary>
+	[CascadingParameter] public NavBar? NavBar { get; set; }
 
+	/// <summary>부모 아이디</summary>
 	[Parameter] public string? ParentId { get; set; }
+	/// <summary>처리 방향</summary>
 	[Parameter] public TagDirection Direction { get; set; } = TagDirection.Vertical;
+	/// <summary>확장 여부</summary>
 	[Parameter] public bool Expanded { get; set; }
 
+	/// <summary>확장될 때 이벤트</summary>
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanding { get; set; }
+	/// <summary>확장된 다음 이벤트</summary>
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	/// <summary>확장 여부 변경 이벤트</summary>
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
 	//
@@ -91,8 +98,8 @@ else
 	protected override bool ShouldRender() =>
 		!_now_show && !_now_hide;
 
-	//
-	public async Task ShowAsync()
+	/// <summary>보여준다</summary>
+	public async Task ExpandAsync()
 	{
 		if (_expanded)
 			return;
@@ -102,7 +109,8 @@ else
 	}
 
 	//
-	public async Task HideAsync()
+	/// <summary>감춘다</summary>
+	public async Task CollapseAsync()
 	{
 		if (_expanded is false)
 			return;
@@ -133,7 +141,7 @@ else
 		_objref?.Dispose();
 	}
 
-	//
+	// 반드시 public
 	[JSInvokable("ivk_clps_bs")]
 	public async Task InternalHandleShow()
 	{
@@ -141,7 +149,7 @@ else
 		await InvokeOnExpanding(Id, true);
 	}
 
-	//
+	// 반드시 public
 	[JSInvokable("ivk_clps_bsn")]
 	public async Task InternalHandleShownAsync()
 	{
@@ -157,7 +165,7 @@ else
 			StateHasChanged();
 	}
 
-	//
+	// 반드시 public
 	[JSInvokable("ivk_clps_eh")]
 	public async Task InternalHandleHide()
 	{
@@ -165,7 +173,7 @@ else
 		await InvokeOnExpanding(Id, false);
 	}
 
-	//
+	// 반드시 public
 	[JSInvokable("ivk_clps_ehn")]
 	public async Task InternalHandleHidden()
 	{

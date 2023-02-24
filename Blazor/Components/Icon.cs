@@ -2,6 +2,7 @@
 
 namespace Du.Blazor.Components;
 
+/// <summary>아이콘을 표시합니다. oi/bi/fa 같은데 쓸 수 있음</summary>
 public class Icon : ComponentObject
 {
 	[Parameter] public string Name { get; set; } = string.Empty;
