@@ -2,17 +2,18 @@
 
 namespace Du.Blazor.Components;
 
+/// <summary>가로 줄 그리기</summary>
 public class Divider : ComponentObject
 {
+	/// <summary>드랍메뉴. 이 내용이 캐스케이딩되면 리스트(li)를 추가한다</summary>
 	[CascadingParameter] public DropMenu? DropMenu { get; set; }
 
+	/// <summary>리스트(li)로 출력할 때 사용하는 css클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css)
-	{
+	protected override void OnComponentClass(CssCompose css) => 
 		css.AddIf(DropMenu is not null, "dropdown-divider");
-	}
 
 	// 
 	protected override void BuildRenderTree(RenderTreeBuilder builder)

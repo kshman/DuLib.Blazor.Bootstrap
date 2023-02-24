@@ -4,6 +4,7 @@
 /// <seealso cref="Du.Blazor.Components.ButtonBase" />
 public partial class Button
 {
+	/// <summary>버튼 설정</summary>
 	public class Settings
 	{
 		public ButtonType Type { get; set; }
@@ -12,6 +13,7 @@ public partial class Button
 		public bool Outline { get; set; }
 	}
 
+	/// <summary>버튼 기본값</summary>
 	public static Settings DefaultSettings { get; set; } = new Settings()
 	{
 		Type = ButtonType.Button,

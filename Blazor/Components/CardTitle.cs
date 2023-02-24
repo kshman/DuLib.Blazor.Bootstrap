@@ -6,11 +6,16 @@ namespace Du.Blazor.Components;
 /// <seealso cref="Du.Blazor.ComponentContent" />
 public class CardTitle : ComponentContent
 {
+	/// <summary>타이틀 주 이름</summary>
 	[Parameter] public RenderFragment? MainText { get; set; }
+	/// <summary>타이틀 보조 이름</summary>
 	[Parameter] public RenderFragment? SubText { get; set; }
 
+	/// <summary>주 이름의 HTML 태그</summary>
 	[Parameter] public string MainTag { get; set; } = "h5";
+	/// <summary>보조 이름의 HTML 태그</summary>
 	[Parameter] public string SubTag { get; set; } = "h6";
+	/// <summary>보조 이름의 CSS클래스</summary>
 	[Parameter] public string SubClass { get; set; } = "mb-2 text-muted";
 
 	// 
@@ -35,18 +40,16 @@ public class CardTitle : ComponentContent
 	}
 
 	//
-	private int InternalBuildRender(RenderTreeBuilder builder, RenderFragment? content,
-		int index, string tag, string? css, Dictionary<string, object>? attrs)
+	private void InternalBuildRender(RenderTreeBuilder builder, RenderFragment? content,
+		int sequence, string tag, string? css, Dictionary<string, object>? attrs)
 	{
-		builder.OpenElement(index++, tag);
+		builder.OpenElement(sequence++, tag);
 
-		builder.AddAttribute(index++, "class", css);
-		builder.AddMultipleAttributes(index++, attrs);
+		builder.AddAttribute(sequence++, "class", css);
+		builder.AddMultipleAttributes(sequence++, attrs);
 
-		builder.AddContent(index++, content);
+		builder.AddContent(sequence++, content);
 
 		builder.CloseElement();
-
-		return index + 1;
 	}
 }

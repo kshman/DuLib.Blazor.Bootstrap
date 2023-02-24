@@ -122,23 +122,23 @@
 		_drf?.Dispose();
 	}
 
-	//
+	/// <summary>지정한 슬라이드로 이동</summary>
 	public async Task MoveToAsync(int index) =>
 		await JS.InvokeVoidAsync("DUCARS.to", _self, index);
 
-	//
+	/// <summary>앞 슬라이드로 이동</summary>
 	public async Task MovePreviousAsync() =>
 		await JS.InvokeVoidAsync("DUCARS.prev", _self);
 
-	//
+	/// <summary>다음 슬라이드로  이동</summary>
 	public async Task MoveNextAsync() =>
 		await JS.InvokeVoidAsync("DUCARS.next", _self);
 
-	//
+	/// <summary>슬라이드를 재개함</summary>
 	public async Task CycleAsync() =>
 		await JS.InvokeVoidAsync("DUCARS.cycle", _self);
 
-	//
+	/// <summary>슬라이드를 멈춤</summary>
 	public async Task PauseAsync() =>
 		await JS.InvokeVoidAsync("DUCARS.pause", _self);
 

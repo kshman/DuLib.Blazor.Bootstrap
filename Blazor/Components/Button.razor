@@ -39,6 +39,7 @@ else
 }
 
 @code {
+	/// <summary>드랍 메뉴, 이게 있으면 드랍 메뉴용으로 처리함</summary>
 	[CascadingParameter] public DropMenu? DropMenu { get; set; }
 
 	/// <summary>URL 링크 지정.</summary>
@@ -46,6 +47,7 @@ else
 	/// <summary>타겟 지정.</summary>
 	[Parameter] public string? Target { get; set; }
 
+	/// <summary>드랍 메뉴가 있을 때 리스트(li)의 CSS클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
 	//

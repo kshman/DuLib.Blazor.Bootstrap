@@ -5,14 +5,21 @@ namespace Du.Blazor.Components;
 
 public class NavHref : ComponentContent, IDisposable
 {
+	/// <summary>드랍다운. 이게 캐스케이딩되어 있으면 리스트(li)를 추가한다</summary>
 	[CascadingParameter] public DropMenu? DropDown { get; set; }
 
+	/// <summary>나브 링크 매치</summary>
 	[Parameter] public NavLinkMatch Match { get; set; }
+	/// <summary>이동할 URL 링크</summary>
 	[Parameter] public string? Link { get; set; }
 
+	/// <summary>리스트(li)의 css클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
+	/// <summary>현재 URL과 일치하면 표시할 css클래스</summary>
+	/// <remarks>기본값은 'active'</remarks>
 	[Parameter] public string ActiveClass { get; set; } = "active";
 
+	/// <summary>마우스로 눌렀을 때 이벤트</summary>
 	[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
 	//
@@ -117,7 +124,7 @@ public class NavHref : ComponentContent, IDisposable
 			return true;
 		if (uri.Length != _href!.Length - 1)
 			return false;
-		if (_href[_href!.Length - 1] != '/' || !_href.StartsWith(uri, StringComparison.OrdinalIgnoreCase))
+		if (_href[^1] != '/' || !_href.StartsWith(uri, StringComparison.OrdinalIgnoreCase))
 			return false;
 		return true;
 	}
@@ -137,8 +144,6 @@ public class NavHref : ComponentContent, IDisposable
 	}
 
 	//
-	public void Dispose()
-	{
+	public void Dispose() => 
 		NavMan.LocationChanged -= OnLocationChanged;
-	}
 }

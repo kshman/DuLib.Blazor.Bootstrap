@@ -35,10 +35,14 @@
 </div>
 
 @code {
+	/// <summary>모서리 없는 모양</summary>
 	[Parameter] public bool Flush { get; set; }
+	/// <summary>언제나 열려있음</summary>
 	[Parameter] public bool AlwaysOpen { get; set; }
 
+	/// <summary>열리려고 할 때 이벤트</summary>
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanding { get; set; }
+	/// <summary>열리고 나서 이벤트</summary>
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
 
 	//
@@ -76,42 +80,46 @@
 			await InternalExpandAsync(item);
 	}
 
-	//
+	/// <summary>엽니다</summary>
+	/// <param name="id"></param>
+	/// <returns></returns>
 	public Task ExpandAsync(string id) =>
 		InternalExpandAsync(GetItem(id));
 
-	//
+	/// <summary>닫아요</summary>
+	/// <param name="id"></param>
+	/// <returns></returns>
 	public Task CollapseAsync(string id) =>
 		InternalCollapseAsync(GetItem(id));
 
-	//
+	// 열려라
 	private Task InternalExpandAsync(ContentItem? item)
 	{
 		if (item?.AcnExtend?.Collapse is null)
 			return Task.CompletedTask;
 
 		_now_transition = true;
-		return item.AcnExtend.Collapse.ShowAsync();
+		return item.AcnExtend.Collapse.ExpandAsync();
 	}
 
-	//
+	// 닫아라
 	private Task InternalCollapseAsync(ContentItem? item)
 	{
 		if (item?.AcnExtend?.Collapse is null)
 			return Task.CompletedTask;
 
 		_now_transition = true;
-		return item.AcnExtend.Collapse.HideAsync();
+		return item.AcnExtend.Collapse.CollapseAsync();
 	}
 
-	//
+	// 열릴때
 	private async Task HandleOnExpandingAsync(ExpandedEventArgs e)
 	{
 		_now_transition = true;
 		await InvokeOnExpanding(e);
 	}
 
-	//
+	// 열린다음
 	private async Task HandleOnExpandedAsync(ExpandedEventArgs e)
 	{
 		_now_transition = false;

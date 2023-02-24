@@ -33,7 +33,9 @@
 }
 
 @code {
+	/// <summary>탭을 표현할 레이아웃. <see cref="NavLayout"/></summary>
 	[Parameter] public NavLayout Layout { get; set; } = NavLayout.None;
+	/// <summary>탭만 보이고 내용은 표시하지 않는다</summary>
 	[Parameter] public bool TabOnly { get; set; } //= false;
 
 	//

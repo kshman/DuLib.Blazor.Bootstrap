@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 namespace Du.Blazor.Components;
 
 /// <summary>
-///   <para>토글러</para>
+///   <para>토글러, 보통 붕괴 토글에 쓰임</para>
 ///   <para>드랍다운의 펼치기/닫기 버튼으로 쓰이며, NavBar 버튼으로도 쓸 수 있음</para>
 /// </summary>
 /// <seealso cref="DropDown" />
@@ -17,22 +17,37 @@ public class Toggle : ComponentContent, IAsyncDisposable
 	// 우선 순위를 지키지 않으면 나브바 아래 드랍다운이 동작안한다
 	// 한편, 나브바와 붕괴가 같이 있으면... 안된다. 동작이 제대로 안됨
 
+	/// <summary>드랍다운</summary>
 	[CascadingParameter(Name = "DropDown")] public DropDown? DropDown { get; set; }
+	/// <summary>나브바</summary>
 	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
+	/// <summary>붕괴 아이디. 나브바가 지정될 경우 나브바에서 가져옴</summary>
 	[Parameter] public string? CollapseId { get; set; }
 
+	/// <summary>표시할 때 사용하는 태그</summary>
 	[Parameter] public string? Tag { get; set; }
 
+	/// <summary>표시할 텍스트</summary>
 	[Parameter] public string? Text { get; set; }
+	/// <summary>ARIA LABEL. 이 값이 없으면 브라우저가 싫어함</summary>
 	[Parameter] public string? AriaLabel { get; set; }
+	/// <summary>토글 모양 <see cref="ToggleLayout"/></summary>
 	[Parameter] public ToggleLayout Layout { get; set; } = ToggleLayout.Button;
+	/// <summary>드랍다운일 때 자동으로 닫기 방법 <see cref="DropAutoClose"/></summary>
 	[Parameter] public DropAutoClose AutoClose { get; set; } = DropAutoClose.True;
+	/// <summary>버튼 모양일 때 색깔 <see cref="TagColor"/></summary>
 	[Parameter] public TagColor? Color { get; set; }
+	/// <summary>버튼 모양일 때 크기 <see cref="TagSize"/></summary>
 	[Parameter] public TagSize? Size { get; set; }
+	/// <summary>버튼 모양일 때 외곽선 모양인가 여부</summary>
 	[Parameter] public bool? Outline { get; set; }
+	/// <summary>버튼이 아닐 때 선택 모양을 표시(채워서)하는지 여부</summary>
 	[Parameter] public bool Caret { get; set; }
+	/// <summary>분할 버튼</summary>
+	/// <remarks>※ 구현 안됨</remarks>
 	[Parameter] public bool Split { get; set; } // 당분간 안만듬
 
+	/// <summary>확장되면 처리하는 이벤트</summary>
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
 	// OnClick 구현해야하나?
 	//[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
@@ -84,7 +99,8 @@ public class Toggle : ComponentContent, IAsyncDisposable
 			{
 				Logger.LogCritical(UseLocaleMesg
 						? "{name}: 붕괴?! 컨트롤의 분리 기능과 나브바를 함께 쓰면 안되요."
-						: "{name}: Cannot use with Collapse control or NavBar.", nameof(Split));
+						: "{name}: Cannot use with Collapse control or NavBar.", 
+						nameof(Split));
 				Split = false;
 			}
 
@@ -96,7 +112,8 @@ public class Toggle : ComponentContent, IAsyncDisposable
 				{
 					Logger.LogCritical(UseLocaleMesg
 						? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
-						: "{name}: Must be {type} when contained within NavBar.", nameof(Layout), nameof(ToggleLayout.Button));
+						: "{name}: Must be {type} when contained within NavBar.", 
+						nameof(Layout), nameof(ToggleLayout.Button));
 					Layout = ToggleLayout.Button;
 				}
 			}
@@ -117,13 +134,15 @@ public class Toggle : ComponentContent, IAsyncDisposable
 		{
 			Logger.LogError(UseLocaleMesg
 				? "{name}: 스플릿 모드를 쓰려거든 레이아웃을 반드시 버튼으로 하세요."
-				: "{name}: Layout must be button when split mode.", nameof(Split));
+				: "{name}: Layout must be button when split mode.", 
+				nameof(Split));
 			Layout = ToggleLayout.Button;
 		}
 
 		Logger.LogTrace(UseLocaleMesg
 			? "{name}: 성공적으로 초기화 했어요."
-			: "{name}: initialized successfully.", nameof(Toggle));
+			: "{name}: initialized successfully.", 
+			nameof(Toggle));
 	}
 
 	//

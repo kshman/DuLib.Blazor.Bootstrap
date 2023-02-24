@@ -172,7 +172,7 @@ public class ComponentContainer<TItem> : ComponentStorage<TItem>
 		}
 	}
 
-	/// <summary>아이템 선택/// </summary>
+	/// <summary>아이템 선택</summary>
 	/// <param name="item"></param>
 	/// <param name="stateChange"></param>
 	/// <returns>비동기 처리한 태스크</returns>

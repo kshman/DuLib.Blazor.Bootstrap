@@ -29,7 +29,7 @@ internal static class ThrowIf
 			return;
 
 		var names = from c in containers where c is not null select c.GetType().Name;
-		var join = string.Join(ComponentObject.UseLocaleMesg ? "또는 " :" or ", names);
+		var join = string.Join(ComponentObject.UseLocaleMesg ? "또는 " : " or ", names);
 		throw new InvalidOperationException(ComponentObject.UseLocaleMesg
 			? $"{typeof(TItem)}: 컨테이너가 없어요. 이 컴포넌트는 반드시 <{join}> 컨테이너 아래 있어야 해요."
 			: $"{typeof(TItem)}: No container found. This component must be contained within <{join}> components");

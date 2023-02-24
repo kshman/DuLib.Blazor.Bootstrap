@@ -14,11 +14,15 @@
 </div>
 
 @code {
+	/// <summary>나브바. 캐스케이딩되면 아래 딸려오는 컴포넌트가 나브바를 지원하게 동작한다</summary>
 	[CascadingParameter(Name = "NavBar")] public NavBar? NavBar { get; set; }
 
+	/// <summary>드랍 방향 <see cref="DropDirection"/></summary>
 	[Parameter] public DropDirection Direction { get; set; }
 
+	/// <summary>확장 여부</summary>
 	[Parameter] public bool Expanded { get; set; }
+	/// <summary>확장 여부가 변경될 때 이벤트</summary>
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
 	//

@@ -5,8 +5,11 @@
 </span>
 
 @code {
+	/// <summary>글자색</summary>
 	[Parameter] public TagColor? Fore { get; set; }
+	/// <summary>배경색</summary>
 	[Parameter] public TagColor? Back { get; set; }
+	/// <summary>레이아웃 <see cref="BadgeLayout"/></summary>
 	[Parameter] public BadgeLayout? Layout { get; set; }
 
 	//
