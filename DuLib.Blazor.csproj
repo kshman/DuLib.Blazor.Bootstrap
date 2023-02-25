@@ -9,7 +9,7 @@
     <RootNamespace>Du</RootNamespace>
 
     <RepositoryUrl>https://github.com/kshman/DuLib.Blazor</RepositoryUrl>
-    <Version>0.1.2</Version>
+    <Version>0.1.4</Version>
     <Title>DuLib.Blazor</Title>
     <PackageId>DuLib.Blazor</PackageId>
     <Product>DuLib.Blazor</Product>
@@ -41,6 +41,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig.Signed" Version="0.30.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.2" />
   </ItemGroup>
 
@@ -76,14 +77,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Blazor\Components\Card.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Blazor\Components\Card.razor" />
   </ItemGroup>
 
 </Project>

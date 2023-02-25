@@ -58,23 +58,18 @@ public class DropDown : ComponentContent
 		 * </div>
 		 */
 		builder.OpenElement(0, "div");
-
 		builder.AddAttribute(1, "class", CssClass);
 		builder.AddAttribute(2, "id", Id);
 		builder.AddMultipleAttributes(3, UserAttrs);
 
 		builder.OpenComponent<CascadingValue<DropDown>>(4);
-
 		builder.AddAttribute(5, "Value", this);
 		builder.AddAttribute(6, "IsFixed", true);
 		builder.AddAttribute(7, "ChildContent", (RenderFragment)((b) =>
-		{
-			b.AddContent(8, ChildContent);
-		}));
+			b.AddContent(8, ChildContent)));
+		builder.CloseComponent(); // CascadingValue<DropDown>
 
-		builder.CloseComponent();
-
-		builder.CloseElement(); 
+		builder.CloseElement(); // div
 	}
 
 	//

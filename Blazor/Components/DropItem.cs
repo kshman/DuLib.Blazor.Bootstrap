@@ -69,14 +69,11 @@ public class DropItem : TagItem
 		}
 
 		builder.OpenElement(2, Tag);
-
 		builder.AddAttribute(3, "class", CssClass);
 		builder.AddMultipleAttributes(4, UserAttrs);
-
 		builder.AddContent(5, Text);
 		builder.AddContent(6, ChildContent);
-
-		builder.CloseElement(); // span or div
+		builder.CloseElement(); // tag
 
 		if (DropMenu is not null)
 			builder.CloseElement(); // li

@@ -67,17 +67,13 @@ public class DropMenu : ComponentContent
 		builder.AddAttribute(4, "ChildContent", (RenderFragment)((bt) =>
 		{
 			bt.OpenComponent<CascadingValue<DropMenu>>(5);
-
 			bt.AddAttribute(6, "Value", this);
 			bt.AddAttribute(7, "IsFixed", true);
 			bt.AddAttribute(8, "ChildContent", (RenderFragment)((bc) =>
-			{
-				bc.AddContent(9, ChildContent);
-			}));
-
-			bt.CloseComponent();
+				bc.AddContent(9, ChildContent)));
+			bt.CloseComponent(); // CascadingValue<DropMenu>
 		}));
 
-		builder.CloseElement();
+		builder.CloseElement(); // TagElement
 	}
 }
