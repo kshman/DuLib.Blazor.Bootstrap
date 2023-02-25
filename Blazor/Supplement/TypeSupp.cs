@@ -145,15 +145,15 @@ namespace Du.Blazor.Supplement
 			_ => null,
 		};
 
-		internal static string? ToCss(this NavContainerLayout layout) => layout switch
+		internal static string? ToContainerCss(this TagDimension layout) => layout switch
 		{
-			NavContainerLayout.Fluid => "container-fluid",
-			NavContainerLayout.Small => "container-sm",
-			NavContainerLayout.Medium => "container-md",
-			NavContainerLayout.Large => "container-lg",
-			NavContainerLayout.ExtraLarge => "container-xl",
-			NavContainerLayout.ExtraExtraLarge => "container-xxl",
-			NavContainerLayout.None or
+			TagDimension.Small => "container-sm",
+			TagDimension.Medium => "container-md",
+			TagDimension.Large => "container-lg",
+			TagDimension.ExtraLarge => "container-xl",
+			TagDimension.ExtraExtraLarge => "container-xxl",
+			TagDimension.NavFluid => "container-fluid",
+			TagDimension.None or
 			_ => null
 		};
 		#endregion 컴포넌트

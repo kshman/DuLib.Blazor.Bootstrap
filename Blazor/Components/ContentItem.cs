@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace Du.Blazor.Components;
+﻿namespace Du.Blazor.Components;
 
 /// <summary>콘텐트 아이템 컨테이너</summary>
 /// <remarks>
@@ -18,7 +16,7 @@ public abstract class ContentItemContainer : ComponentContainer<ContentItem>
 
 /// <summary>콘텐트 아이템</summary>
 /// <remarks>자체적으로 렌더링 하는 기능은 없음</remarks>
-public class ContentItem : TagItem, IAsyncDisposable
+public class ContentItem : TagItemBase, IAsyncDisposable
 {
 	/// <summary>이 컴포넌트를 포함하는 컨테이너</summary>
 	[CascadingParameter] public ComponentStorage<ContentItem>? Container { get; set; }
@@ -27,6 +25,9 @@ public class ContentItem : TagItem, IAsyncDisposable
 	[Parameter] public RenderFragment? Display { get; set; }
 	/// <summary>콘텐트 태그. 내용에 쓰임</summary>
 	[Parameter] public RenderFragment? Content { get; set; }
+
+	//
+	internal object? InternalExtend { get; set; }
 
 	//
 	internal Accordion.AcnExtend? AcnExtend

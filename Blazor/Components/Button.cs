@@ -104,7 +104,8 @@ public class Button : ButtonBase
 
 		builder.AddAttribute(8, "id", Id);
 		builder.AddMultipleAttributes(9, UserAttrs);
-		builder.AddContent(10, Text);
+		if (Text.IsHave(true))
+			builder.AddContent(10, Text);
 		builder.AddContent(11, ChildContent);
 		builder.CloseElement(); // a
 
@@ -149,7 +150,8 @@ public class Button : ButtonBase
 
 		builder.AddAttribute(7, "id", Id);
 		builder.AddMultipleAttributes(8, UserAttrs);
-		builder.AddContent(9, Text);
+		if (Text.IsHave(true))
+			builder.AddContent(9, Text);
 		builder.AddContent(10, ChildContent);
 		builder.CloseElement(); // a or button
 	}

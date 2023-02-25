@@ -5,7 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 카드
 /// </summary>
-public class Card : ComponentContent
+public class Card : ComponentContent, ITagContentAdopter
 {
 	#region 기본 세팅
 
@@ -143,7 +143,12 @@ public class Card : ComponentContent
 			builder.CloseElement();
 		}
 
-		builder.AddContent(40, ChildContent);
+		builder.OpenComponent<CascadingValue<Card>>(40);
+		builder.AddAttribute(41, "Value", this);
+		builder.AddAttribute(42, "IsFixed", true);
+		builder.AddAttribute(43, "ChildContent", (RenderFragment)((b) =>
+				b.AddContent(44, ChildContent)));
+		builder.CloseComponent(); // CascadingValue<Card>
 
 		if (Image.IsHave(true) && Location is CardImageLocation.Bottom)
 		{

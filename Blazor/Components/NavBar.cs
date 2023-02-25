@@ -17,9 +17,9 @@ public class NavBar : ComponentContent
 	#region 컨테이너
 	/// <summary>컨테이너의 css클래스</summary>
 	[Parameter] public string? ContainerClass { get; set; }
-	/// <summary>커네이너의 레이아웃 <see cref="NavContainerLayout"/></summary>
+	/// <summary>커네이너의 레이아웃 <see cref="TagDimension"/></summary>
 	/// <remarks>딱히 지정하지 않는게 좋긴하다! 기본은 container-fluid</remarks>
-	[Parameter] public NavContainerLayout ContainerLayout { get; set; } = NavContainerLayout.Fluid;
+	[Parameter] public TagDimension ContainerLayout { get; set; } = TagDimension.NavFluid;
 	#endregion
 
 	//
@@ -29,7 +29,7 @@ public class NavBar : ComponentContent
 	public string? ToggleId { get; set; }
 
 	//
-	private string? ContainerCssClass => CssCompose.Join(ContainerLayout.ToCss(), ContainerClass);
+	private string? ContainerCssClass => CssCompose.Join(ContainerLayout.ToContainerCss(), ContainerClass);
 
 	//
 	protected override void OnComponentClass(CssCompose css)
