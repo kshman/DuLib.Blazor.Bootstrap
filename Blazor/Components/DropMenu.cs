@@ -2,6 +2,15 @@
 
 namespace Du.Blazor.Components;
 
+/// <summary>드랍 콘텐트</summary>
+/// <remarks>원래 <see cref="DropDown"/> 아래 콘텐트 구성용이지만, 단독으로 쓸 수 있음</remarks>
+public class DropContent : DropMenu
+{
+	//
+	protected override string TagName => "div";
+}
+
+
 /// <summary>
 /// 드랍다운 메뉴 제공 컴포넌트
 /// </summary>
@@ -51,7 +60,9 @@ public class DropMenu : ComponentContent, ITagItemAdopter
 	}
 
 	//
-	protected override void BuildRenderTree(RenderTreeBuilder builder)
+	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
+		InternalRenderTreeCascadingTag<DropMenu>(builder, TagName);
+#if false
 	{
 		/*
 		 * <TagElement Tag="@TagName" Class="@CssClass" UserAttrs="@UserAttrs">
@@ -60,7 +71,7 @@ public class DropMenu : ComponentContent, ITagItemAdopter
 		 *     </CascadingValue>
 		 * </TagElement>
 		 */
-		builder.OpenComponent<TagElement>(0);
+		builder.OpenComponent<Web.TagElement>(0);
 
 		builder.AddAttribute(1, "Tag", TagName);
 		builder.AddAttribute(2, "Class", CssClass);
@@ -77,4 +88,5 @@ public class DropMenu : ComponentContent, ITagItemAdopter
 
 		builder.CloseElement(); // TagElement
 	}
+#endif
 }

@@ -1,9 +1,11 @@
-﻿using Du.Blazor.Supplement;
-using Microsoft.AspNetCore.Components.Rendering;
+﻿using Microsoft.AspNetCore.Components.Rendering;
 
 namespace Du.Blazor.Components;
 
-public class CardContent : TagContentObject<Card>, ITagItemAdopter
+/// <summary>
+/// 카드 이미지가 있을 때만 쓰는 콘텐트 컴포넌트
+/// </summary>
+public class CardImageContent : TagContentObject<Card>
 {
 	/// <summary>카드에 넣을 이미지 URL</summary>
 	[Parameter] public string? Image { get; set; }
@@ -15,6 +17,14 @@ public class CardContent : TagContentObject<Card>, ITagItemAdopter
 	[Parameter] public int? Height { get; set; }
 	/// <summary>카드에 넣을 이미지가 놓여지는 방버ㅓ</summary>
 	[Parameter] public CardImageLocation Location { get; set; }
+
+	// 
+	protected override void OnComponentInitialized()
+	{
+		LogIf.FailWithMessage(Logger, Image is not null, Settings.UseLocaleMesg
+			? "이미지가 없으면 <TagContent>를 쓰세요."
+			: "Use <TagContent> without image");
+	}
 
 	//
 	protected override void OnComponentClass(CssCompose css)
@@ -33,10 +43,8 @@ public class CardContent : TagContentObject<Card>, ITagItemAdopter
 		 *     <img src="@Image" alt="@Alt" width="@Width" height="@Height" 
 		 *         class="@(Location== CardImageLocation.Top ? "card-img-top" : "card-img")" />
 		 * }
-		 * <div class="@CssClass">
-		 *     <CascadeValue Value="this" IsFixed="true">
-		 *         @ChildContent
-		 *     </CascadeValue>
+		 * <div class="@CssClass" @attributes="UserAttrs">
+		 *     @ChildContent
 		 * </div>
 		 * @if (Image.IsHave(true) && isbottom)
 		 * {
@@ -60,17 +68,7 @@ public class CardContent : TagContentObject<Card>, ITagItemAdopter
 		builder.OpenElement(10, "div");
 		builder.AddAttribute(11, "class", CssClass);
 		builder.AddMultipleAttributes(12, UserAttrs);
-
-		if (ChildContent is not null)
-		{
-			builder.OpenComponent<CascadingValue<CardContent>>(13);
-			builder.AddAttribute(14, "Value", this);
-			builder.AddAttribute(15, "IsFixed", true);
-			builder.AddAttribute(16, "ChildContent", (RenderFragment)((b) =>
-					b.AddContent(17, ChildContent)));
-			builder.CloseComponent(); // CascadingValue<Card>
-		}
-
+		builder.AddContent(13, ChildContent);
 		builder.CloseElement(); // div
 
 		if (image && Location is CardImageLocation.Bottom)

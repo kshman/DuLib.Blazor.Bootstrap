@@ -40,7 +40,7 @@ public class TagItem : TagItemObject<ITagItemAdopter>
 	{
 		if (Adopter is DropMenu)
 			css.AddSelect(TextMode, "dropdown-item-text", "dropdown-item");
-		else if (Adopter is CardContent)
+		else if (Adopter is Card)
 			css.Add("card-text");
 	}
 
@@ -48,13 +48,13 @@ public class TagItem : TagItemObject<ITagItemAdopter>
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
 		if (Adopter is DropMenu)
-			BuildRenderDropMenu(builder);
+			InternalRenderTreeDropMenu(builder);
 		else
-			BuildRenderCommon(builder);
+			InternalRenderTreeTextChild(builder);
 	}
 
 	//
-	private void BuildRenderDropMenu(RenderTreeBuilder builder)
+	protected void InternalRenderTreeDropMenu(RenderTreeBuilder builder)
 	{
 		/*
 		 * 	<li>
@@ -78,23 +78,6 @@ public class TagItem : TagItemObject<ITagItemAdopter>
 		builder.CloseElement(); // tag
 
 		builder.CloseElement(); // li
-	}
-
-	//
-	private void BuildRenderCommon(RenderTreeBuilder builder)
-	{
-		/*
-		 * <div class="@CssClass" @attributes="@UserAttrs">
-		 *     @Text
-		 *     @ChildContent
-		 * </div>
-		 */
-		builder.OpenElement(0, Tag);
-		builder.AddAttribute(1, "class", CssClass);
-		builder.AddMultipleAttributes(2, UserAttrs);
-		builder.AddContent(3, Text);
-		builder.AddContent(4, ChildContent);
-		builder.CloseElement(); // tag
 	}
 }
 
@@ -122,4 +105,21 @@ public abstract class TagItemBase : ComponentContent
 
 	//
 	protected virtual string Tag => "p";
+
+	//
+	protected void InternalRenderTreeTextChild(RenderTreeBuilder builder)
+	{
+		/*
+		 * <div class="@CssClass" @attributes="@UserAttrs">
+		 *     @Text
+		 *     @ChildContent
+		 * </div>
+		 */
+		builder.OpenElement(0, Tag);
+		builder.AddAttribute(1, "class", CssClass);
+		builder.AddMultipleAttributes(2, UserAttrs);
+		builder.AddContent(3, Text);
+		builder.AddContent(4, ChildContent);
+		builder.CloseElement(); // tag
+	}
 }

@@ -51,18 +51,6 @@ public class Badge : ComponentContent
 	}
 
 	//
-	protected override void BuildRenderTree(RenderTreeBuilder builder)
-	{
-		/*
-		 * <span class="@CssClass" @attributes="UserAttrs">
-		 *     @ChildContent
-		 * </span>
-		 */
-
-		builder.OpenElement(0, "span");
-		builder.AddAttribute(1, "class", CssClass);
-		builder.AddMultipleAttributes(2, UserAttrs);
-		builder.AddContent(3, ChildContent);
-		builder.CloseElement();
-	}
+	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
+		InternalRenderTreeTag(builder, "span");
 }

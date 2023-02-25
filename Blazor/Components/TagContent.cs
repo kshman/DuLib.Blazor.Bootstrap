@@ -17,23 +17,20 @@ public interface ITagContentAdopter
 /// </summary>
 public class TagHeader : TagContentObject<ITagContentAdopter>
 {
-	// 해야함
-
 	//
-	protected override void BuildRenderTree(RenderTreeBuilder builder)
+	protected override void OnComponentClass(CssCompose css)
 	{
-		/*
-		 * <div class="@CssClass">
-		 *     @ChildContent
-		 * </div>
-		 */
-
-		builder.OpenElement(0, "div");
-		builder.AddAttribute(1, "class", CssClass);
-		builder.AddMultipleAttributes(2, UserAttrs);
-		builder.AddContent(3, ChildContent);
-		builder.CloseElement(); // div
+		if (Adopter is Card)
+		{
+			css
+				.Add("card-header")
+				.AddIf(Class is null, Card.DefaultSettings.HeaderClass);
+		}
 	}
+
+	// 
+	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
+		InternalRenderTreeTag(builder);
 }
 
 
@@ -42,23 +39,20 @@ public class TagHeader : TagContentObject<ITagContentAdopter>
 /// </summary>
 public class TagFooter : TagContentObject<ITagContentAdopter>
 {
-	// 해야함
-
 	//
-	protected override void BuildRenderTree(RenderTreeBuilder builder)
+	protected override void OnComponentClass(CssCompose css)
 	{
-		/*
-		 * <div class="@CssClass">
-		 *     @ChildContent
-		 * </div>
-		 */
-
-		builder.OpenElement(0, "div");
-		builder.AddAttribute(1, "class", CssClass);
-		builder.AddMultipleAttributes(2, UserAttrs);
-		builder.AddContent(3, ChildContent);
-		builder.CloseElement(); // div
+		if (Adopter is Card)
+		{
+			css
+				.Add("card-footer")
+				.AddIf(Class is null, Card.DefaultSettings.FooterClass);
+		}
 	}
+
+	// 
+	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
+		InternalRenderTreeTag(builder);
 }
 
 
@@ -68,37 +62,24 @@ public class TagFooter : TagContentObject<ITagContentAdopter>
 public class TagContent : TagContentObject<ITagContentAdopter>
 {
 	//
-	protected override void BuildRenderTree(RenderTreeBuilder builder)
+	protected override void OnComponentClass(CssCompose css)
 	{
-		/*
-		 * <div class="@CssClass">
-		 *     <CascadeValue Value="this" IsFixed="true">
-		 *         @ChildContent
-		 *     </CascadeValue>
-		 * </div>
-		 */
-
-		builder.OpenElement(0, "div");
-		builder.AddAttribute(1, "class", CssClass);
-		builder.AddMultipleAttributes(2, UserAttrs);
-
-		if (ChildContent is not null)
+		if (Adopter is Card)
 		{
-			builder.OpenComponent<CascadingValue<CardContent>>(13);
-			builder.AddAttribute(4, "Value", this);
-			builder.AddAttribute(5, "IsFixed", true);
-			builder.AddAttribute(6, "ChildContent", (RenderFragment)((b) =>
-					b.AddContent(7, ChildContent)));
-			builder.CloseComponent(); // CascadingValue<Card>
+			css
+				.Add("card-body")
+				.AddIf(Class is null, Card.DefaultSettings.ContentClass);
 		}
-
-		builder.CloseElement(); // div
 	}
+
+	// 
+	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
+		InternalRenderTreeTag(builder);
 }
 
 
 /// <summary>
-/// 태그 콘텐트 기본
+/// 태그 콘텐트 기본, 그리기 엄다
 /// </summary>
 /// <typeparam name="T">이 클래스를 자식으로 두는 클래스 형식</typeparam>
 public abstract class TagContentObject<T> : ComponentContent
@@ -110,8 +91,10 @@ public abstract class TagContentObject<T> : ComponentContent
 	[Inject] protected ILogger<T> Logger { get; set; } = default!;
 
 	//
-	protected override void OnComponentInitialized()
+	protected override void OnInitialized()
 	{
 		LogIf.ContainerIsNull(Logger, Adopter);
+
+		base.OnInitialized();
 	}
 }

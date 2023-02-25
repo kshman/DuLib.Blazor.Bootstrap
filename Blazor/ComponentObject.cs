@@ -1,4 +1,6 @@
-﻿namespace Du.Blazor;
+﻿using Microsoft.AspNetCore.Components.Rendering;
+
+namespace Du.Blazor;
 
 /// <summary>
 /// Du.Blazor 컴포넌트 맨 밑단
@@ -83,6 +85,46 @@ public abstract class ComponentContent : ComponentObject
 {
 	/// <summary>자식 콘텐트</summary>
 	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	//
+	protected void InternalRenderTreeTag(RenderTreeBuilder builder, string tag = "div")
+	{
+		/*
+		 * <tag class="@CssClass" @attributes="UserAttrs">
+		 *    @ChildContent
+		 * </tag>
+		 */
+
+		builder.OpenElement(0, tag);
+		builder.AddAttribute(1, "class", CssClass);
+		builder.AddMultipleAttributes(2, UserAttrs);
+		builder.AddContent(3, ChildContent);
+		builder.CloseElement(); // tag
+	}
+
+	//
+	protected void InternalRenderTreeCascadingTag<TType>(RenderTreeBuilder builder, string tag = "div")
+	{
+		/*
+		 * <tag class="@CssClass" @attributes="@UserAttrs">
+		 *     <CascadingValue Value="this" IsFixed="true>
+		 *         @Content
+		 *     </CascadingValue>
+		 * </tag>
+		 */
+		builder.OpenElement(0, tag);
+		builder.AddAttribute(1, "class", CssClass);
+		builder.AddMultipleAttributes(2, UserAttrs);
+
+		builder.OpenComponent<CascadingValue<TType>>(3);
+		builder.AddAttribute(4, "Value", this);
+		builder.AddAttribute(5, "IsFixed", true);
+		builder.AddAttribute(6, "ChildContent", (RenderFragment)((b) =>
+				b.AddContent(7, ChildContent)));
+		builder.CloseComponent(); // CascadingValue<TType>
+
+		builder.CloseElement(); // tag
+	}
 }
 
 

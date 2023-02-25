@@ -47,7 +47,7 @@ internal static class LogIf
 	}
 
 	//
-	internal static void FailWithMessage<TItem>(bool condition, string message, ILogger<TItem> logger)
+	internal static void FailWithMessage<TItem>(ILogger<TItem> logger, bool condition, string message)
 	{
 		if (condition)
 			return;
