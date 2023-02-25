@@ -4,7 +4,8 @@ using static System.Net.Mime.MediaTypeNames;
 namespace Du.Blazor.Components;
 
 /// <summary>
-/// 붕괴?! (콜랩스)
+/// 붕괴?! (콜랩스)<br/>
+/// 기능은... 뻔하져
 /// </summary>
 public class Collapse : ComponentContent, IAsyncDisposable
 {

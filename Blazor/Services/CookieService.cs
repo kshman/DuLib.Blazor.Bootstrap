@@ -66,7 +66,7 @@ public interface ICookieService
 /// </summary>
 public static class CookieServiceExtension
 {
-	public static IServiceCollection AddDuCookieService(this IServiceCollection services)
+	public static IServiceCollection AdDuCookieService(this IServiceCollection services)
 	{
 		if (services==null)
 			throw new ArgumentNullException(nameof(services));

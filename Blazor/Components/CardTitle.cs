@@ -3,7 +3,6 @@
 namespace Du.Blazor.Components;
 
 /// <summary>카드 타이틀</summary>
-/// <seealso cref="Du.Blazor.ComponentContent" />
 public class CardTitle : ComponentContent
 {
 	/// <summary>타이틀 주 이름</summary>

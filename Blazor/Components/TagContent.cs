@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Logging;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Du.Blazor.Components;
 

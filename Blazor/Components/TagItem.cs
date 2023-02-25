@@ -38,10 +38,15 @@ public class TagItem : TagItemObject<ITagItemAdopter>
 	//
 	protected override void OnComponentClass(CssCompose css)
 	{
-		if (Adopter is DropMenu)
-			css.AddSelect(TextMode, "dropdown-item-text", "dropdown-item");
-		else if (Adopter is Card)
-			css.Add("card-text");
+		switch (Adopter)
+		{
+			case DropMenu:
+				css.AddSelect(TextMode, "dropdown-item-text", "dropdown-item");
+				break;
+			case Card:
+				css.Add("card-text");
+				break;
+		}
 	}
 
 	//

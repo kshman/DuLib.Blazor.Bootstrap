@@ -30,7 +30,7 @@ public class Button : ButtonBase
 	[CascadingParameter] public DropMenu? DropMenu { get; set; }
 
 	/// <summary>URL 링크 지정.</summary>
-	[Parameter] public string? Href { get; set; }
+	[Parameter] public string? Link { get; set; }
 	/// <summary>타겟 지정.</summary>
 	[Parameter] public string? Target { get; set; }
 
@@ -91,9 +91,9 @@ public class Button : ButtonBase
 		builder.OpenElement(2, "a"); // a
 		builder.AddAttribute(3, "class", CssClass);
 
-		if (Href.IsHave())
+		if (Link.IsHave())
 		{
-			builder.AddAttribute(4, "href", Href);
+			builder.AddAttribute(4, "href", Link);
 			builder.AddAttribute(5, "target", Target);
 		}
 		else
@@ -131,14 +131,14 @@ public class Button : ButtonBase
 		 *     </button>
 		 *     }
 		 */
-		var href = Href.IsHave();
+		var link = Link.IsHave();
 
-		builder.OpenElement(0, href ? "a" : "button"); // a or button
+		builder.OpenElement(0, link ? "a" : "button"); // a or button
 		builder.AddAttribute(1, "class", CssClass);
 
-		if (href)
+		if (link)
 		{
-			builder.AddAttribute(2, "href", Href);
+			builder.AddAttribute(2, "href", Link);
 			builder.AddAttribute(3, "target", Target);
 		}
 		else

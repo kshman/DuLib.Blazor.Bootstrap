@@ -4,6 +4,7 @@ namespace Du.Blazor.Components;
 
 /// <summary>드랍 콘텐트</summary>
 /// <remarks>원래 <see cref="DropDown"/> 아래 콘텐트 구성용이지만, 단독으로 쓸 수 있음</remarks>
+/// <seealso cref="DropMenu"/>
 public class DropContent : DropMenu
 {
 	//
@@ -23,8 +24,9 @@ public class DropContent : DropMenu
 /// <item><term><see cref="TagItem"/></term><description>P 태그 제공</description></item>
 /// <item><term><see cref="TagSpan"/></term><description>SPAN 태그 제공</description></item>
 /// <item><term><see cref="TagDiv"/></term><description>DIV 태그 제공</description></item>
-/// <item><term><see cref="Button"/></term><description>버튼 표시</description></item>
-/// <item><term><see cref="Divider"/></term><description>구분 가로줄 표시</description></item>
+/// <item><term><see cref="Button"/></term><description>버튼/링크</description></item>
+/// <item><term><see cref="Divider"/></term><description>구분 가로줄</description></item>
+/// <item><term><see cref="NavButton"/></term><description>나브 링크</description></item>
 /// </list>
 /// </para>
 /// </remarks>
@@ -62,31 +64,4 @@ public class DropMenu : ComponentContent, ITagItemAdopter
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
 		InternalRenderTreeCascadingTag<DropMenu>(builder, TagName);
-#if false
-	{
-		/*
-		 * <TagElement Tag="@TagName" Class="@CssClass" UserAttrs="@UserAttrs">
-		 *     <CascadingValue Value="this" IsFixed="true">
-		 *         @ChildContent
-		 *     </CascadingValue>
-		 * </TagElement>
-		 */
-		builder.OpenComponent<Web.TagElement>(0);
-
-		builder.AddAttribute(1, "Tag", TagName);
-		builder.AddAttribute(2, "Class", CssClass);
-		builder.AddMultipleAttributes(3, UserAttrs);
-		builder.AddAttribute(4, "ChildContent", (RenderFragment)((bt) =>
-		{
-			bt.OpenComponent<CascadingValue<DropMenu>>(5);
-			bt.AddAttribute(6, "Value", this);
-			bt.AddAttribute(7, "IsFixed", true);
-			bt.AddAttribute(8, "ChildContent", (RenderFragment)((bc) =>
-				bc.AddContent(9, ChildContent)));
-			bt.CloseComponent(); // CascadingValue<DropMenu>
-		}));
-
-		builder.CloseElement(); // TagElement
-	}
-#endif
 }

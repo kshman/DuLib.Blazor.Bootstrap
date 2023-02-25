@@ -5,6 +5,9 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 카드 이미지가 있을 때만 쓰는 콘텐트 컴포넌트
 /// </summary>
+/// <remarks>
+/// 이름으로 타이틀을 제공할 때는 <see cref="CardTitle"/> 컴포넌트를 내부에서 사용하면 됨
+/// </remarks>
 public class CardImageContent : TagContentObject<Card>
 {
 	/// <summary>카드에 넣을 이미지 URL</summary>

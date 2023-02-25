@@ -4,18 +4,16 @@ namespace Du.Blazor.Services;
 
 public class MarkdownProvider : IMarkdownProvider
 {
-	private readonly MarkdownPipeline _pipeline;
-
 	public MarkdownProvider() =>
-		_pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
+		Pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
 
-	public MarkdownPipeline Pipeline => _pipeline;
+	public MarkdownPipeline Pipeline { get; }
 
 	public string GetHtml(string markdown) =>
-		Markdown.ToHtml(markdown, _pipeline);
+		Markdown.ToHtml(markdown, Pipeline);
 
 	public MarkupString GetMarkup(string markdown) =>
-		(MarkupString)Markdown.ToHtml(markdown, _pipeline);
+		(MarkupString)Markdown.ToHtml(markdown, Pipeline);
 }
 
 public interface IMarkdownProvider
@@ -28,7 +26,7 @@ public interface IMarkdownProvider
 
 public static class MarkdownProviderExtension
 {
-	public static IServiceCollection AddDuMarkdownProvider(this IServiceCollection services)
+	public static IServiceCollection AdDuMarkdownProvider(this IServiceCollection services)
 	{
 		if (services == null)
 			throw new ArgumentNullException(nameof(services));

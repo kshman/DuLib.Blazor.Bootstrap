@@ -1,5 +1,8 @@
 ﻿namespace Du.Blazor.Components;
 
+/// <summary>
+/// 오프캔바스
+/// </summary>
 public partial class OffCanvas : ComponentContent, IAsyncDisposable
 {
 	#region 기본 설정

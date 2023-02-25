@@ -3,7 +3,7 @@
 namespace Du.Blazor.Components;
 
 /// <summary>
-/// 나브
+/// 나브 컴포넌트
 /// </summary>
 public class Nav : ComponentContent
 {

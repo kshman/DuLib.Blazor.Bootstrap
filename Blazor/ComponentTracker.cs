@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.Logging;
 
-namespace Du.Blazor.Web;
+namespace Du.Blazor;
 
 /// <summary>
 /// 컴포넌트 값 변경 추적
@@ -24,7 +24,7 @@ public class ComponentTracker : ComponentBase, IDisposable
 	{
 		ThrowIf.ArgumentNull(Value, nameof(Value));
 
-		if (Value != _prevValue)
+		if (!ReferenceEquals(Value, _prevValue))
 		{
 			Logger.LogDebug(Settings.UseLocaleMesg
 				? "값 변경 감시를 시작합니다: {desc}"
@@ -65,11 +65,15 @@ public class ComponentTracker : ComponentBase, IDisposable
 	}
 
 	//
-	public void Dispose() => throw new NotImplementedException();
+	public void Dispose() =>
+		Dispose(true);
 
 	//
 	protected virtual void Dispose(bool disposing)
 	{
+		if (!disposing) 
+			return;
+
 		Logger.LogDebug(Settings.UseLocaleMesg
 			? "개체가 종료하므로 감시를 해제합니다: {desc}"
 			: "{desc}: Disposed. stopped PropertyChanged",
