@@ -8,7 +8,7 @@ namespace Du.Blazor.Components;
 ///   <para>드랍다운의 펼치기/닫기 버튼으로 쓰이며, NavBar 버튼으로도 쓸 수 있음</para>
 /// </summary>
 /// <seealso cref="DropDown" />
-public class Toggle : ComponentContent, IAsyncDisposable
+public class Toggle : ComponentFragment, IAsyncDisposable
 {
 	// 우선순위
 	//	1. 드랍다운			=> nav-link dropdown-toggle
@@ -99,7 +99,7 @@ public class Toggle : ComponentContent, IAsyncDisposable
 			{
 				Logger.LogCritical(Settings.UseLocaleMesg
 						? "{name}: 붕괴?! 컨트롤의 분리 기능과 나브바를 함께 쓰면 안되요."
-						: "{name}: Cannot use with Collapse control or NavBar.", 
+						: "{name}: Cannot use with Collapse control or NavBar.",
 						nameof(Split));
 				Split = false;
 			}
@@ -112,7 +112,7 @@ public class Toggle : ComponentContent, IAsyncDisposable
 				{
 					Logger.LogCritical(Settings.UseLocaleMesg
 						? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
-						: "{name}: Must be {type} when contained within NavBar.", 
+						: "{name}: Must be {type} when contained within NavBar.",
 						nameof(Layout), nameof(ToggleLayout.Button));
 					Layout = ToggleLayout.Button;
 				}
@@ -134,47 +134,44 @@ public class Toggle : ComponentContent, IAsyncDisposable
 		{
 			Logger.LogError(Settings.UseLocaleMesg
 				? "{name}: 스플릿 모드를 쓰려거든 레이아웃을 반드시 버튼으로 하세요."
-				: "{name}: Layout must be button when split mode.", 
+				: "{name}: Layout must be button when split mode.",
 				nameof(Split));
 			Layout = ToggleLayout.Button;
 		}
 
 		Logger.LogTrace(Settings.UseLocaleMesg
 			? "{name}: 성공적으로 초기화 했어요."
-			: "{name}: initialized successfully.", 
+			: "{name}: initialized successfully.",
 			nameof(Toggle));
 	}
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
 		if (NavBar is not null)
 		{
 			if (DropDown is null)
-				css.Add("navbar-toggler");
+				cssc.Add("navbar-toggler");
 			else
 			{
-				css
-					.Add("nav-link")
+				cssc.Add("nav-link")
 					.Add("dropdown-toggle"); // 밑에도 나오지만, 그때는 _use_collapse가 false임 여긴 true
 			}
 		}
 
 		if (Layout == ToggleLayout.Button)
 		{
-			css
-				.AddIf(_use_collapse is false, "dropdown-toggle")
+			cssc.AddIf(_use_collapse is false, "dropdown-toggle")
 				.Add("btn")
 				.Add(ActualColor.ToButtonCss(ActualOutline))
 				.Add(ActualSize.ToCss("btn"));
 		}
 		else
 		{
-			css.AddIf(Caret && _use_collapse is false, "dropdown-toggle");
+			cssc.AddIf(Caret && _use_collapse is false, "dropdown-toggle");
 		}
 
-		css
-			.AddIf(Split, "dropdown-toggle-split")
+		cssc.AddIf(Split, "dropdown-toggle-split")
 			.Register(() => (DropDown?.Expanded ?? false).IfTrue("show"));
 	}
 
@@ -239,9 +236,10 @@ public class Toggle : ComponentContent, IAsyncDisposable
 			builder.AddElementReferenceCapture(11, e => _self = e);
 		}
 
-		if (Text.IsHave() || ChildContent is not null)
+		if (Text.IsHave(true) || ChildContent is not null)
 		{
-			builder.AddContent(20, Text);
+			if (Text.IsHave(true))
+				builder.AddContent(20, Text);
 			builder.AddContent(21, ChildContent);
 		}
 		else if (NavBar is not null)

@@ -9,7 +9,7 @@
     <RootNamespace>Du</RootNamespace>
 
     <RepositoryUrl>https://github.com/kshman/DuLib.Blazor</RepositoryUrl>
-    <Version>0.1.2</Version>
+    <Version>0.1.4</Version>
     <Title>DuLib.Blazor</Title>
     <PackageId>DuLib.Blazor</PackageId>
     <Product>DuLib.Blazor</Product>
@@ -32,58 +32,38 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <SupportedPlatform Include="browser" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Remove="sassconfig.json" />
-    <None Include="sassconfig.json" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Include="Markdig.Signed" Version="0.30.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <SupportedPlatform Include="browser" />
+
+    <Content Remove="sassconfig.json" />
+    <None Include="sassconfig.json" />
+
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-  </ItemGroup>
 
-  <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
 
-  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <!--Content Remove="wwwroot\ref\**" /-->
-    <!--Compile Remove="wwwroot\ref\**" /-->
-    <!--EmbeddedResource Remove="wwwroot\ref\**" /-->
-    <None Remove="wwwroot\ref\**" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <Content Remove="wwwroot\ref\**" />
-    <None Remove="wwwroot\ref\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="DuLib.Blazor.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Blazor\Components\Card.razor" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Blazor\Components\Card.razor" />
+  <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <Content Remove="wwwroot\ref\**" />
+    <None Remove="wwwroot\ref\**" />
+    <Compile Remove="Blazor\Unused\RemoveIntellisence.cs" />
+    <None Include="Blazor\Unused\RemoveIntellisence.cs" />
   </ItemGroup>
 
 </Project>

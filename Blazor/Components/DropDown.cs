@@ -26,7 +26,7 @@ namespace Du.Blazor.Components;
 /// </code>
 /// </para>
 /// </remarks>
-public class DropDown : ComponentContent
+public class DropDown : ComponentFragment
 {
 	/// <summary>나브바. 캐스케이딩되면 아래 딸려오는 컴포넌트가 나브바를 지원하게 동작한다</summary>
 	[CascadingParameter] public NavBar? NavBar { get; set; }
@@ -40,10 +40,9 @@ public class DropDown : ComponentContent
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add(Direction.ToCss())
+		cssc.Add(Direction.ToCss())
 			.AddIf(NavBar is null, "btn-group");
 	}
 
@@ -58,23 +57,18 @@ public class DropDown : ComponentContent
 		 * </div>
 		 */
 		builder.OpenElement(0, "div");
-
 		builder.AddAttribute(1, "class", CssClass);
 		builder.AddAttribute(2, "id", Id);
 		builder.AddMultipleAttributes(3, UserAttrs);
 
 		builder.OpenComponent<CascadingValue<DropDown>>(4);
-
 		builder.AddAttribute(5, "Value", this);
 		builder.AddAttribute(6, "IsFixed", true);
 		builder.AddAttribute(7, "ChildContent", (RenderFragment)((b) =>
-		{
-			b.AddContent(8, ChildContent);
-		}));
+			b.AddContent(8, ChildContent)));
+		builder.CloseComponent(); // CascadingValue<DropDown>
 
-		builder.CloseComponent();
-
-		builder.CloseElement(); 
+		builder.CloseElement(); // div
 	}
 
 	//

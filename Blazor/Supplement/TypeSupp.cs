@@ -51,7 +51,7 @@ namespace Du.Blazor.Supplement
 				TagColor.Info => "info",
 				TagColor.Light => "light",
 				TagColor.Dark => "dark",
-				TagColor.None or 
+				TagColor.None or
 				_ => null,
 			};
 			return cs is null ? null : $"{lead}-{cs}";
@@ -141,20 +141,49 @@ namespace Du.Blazor.Supplement
 			NavBarExpand.Large => "navbar-expand-lg",
 			NavBarExpand.ExtraLarge => "navbar-expand-xl",
 			NavBarExpand.ExtraExtraLarge => "navbar-expand-xxl",
-			NavBarExpand.Collapsed or 
+			NavBarExpand.Collapsed or
 			_ => null,
 		};
 
-		internal static string? ToCss(this NavContainerLayout layout) => layout switch
+		internal static string? ToContainerCss(this TagDimension layout) => layout switch
 		{
-			NavContainerLayout.Fluid => "container-fluid",
-			NavContainerLayout.Small => "container-sm",
-			NavContainerLayout.Medium => "container-md",
-			NavContainerLayout.Large => "container-lg",
-			NavContainerLayout.ExtraLarge => "container-xl",
-			NavContainerLayout.ExtraExtraLarge => "container-xxl",
-			NavContainerLayout.None or
+			TagDimension.Small => "container-sm",
+			TagDimension.Medium => "container-md",
+			TagDimension.Large => "container-lg",
+			TagDimension.ExtraLarge => "container-xl",
+			TagDimension.ExtraExtraLarge => "container-xxl",
+			TagDimension.NavFluid => "container-fluid",
+			TagDimension.None or
 			_ => null
+		};
+
+		internal static string ToOffCanvasCss(this TagDimension responsive) => responsive switch
+		{
+			TagDimension.Small => "offcanvas-sm",
+			TagDimension.Medium => "offcanvas-md",
+			TagDimension.Large => "offcanvas-lg",
+			TagDimension.ExtraLarge => "offcanvas-xl",
+			TagDimension.ExtraExtraLarge => "offcanvas-xxl",
+			TagDimension.NavFluid or
+			TagDimension.None or
+			_ => "offcanvas",
+		};
+
+		internal static string ToOffCanvasCss(this TagPlacement replacement) => replacement switch
+		{
+			TagPlacement.Top => "offcanvas-top",
+			TagPlacement.Bottom => "offcanvas-bottom",
+			TagPlacement.Left => "offcanvas-start",
+			TagPlacement.Right or
+			_ => "offcanvas-end",
+		};
+
+		internal static string ToBootStrap(this OffCanvasBackDrop backdrop) => backdrop switch
+		{
+			OffCanvasBackDrop.True => "true",
+			OffCanvasBackDrop.False => "false",
+			OffCanvasBackDrop.Static or
+			_ => "static",
 		};
 		#endregion 컴포넌트
 

@@ -8,6 +8,20 @@ public enum TagSize
 	Large,
 }
 
+/// <summary>컴포넌트 크기</summary>
+public enum TagDimension
+{
+	None,
+	Small,
+	Medium,
+	Large,
+	ExtraLarge,
+	ExtraExtraLarge,
+
+	/// <summary>나브 전용 Fluid, 그외에는 Medium으로 대체</summary>
+	NavFluid,
+}
+
 /// <summary>컴포넌트 색깔</summary>
 public enum TagColor
 {
@@ -49,6 +63,18 @@ public enum TagPosition
 	Sticky,
 }
 
+/// <summary>position 또는 placement 속성</summary>
+public enum TagPlacement
+{
+	Top,
+	Right,
+	Bottom,
+	Left,
+
+	Start = Left,
+	End = Right,
+}
+
 /// <summary>배지 레이아웃</summary>
 public enum BadgeLayout
 {
@@ -76,9 +102,9 @@ public enum ButtonLayout
 /// <summary>carousel 재생 방법</summary>
 public enum CarouselPlay
 {
-	Auto,	// 자동
-	False,	// 수동
-	True,	// 한 사이클
+	Auto,   // 자동
+	False,  // 수동
+	True,   // 한 사이클
 }
 
 /// <summary>Bit's 피벗 타이틀 레이아웃</summary>
@@ -86,16 +112,6 @@ public enum PivotLayout
 {
 	Flat,
 	Box,
-}
-
-/// <summary>피벗 위치</summary>
-public enum PivotPosition
-{
-	Top,
-	Right,
-	Bottom, 
-	Left, 
-	//Center,	
 }
 
 /// <summary>토글 레이아웃</summary>
@@ -153,22 +169,18 @@ public enum NavBarExpand
 	Collapsed,
 }
 
-/// <summary>NAV 컨테이너 레이아웃</summary>
-public enum NavContainerLayout
-{
-	None,
-	Fluid,
-	Small,
-	Medium,
-	Large,
-	ExtraLarge,
-	ExtraExtraLarge,
-}
-
 /// <summary>카드 놓기 위치</summary>
 public enum CardImageLocation
 {
 	Top,
 	Bottom,
 	Overlay,
+}
+
+/// <summary>오프 캔바스 백드랍</summary>
+public enum OffCanvasBackDrop
+{
+	True,
+	False,
+	Static
 }

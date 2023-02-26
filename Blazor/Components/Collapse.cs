@@ -1,40 +1,14 @@
-﻿@inherits ComponentContent
-@implements IAsyncDisposable
-@inject IJSRuntime JS
+﻿using Microsoft.AspNetCore.Components.Rendering;
+using static System.Net.Mime.MediaTypeNames;
 
-@*
-@if (NavBar is not null)
+namespace Du.Blazor.Components;
+
+/// <summary>
+/// 붕괴?! (콜랩스)<br/>
+/// 기능은... 뻔하져
+/// </summary>
+public class Collapse : ComponentFragment, IAsyncDisposable
 {
-	<div @ref="_self"
-		 class="@CssClass"
-		 id="@Id"
-		 @attributes="@UserAttrs">
-		@ChildContent
-	</div>
-}
-else
-{
-	<div @ref="_self"
-		 class="@CssClass"
-		 id="@Id"
-		 aria-expanded="@Expanded"
-		 data-bs-parent="@ParentId"
-		 @attributes="@UserAttrs">
-		@ChildContent
-	</div>
-}
-*@
-
-<div @ref="_self"
-	 class="@CssClass"
-	 id="@Id"
-	 aria-expanded="@Expanded"
-	 data-bs-parent="@ParentId"
-	 @attributes="@UserAttrs">
-	@ChildContent
-</div>
-
-@code {
 	/// <summary>윗단에 놓이는 나브바</summary>
 	[CascadingParameter] public NavBar? NavBar { get; set; }
 
@@ -51,6 +25,9 @@ else
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
 	/// <summary>확장 여부 변경 이벤트</summary>
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
+
+	//
+	[Inject] private IJSRuntime JS { get; set; } = default!;
 
 	//
 	private ElementReference _self;
@@ -75,10 +52,9 @@ else
 		_expanded = Expanded;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.AddIf(NavBar is not null, "navbar-collapse")
+		cssc.AddIf(NavBar is not null, "navbar-collapse")
 			.Add("collapse")
 			.AddIf(Direction == TagDirection.Horizontal, "collapse-horizontal")
 			.AddIf(_expanded, "show");
@@ -97,6 +73,30 @@ else
 	//
 	protected override bool ShouldRender() =>
 		!_now_show && !_now_hide;
+
+	//
+	protected override void BuildRenderTree(RenderTreeBuilder builder)
+	{
+		/* 
+		 * <div @ref="_self"
+		 *      class="@CssClass"
+		 *      id="@Id"
+		 *      aria-expanded="@Expanded"
+		 *      data-bs-parent="@ParentId"
+		 *      @attributes="@UserAttrs">
+		 *     @ChildContent
+		 * </div>
+		 */
+		builder.OpenElement(0, "div");
+		builder.AddAttribute(1, "class", CssClass);
+		builder.AddAttribute(2, "id", Id);
+		builder.AddAttribute(3, "aria-expanded", Expanded);
+		builder.AddAttribute(4, "data-bs-parent", ParentId);
+		builder.AddMultipleAttributes(5, UserAttrs);
+		builder.AddElementReferenceCapture(6, p => _self = p);
+		builder.AddContent(7, ChildContent);
+		builder.CloseElement(); // div
+	}
 
 	/// <summary>보여준다</summary>
 	public async Task ExpandAsync()

@@ -34,8 +34,8 @@
 @code {
 	/// <summary>피벗 레이아웃. <see cref="PivotLayout"/></summary>
 	[Parameter] public PivotLayout Layout { get; set; } = PivotLayout.Flat;
-	/// <summary>피벗 위치. <see cref="PivotPosition"/></summary>
-	[Parameter] public PivotPosition Position { get; set; } = PivotPosition.Top;
+	/// <summary>피벗 위치. <see cref="TagPlacement"/></summary>
+	[Parameter] public TagPlacement Position { get; set; } = TagPlacement.Top;
 	/// <summary>피벗이 범위를 넘어서면 처리할 방법. <see cref="TagOverflow"/></summary>
 	[Parameter] public TagOverflow Overflow { get; set; } = TagOverflow.None;
 	/// <summary>피벗 크기. <see cref="TagSize"/></summary>
@@ -44,10 +44,9 @@
 	[Parameter] public bool PivotOnly { get; set; } //= false;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add("hpvt")
+		cssc.Add("hpvt")
 			.Add(Size switch
 			{
 				TagSize.Medium or
@@ -70,10 +69,10 @@
 			})
 			.Add(Position switch
 			{
-				PivotPosition.Top => "ff-column",
-				PivotPosition.Right => "ff-row-reverse",
-				PivotPosition.Bottom => "ff-column-reverse",
-				PivotPosition.Left => "ff-row",
+				TagPlacement.Top => "ff-column",
+				TagPlacement.Right => "ff-row-reverse",
+				TagPlacement.Bottom => "ff-column-reverse",
+				TagPlacement.Left => "ff-row",
 				_ => null
 			});
 	}

@@ -1,4 +1,6 @@
-﻿namespace Du.Blazor;
+﻿using Microsoft.AspNetCore.Components.Rendering;
+
+namespace Du.Blazor;
 
 /// <summary>
 /// Du.Blazor 컴포넌트 맨 밑단
@@ -45,7 +47,7 @@ public abstract class ComponentObject : ComponentBase
 	{ }
 
 	/// <summary>컴포넌트의 CSS 클래스 값을 지정</summary>
-	protected virtual void OnComponentClass(CssCompose css)
+	protected virtual void OnComponentClass(CssCompose cssc)
 	{ }
 
 	// 태스크 상태를 봐서 기다렸다가 StateHasChanged 호출
@@ -68,8 +70,8 @@ public abstract class ComponentObject : ComponentBase
 	}
 
 	//
-	internal static uint _atomic_index = 1;
-	internal static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
+	private static uint _atomic_index = 1;
+	private static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
 
 	//
 	public override string ToString() => $"<{GetType().Name}#{Id}>";
@@ -77,12 +79,73 @@ public abstract class ComponentObject : ComponentBase
 
 
 /// <summary>
-/// 자식 콘텐트를 가지는 컴포넌트
+/// 프래그먼트 콘텐트를 가지는 컴포넌트
 /// </summary>
-public abstract class ComponentContent : ComponentObject
+public abstract class ComponentFragment : ComponentObject
 {
 	/// <summary>자식 콘텐트</summary>
 	[Parameter] public RenderFragment? ChildContent { get; set; }
+
+	/// <summary>
+	/// 태그를 이용해서 자식 콘텐트를 그린다
+	/// <example><code>
+	/// &lt;tag class="@CssClass" @attributes="UserAttrs"&gt;
+	///     @ChildContent
+	/// &lt;/tag&gt;
+	/// </code></example>
+	/// </summary>
+	/// <param name="builder"></param>
+	/// <param name="tag"></param>
+	internal void InternalRenderTagFragment(RenderTreeBuilder builder, string tag = "div")
+	{
+		/*
+		 * <tag class="@CssClass" @attributes="UserAttrs">
+		 *    @ChildContent
+		 * </tag>
+		 */
+
+		builder.OpenElement(0, tag);
+		builder.AddAttribute(1, "class", CssClass);
+		builder.AddMultipleAttributes(2, UserAttrs);
+		builder.AddContent(3, ChildContent);
+		builder.CloseElement(); // tag
+	}
+
+	/// <summary>
+	/// 태그를 이용해서 자식 콘텐트를 캐스케이딩해서 그린다
+	/// <example><code>
+	/// &lt;tag class="@CssClass" @attributes="@UserAttrs"&gt;
+	///     &lt;CascadingValue Value="this" IsFixed="true&gt;
+	///         @Content
+	///     &lt;/CascadingValue&gt;
+	/// &lt;/tag&gt;
+	/// </code></example>
+	/// </summary>
+	/// <typeparam name="TType"></typeparam>
+	/// <param name="builder"></param>
+	/// <param name="tag"></param>
+	internal void InternalRenderCascadingTagFragment<TType>(RenderTreeBuilder builder, string tag = "div")
+	{
+		/*
+		 * <tag class="@CssClass" @attributes="@UserAttrs">
+		 *     <CascadingValue Value="this" IsFixed="true>
+		 *         @Content
+		 *     </CascadingValue>
+		 * </tag>
+		 */
+		builder.OpenElement(0, tag);
+		builder.AddAttribute(1, "class", CssClass);
+		builder.AddMultipleAttributes(2, UserAttrs);
+
+		builder.OpenComponent<CascadingValue<TType>>(3);
+		builder.AddAttribute(4, "Value", this);
+		builder.AddAttribute(5, "IsFixed", true);
+		builder.AddAttribute(6, "ChildContent", (RenderFragment)((b) =>
+				b.AddContent(7, ChildContent)));
+		builder.CloseComponent(); // CascadingValue<TType>
+
+		builder.CloseElement(); // tag
+	}
 }
 
 

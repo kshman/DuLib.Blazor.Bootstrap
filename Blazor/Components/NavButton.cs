@@ -3,7 +3,11 @@ using Microsoft.AspNetCore.Components.Routing;
 
 namespace Du.Blazor.Components;
 
-public class NavHref : ComponentContent, IDisposable
+/// <summary>
+/// 나브 링크 제공. NavLink는 닷넷 콤포넌트라 이름을 못씀...<br/>
+/// 버튼이라는 이름이지만 버튼이 아님.
+/// </summary>
+public class NavButton : ComponentFragment, IDisposable
 {
 	/// <summary>드랍다운. 이게 캐스케이딩되어 있으면 리스트(li)를 추가한다</summary>
 	[CascadingParameter] public DropMenu? DropDown { get; set; }
@@ -36,10 +40,9 @@ public class NavHref : ComponentContent, IDisposable
 	}
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add(DropDown is null ? "nav-link" : "dropdown-item")
+		cssc.Add(DropDown is null ? "nav-link" : "dropdown-item")
 			.Register(() => _is_active ? ActiveClass : null);
 	}
 

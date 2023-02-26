@@ -1,19 +1,4 @@
-﻿using Du.Blazor.Components;
-
-namespace Du.Blazor;
-
-/// <summary>선택 이벤트</summary>
-public class SelectEventArgs : EventArgs
-{
-	public string Id { get; set; }
-	public string? Content { get; set; }
-
-	public SelectEventArgs(string id, string? content)
-	{
-		Id = id;
-		Content = content;
-	}
-}
+﻿namespace Du.Blazor;
 
 /// <summary>펼침 이벤트</summary>
 public class ExpandedEventArgs : EventArgs
