@@ -5,7 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 나브바에서 사용할 수 있는 브랜드
 /// </summary>
-public class NavBrand : ComponentContent
+public class NavBrand : ComponentFragment
 {
 		/// <summary>브랜드를 눌렀을 때 이동할 링크</summary>
 	[Parameter] public string? Link { get; set; }

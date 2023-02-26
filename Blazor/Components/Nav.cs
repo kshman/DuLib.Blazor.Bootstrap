@@ -5,7 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 나브 컴포넌트
 /// </summary>
-public class Nav : ComponentContent
+public class Nav : ComponentFragment
 {
 	/// <summary>나브바. 이게 캐스케이딩되면 나브바에 맞춰 컴포넌트를 설정</summary>
 	[CascadingParameter] public NavBar? NavBar { get; set; }

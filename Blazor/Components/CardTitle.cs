@@ -3,7 +3,7 @@
 namespace Du.Blazor.Components;
 
 /// <summary>카드 타이틀</summary>
-public class CardTitle : ComponentContent
+public class CardTitle : ComponentFragment
 {
 	/// <summary>타이틀 주 이름</summary>
 	[Parameter] public RenderFragment? MainText { get; set; }

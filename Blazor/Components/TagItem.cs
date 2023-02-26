@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.Extensions.Logging;
 
 namespace Du.Blazor.Components;
 
-/// <summary>태그 아이템의 채용자</summary>
-/// <remarks>컨테이너가 아니고 채용자것은 그냥 포함만 하지 관리는 않기 때문</remarks>
-public interface ITagItemWard
+/// <summary>태그 아이템의 보호자</summary>
+/// <remarks>컨테이너가 아닌것은 개체를 소유하지 않고 처리만 도와주기 때문</remarks>
+public interface ITagItemAgency
 {
 	/// <summary>
 	/// 태그 아이템의 CSS클래스를 설정
@@ -38,7 +39,7 @@ public class TagSpan : TagItem
 /// <summary>
 /// 태그 아이템. 
 /// </summary>
-public class TagItem : TagItemObject<ITagItemWard>
+public class TagItem : TagItemObject<ITagItemAgency>
 {
 	/// <summary>참일 경우 리스트 모드로 출력한다</summary>
 	/// <remarks>드랍일경우 드랍 텍스트로 출력한다 (마우스로 활성화되지 않는 기능)</remarks>
@@ -49,13 +50,13 @@ public class TagItem : TagItemObject<ITagItemWard>
 
 	//
 	protected override void OnComponentClass(CssCompose cssc) =>
-		Ward?.OnTagItemClass(this, cssc);
+		ItemAgency?.OnTagItemClass(this, cssc);
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
-		if (Ward is not null)
-			Ward.OnTagItemBuildRenderTree(this, builder);
+		if (ItemAgency is not null)
+			ItemAgency.OnTagItemBuildRenderTree(this, builder);
 		else
 		{
 			// 캐스터 없이도 그릴 수 있다!
@@ -69,19 +70,35 @@ public class TagItem : TagItemObject<ITagItemWard>
 /// 태그 아이템 오브젝트
 /// </summary>
 /// <typeparam name="T"></typeparam>
-public abstract class TagItemObject<T> : TagItemBase
-	where T : ITagItemWard
+public abstract class TagItemObject<T> : TagTextBase
+	where T : ITagItemAgency
 {
 	/// <summary>컨테이너 컴포넌트</summary>
-	[CascadingParameter] public T? Ward { get; set; }
+	[CascadingParameter] public T? ItemAgency { get; set; }
+
+	//
+	[Inject] protected ILogger<TagItemObject<T>> Logger { get; set; } = default!;
+
+	//
+	/// <inheritdoc />
+	protected override void OnInitialized()
+	{
+		// 단독으로 써도 좋은데 디버그 중일 때는 표시하자
+		LogIf.ContainerIsNull(Logger, ItemAgency); 
+
+		base.OnInitialized();
+	}
 }
 
 
 /// <summary>
 /// 태그 아이템 기본. 텍스트 속성만 갖고 있음<br/>
-/// 이 클래스에서는 컨테이너/부모/채용자/연결자 등을 정의하지 않는다
+/// 이 클래스에서는 컨테이너/부모/채용자/연결자 등을 정의하지 않음<br/>
 /// </summary>
-public abstract class TagItemBase : ComponentContent
+/// <remarks>
+/// 태그를 정의할때 텍스트가 필요하면 이 클래스를 상속할것. <see cref="TagItemObject{T}"/>를 사용하지 말고.
+/// </remarks>
+public abstract class TagTextBase : ComponentFragment
 {
 	/// <summary>텍스트 속성</summary>
 	[Parameter] public string? Text { get; set; }

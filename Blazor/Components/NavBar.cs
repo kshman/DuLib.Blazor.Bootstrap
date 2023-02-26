@@ -5,7 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 나브바 컴포넌트
 /// </summary>
-public class NavBar : ComponentContent
+public class NavBar : ComponentFragment
 {
 	#region 나브
 	/// <summary>나브 크기 <see cref="NavBarExpand"/></summary>

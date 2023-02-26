@@ -162,8 +162,8 @@ public class Button : ButtonBase
 
 
 /// <summary>버튼 베이스</summary>
-/// <seealso cref="Du.Blazor.ComponentContent" />
-public abstract class ButtonBase : ComponentContent
+/// <seealso cref="ComponentFragment" />
+public abstract class ButtonBase : ComponentFragment
 {
 	/// <summary>에디트 컨텍스트</summary>
 	[CascadingParameter] public EditContext? EditContext { get; set; }

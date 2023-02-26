@@ -79,9 +79,9 @@ public abstract class ComponentObject : ComponentBase
 
 
 /// <summary>
-/// 자식 콘텐트를 가지는 컴포넌트
+/// 프래그먼트 콘텐트를 가지는 컴포넌트
 /// </summary>
-public abstract class ComponentContent : ComponentObject
+public abstract class ComponentFragment : ComponentObject
 {
 	/// <summary>자식 콘텐트</summary>
 	[Parameter] public RenderFragment? ChildContent { get; set; }
@@ -96,7 +96,7 @@ public abstract class ComponentContent : ComponentObject
 	/// </summary>
 	/// <param name="builder"></param>
 	/// <param name="tag"></param>
-	internal void InternalRenderTreeTag(RenderTreeBuilder builder, string tag = "div")
+	internal void InternalRenderTagFragment(RenderTreeBuilder builder, string tag = "div")
 	{
 		/*
 		 * <tag class="@CssClass" @attributes="UserAttrs">
@@ -124,7 +124,7 @@ public abstract class ComponentContent : ComponentObject
 	/// <typeparam name="TType"></typeparam>
 	/// <param name="builder"></param>
 	/// <param name="tag"></param>
-	internal void InternalRenderTreeCascadingTag<TType>(RenderTreeBuilder builder, string tag = "div")
+	internal void InternalRenderCascadingTagFragment<TType>(RenderTreeBuilder builder, string tag = "div")
 	{
 		/*
 		 * <tag class="@CssClass" @attributes="@UserAttrs">

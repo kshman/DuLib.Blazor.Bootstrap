@@ -8,7 +8,7 @@ namespace Du.Blazor.Components;
 ///   <para>드랍다운의 펼치기/닫기 버튼으로 쓰이며, NavBar 버튼으로도 쓸 수 있음</para>
 /// </summary>
 /// <seealso cref="DropDown" />
-public class Toggle : ComponentContent, IAsyncDisposable
+public class Toggle : ComponentFragment, IAsyncDisposable
 {
 	// 우선순위
 	//	1. 드랍다운			=> nav-link dropdown-toggle

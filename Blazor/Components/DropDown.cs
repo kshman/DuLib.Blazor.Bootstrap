@@ -26,7 +26,7 @@ namespace Du.Blazor.Components;
 /// </code>
 /// </para>
 /// </remarks>
-public class DropDown : ComponentContent
+public class DropDown : ComponentFragment
 {
 	/// <summary>나브바. 캐스케이딩되면 아래 딸려오는 컴포넌트가 나브바를 지원하게 동작한다</summary>
 	[CascadingParameter] public NavBar? NavBar { get; set; }

@@ -18,7 +18,7 @@ namespace Du.Blazor.Components;
 /// <item><term><see cref="TagContent"/></term><description>콘텐트</description></item>
 /// </list>
 /// </remarks>
-public class Card : ComponentContent, ITagContentWard, ITagItemWard
+public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
 {
 	#region 기본 세팅
 	public class Settings
@@ -57,26 +57,26 @@ public class Card : ComponentContent, ITagContentWard, ITagItemWard
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderTreeCascadingTag<Card>(builder);
+		InternalRenderCascadingTagFragment<Card>(builder);
 
 	//
-	void ITagContentWard.OnTagContentClass(TagPart part, TagContentBase content, CssCompose cssc)
+	void ITagContentAgency.OnTagContentClass(TagContentRole part, TagContentBase content, CssCompose cssc)
 	{
 		switch (part)
 		{
-			case TagPart.Header:
+			case TagContentRole.Header:
 				cssc.Add("card-header")
 					.AddIf(Class is null, DefaultSettings.HeaderClass);
 				break;
-			case TagPart.Footer:
+			case TagContentRole.Footer:
 				cssc.Add("card-footer")
 					.AddIf(Class is null, DefaultSettings.FooterClass);
 				break;
-			case TagPart.Content:
+			case TagContentRole.Content:
 				cssc.Add(Location is CardImageLocation.Overlay ? "card-img-overlay" : "card-body")
 					.AddIf(Class is null, DefaultSettings.ContentClass);
 				break;
-			case TagPart.Item:
+			case TagContentRole.Item:
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(part), part);
 				break;
@@ -84,18 +84,18 @@ public class Card : ComponentContent, ITagContentWard, ITagItemWard
 	}
 
 	//
-	void ITagContentWard.OnTagContentBuildRenderTree(TagPart part, TagContentBase content, RenderTreeBuilder builder)
+	void ITagContentAgency.OnTagContentBuildRenderTree(TagContentRole part, TagContentBase content, RenderTreeBuilder builder)
 	{
 		switch (part)
 		{
-			case TagPart.Header:
-			case TagPart.Footer:
+			case TagContentRole.Header:
+			case TagContentRole.Footer:
 				content.InternalRenderTreeTag(builder);
 				break;
-			case TagPart.Content:
+			case TagContentRole.Content:
 				InternalRenderTreeContent(content, builder);
 				break;
-			case TagPart.Item:
+			case TagContentRole.Item:
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(part), part);
 				break;
@@ -152,10 +152,10 @@ public class Card : ComponentContent, ITagContentWard, ITagItemWard
 	}
 
 	//
-	void ITagItemWard.OnTagItemClass(TagItem item, CssCompose cssc) =>
+	void ITagItemAgency.OnTagItemClass(TagItem item, CssCompose cssc) =>
 		cssc.Add("card-text");
 
 	//
-	void ITagItemWard.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder) =>
+	void ITagItemAgency.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder) =>
 		item.InternalRenderTreeTextChild(builder);
 }

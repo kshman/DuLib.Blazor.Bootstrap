@@ -7,7 +7,7 @@ namespace Du.Blazor.Components;
 /// 붕괴?! (콜랩스)<br/>
 /// 기능은... 뻔하져
 /// </summary>
-public class Collapse : ComponentContent, IAsyncDisposable
+public class Collapse : ComponentFragment, IAsyncDisposable
 {
 	/// <summary>윗단에 놓이는 나브바</summary>
 	[CascadingParameter] public NavBar? NavBar { get; set; }

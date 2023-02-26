@@ -5,7 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 오프캔바스
 /// </summary>
-public partial class OffCanvas : ComponentContent, IAsyncDisposable, ITagContentWard
+public partial class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentAgency
 {
 	#region 기본 설정
 	public class Settings
@@ -76,12 +76,12 @@ public partial class OffCanvas : ComponentContent, IAsyncDisposable, ITagContent
 	}
 
 	//
-	void ITagContentWard.OnTagContentClass(TagPart part, TagContentBase content, CssCompose cssc)
+	void ITagContentAgency.OnTagContentClass(TagContentRole part, TagContentBase content, CssCompose cssc)
 	{
 	}
 
 	//
-	void ITagContentWard.OnTagContentBuildRenderTree(TagPart part, TagContentBase content, RenderTreeBuilder builder)
+	void ITagContentAgency.OnTagContentBuildRenderTree(TagContentRole part, TagContentBase content, RenderTreeBuilder builder)
 	{
 	}
 }

@@ -5,7 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 뺏지
 /// </summary>
-public class Badge : ComponentContent
+public class Badge : ComponentFragment
 {
 	#region 기본 세팅
 	/// <summary>배지 설정</summary>
@@ -56,5 +56,5 @@ public class Badge : ComponentContent
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderTreeTag(builder, "span");
+		InternalRenderTagFragment(builder, "span");
 }

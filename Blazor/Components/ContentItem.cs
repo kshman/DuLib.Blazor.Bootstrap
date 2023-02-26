@@ -16,7 +16,7 @@ public abstract class ContentItemContainer : ComponentContainer<ContentItem>
 
 /// <summary>콘텐트 아이템</summary>
 /// <remarks>자체적으로 렌더링 하는 기능은 없음</remarks>
-public class ContentItem : TagItemBase, IAsyncDisposable
+public class ContentItem : TagTextBase, IAsyncDisposable
 {
 	/// <summary>이 컴포넌트를 포함하는 컨테이너</summary>
 	[CascadingParameter] public ComponentStorage<ContentItem>? Container { get; set; }

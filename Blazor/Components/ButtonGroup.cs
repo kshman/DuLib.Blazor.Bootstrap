@@ -5,7 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 버튼 그룹 
 /// </summary>
-public  class ButtonGroup : ComponentContent
+public  class ButtonGroup : ComponentFragment
 {
 	/// <summary>버튼 그룹 형식</summary>
 	[Parameter] public ButtonLayout Layout { get; set; }

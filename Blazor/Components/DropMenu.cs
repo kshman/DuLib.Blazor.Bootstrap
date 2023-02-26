@@ -30,7 +30,7 @@ public class DropContent : DropMenu
 /// </list>
 /// </para>
 /// </remarks>
-public class DropMenu : ComponentContent, ITagItemWard
+public class DropMenu : ComponentFragment, ITagItemAgency
 {
 	/// <summary>드랍다운. 이게 캐스케이딩되면 드랍다운에 맞게 콤포넌트가 동작한다</summary>
 	[CascadingParameter] public DropDown? DropDown { get; set; }
@@ -61,14 +61,14 @@ public class DropMenu : ComponentContent, ITagItemWard
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderTreeCascadingTag<DropMenu>(builder, TagName);
+		InternalRenderCascadingTagFragment<DropMenu>(builder, TagName);
 
 	//
-	void ITagItemWard.OnTagItemClass(TagItem item, CssCompose cssc) =>
+	void ITagItemAgency.OnTagItemClass(TagItem item, CssCompose cssc) =>
 		cssc.AddSelect(item.TextMode, "dropdown-item-text", "dropdown-item");
 
 	//
-	void ITagItemWard.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder)
+	void ITagItemAgency.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder)
 	{
 		/*
 		 * 	<li>
