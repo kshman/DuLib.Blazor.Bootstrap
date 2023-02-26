@@ -52,10 +52,9 @@
 	private bool _now_transition;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add("accordion")
+		cssc.Add("accordion")
 			.AddIf(Flush, "accordion-flush");
 	}
 

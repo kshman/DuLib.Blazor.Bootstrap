@@ -12,8 +12,8 @@ public class Divider : ComponentObject
 	[Parameter] public string? ListClass { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css) => 
-		css.AddIf(DropMenu is not null, "dropdown-divider");
+	protected override void OnComponentClass(CssCompose cssc) => 
+		cssc.AddIf(DropMenu is not null, "dropdown-divider");
 
 	// 
 	protected override void BuildRenderTree(RenderTreeBuilder builder)

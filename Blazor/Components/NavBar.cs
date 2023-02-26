@@ -32,10 +32,9 @@ public class NavBar : ComponentContent
 	private string? ContainerCssClass => CssCompose.Join(ContainerLayout.ToContainerCss(), ContainerClass);
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add("navbar")
+		cssc.Add("navbar")
 			.Add(Expand.ToCss())
 			.Add(Color.ToCss("bg"));
 	}

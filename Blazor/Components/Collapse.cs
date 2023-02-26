@@ -52,10 +52,9 @@ public class Collapse : ComponentContent, IAsyncDisposable
 		_expanded = Expanded;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.AddIf(NavBar is not null, "navbar-collapse")
+		cssc.AddIf(NavBar is not null, "navbar-collapse")
 			.Add("collapse")
 			.AddIf(Direction == TagDirection.Horizontal, "collapse-horizontal")
 			.AddIf(_expanded, "show");

@@ -8,26 +8,26 @@ public class Icon : ComponentObject
 	[Parameter] public string Name { get; set; } = string.Empty;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
 		if (Name.Length > 3)
 		{
 			if (Name[2] == '-')
 			{
 				// oi / bi / fa 같은거는 세번째 빼기가 있다
-				css.Add(Name[..2]);
-				css.Add(Name);
+				cssc.Add(Name[..2]);
+				cssc.Add(Name);
 			}
 			else
 			{
 				// 없으면 걍 넣음
-				css.Add(Name);
+				cssc.Add(Name);
 			}
 		}
 		else
 		{
 			// OI 경고
-			css.Add("oi oi-warning");
+			cssc.Add("oi oi-warning");
 		}
 	}
 

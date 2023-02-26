@@ -27,7 +27,7 @@ public class ContentItem : TagItemBase, IAsyncDisposable
 	[Parameter] public RenderFragment? Content { get; set; }
 
 	//
-	internal object? InternalExtend { get; set; }
+	protected object? InternalExtend { get; set; }
 
 	//
 	internal Accordion.AcnExtend? AcnExtend

@@ -1,58 +1,87 @@
-﻿namespace Du.Blazor.Components;
+﻿using Microsoft.AspNetCore.Components.Rendering;
+
+namespace Du.Blazor.Components;
 
 /// <summary>
 /// 오프캔바스
 /// </summary>
-public partial class OffCanvas : ComponentContent, IAsyncDisposable
+public partial class OffCanvas : ComponentContent, IAsyncDisposable, ITagContentWard
 {
 	#region 기본 설정
 	public class Settings
 	{
-		public bool EnableCloseButton { get; set; }
+		public bool CloseButton { get; set; }
+		public bool Scrollable { get; set; }
 		public OffCanvasBackDrop BackDrop { get; set; }
-		public TagDimension ResponsiveBreakPoint { get; set; }
+		public TagDimension Responsive { get; set; }
 		public TagPlacement Placement { get; set; }
-		public TagSize Size { get; set; }
-		public bool EnableScroll { get; set; }
 		public string? Class { get; set; }
 		public string? HeaderClass { get; set; }
 		public string? ContentClass { get; set; }
 		public string? FooterClass { get; set; }
 	}
 
-	public static Settings DefaultSettings = new()
+	public static Settings DefaultSettings { get; }
+
+	static OffCanvas()
 	{
-		EnableCloseButton = true,
-		BackDrop = OffCanvasBackDrop.True,
-		ResponsiveBreakPoint = TagDimension.None,
-		Placement = TagPlacement.Right,
-		Size = TagSize.Medium,
-		EnableScroll = false,
-	};
+		DefaultSettings = new Settings
+		{
+			CloseButton = true,
+			Scrollable = false,
+			BackDrop = OffCanvasBackDrop.True,
+			Responsive = TagDimension.None,
+			Placement = TagPlacement.Right,
+		};
+	}
 	#endregion
 
 	[Parameter] public Settings? Set { get; set; }
 
-	[Parameter] public RenderFragment? Header { get; set; }
-	[Parameter] public RenderFragment? Content { get; set; }
-	[Parameter] public RenderFragment? Footer { get; set; }
-
 	[Parameter] public string? Text { get; set; }
-	[Parameter] public bool EnableCloseButton { get; set; } = true;
-	[Parameter] public OffCanvasBackDrop BackDrop { get; set; } = OffCanvasBackDrop.True;
-	[Parameter] public TagDimension ResponsiveBreakPoint { get; set; } = TagDimension.None;
-	[Parameter] public TagPlacement Placement { get; set; } = TagPlacement.Right;
-	[Parameter] public TagSize Size { get; set; } = TagSize.Medium;
-	[Parameter] public bool EnableScroll { get; set; } //= false;
-	[Parameter] public string? HeaderClass { get; set; }
-	[Parameter] public string? ContentClass { get; set; }
-	[Parameter] public string? FooterClass { get; set; }
+	[Parameter] public bool? CloseButton { get; set; }
+	[Parameter] public bool? Scrollable { get; set; }
+	[Parameter] public OffCanvasBackDrop? BackDrop { get; set; }
+	[Parameter] public TagDimension? Responsive { get; set; }
+	[Parameter] public TagPlacement? Placement { get; set; }
 
+	// 언제나 그린다
+	[Parameter] public bool Always { get; set; } //= false;
+
+	//
+	internal bool ActualCloseButton => CloseButton ?? Set?.CloseButton ?? DefaultSettings.CloseButton;
+	internal bool ActualScrollable => Scrollable ?? Set?.Scrollable ?? DefaultSettings.Scrollable;
+	private OffCanvasBackDrop ActualBackDrop => BackDrop ?? Set?.BackDrop ?? DefaultSettings.BackDrop;
+	private TagDimension ActualResponsive => Responsive ?? Set?.Responsive ?? DefaultSettings.Responsive;
+	private TagPlacement ActualPlacement => Placement ?? Set?.Placement ?? DefaultSettings.Placement;
+	
+	//
+	private ElementReference _self;
+	internal bool _expanded;
+
+	//
+	protected override void OnComponentClass(CssCompose cssc)
+	{
+		cssc
+			.Add(ActualResponsive.ToOffCanvasCss())
+			.Add(ActualPlacement.ToOffCanvasCss())
+			.AddIf(Class is null, Set?.Class ?? DefaultSettings.Class)
+			.Register(() => _expanded.IfTrue("show"));
+	}
+
+	//
 	public ValueTask DisposeAsync()
 	{
 		throw new NotImplementedException();
 	}
 
 	//
+	void ITagContentWard.OnTagContentClass(TagPart part, TagContentBase content, CssCompose cssc)
+	{
+	}
 
+	//
+	void ITagContentWard.OnTagContentBuildRenderTree(TagPart part, TagContentBase content, RenderTreeBuilder builder)
+	{
+	}
 }

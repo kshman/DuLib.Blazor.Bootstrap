@@ -18,13 +18,18 @@ public class Badge : ComponentContent
 	}
 
 	/// <summary>배지 기본값</summary>
-	public static Settings DefaultSettings { get; set; } = new()
+	public static Settings DefaultSettings { get; }
+
+	static Badge()
 	{
-		Fore = TagColor.Light,
-		Back = TagColor.Primary,
-		Layout = BadgeLayout.None,
-		AdditionalCss = null,
-	}; 
+		DefaultSettings  = new Settings
+		{
+			Fore = TagColor.Light,
+			Back = TagColor.Primary,
+			Layout = BadgeLayout.None,
+			AdditionalCss = null,
+		};
+	}
 	#endregion
 
 	/// <summary>글자색</summary>
@@ -35,10 +40,9 @@ public class Badge : ComponentContent
 	[Parameter] public BadgeLayout? Layout { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add("badge")
+		cssc.Add("badge")
 			.Add((Fore ?? DefaultSettings.Fore).ToCss("text"))
 			.Add((Back ?? DefaultSettings.Back).ToCss("bg"))
 			.Add((Layout ?? DefaultSettings.Layout) switch

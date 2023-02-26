@@ -11,8 +11,8 @@ public class NavBrand : ComponentContent
 	[Parameter] public string? Link { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css) =>
-		css.Add("navbar-brand");
+	protected override void OnComponentClass(CssCompose cssc) =>
+		cssc.Add("navbar-brand");
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)

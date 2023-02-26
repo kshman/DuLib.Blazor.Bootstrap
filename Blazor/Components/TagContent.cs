@@ -3,77 +3,79 @@ using Microsoft.Extensions.Logging;
 
 namespace Du.Blazor.Components;
 
+
 /// <summary>
 /// 태그 콘텐트 채용자
 /// </summary>
-public interface ITagContentAdopter
+public interface ITagContentWard
 {
+	/// <summary>
+	/// 태그 콘텐트의 CSS클래스를 설정
+	/// </summary>
+	/// <param name="part">지정할 부분</param>
+	/// <param name="content">콘텐트</param>
+	/// <param name="cssc">CssCompose</param>
+	void OnTagContentClass(TagPart part, TagContentBase content, CssCompose cssc);
+	/// <summary>
+	/// 태그 콘텐트의 렌더 트리를 만듦
+	/// </summary>
+	/// <param name="part">지정할 부분</param>
+	/// <param name="content">콘텐트</param>
+	/// <param name="builder">빌드 개체</param>
+	void OnTagContentBuildRenderTree(TagPart part, TagContentBase content, RenderTreeBuilder builder);
 }
 
 
 /// <summary>
 /// 기본 태그 헤더
 /// </summary>
-public class TagHeader : TagContentObject<ITagContentAdopter>
+public class TagHeader : TagContentBase
 {
 	//
-	protected override void OnComponentClass(CssCompose css)
-	{
-		if (Adopter is Card)
-		{
-			css
-				.Add("card-header")
-				.AddIf(Class is null, Card.DefaultSettings.HeaderClass);
-		}
-	}
+	protected override void OnComponentClass(CssCompose cssc) =>
+		Ward?.OnTagContentClass(TagPart.Header, this, cssc);
 
 	// 
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderTreeTag(builder);
+		Ward?.OnTagContentBuildRenderTree(TagPart.Header, this, builder);
 }
 
 
 /// <summary>
 /// 기본 태그 풋타
 /// </summary>
-public class TagFooter : TagContentObject<ITagContentAdopter>
+public class TagFooter : TagContentBase
 {
 	//
-	protected override void OnComponentClass(CssCompose css)
-	{
-		if (Adopter is Card)
-		{
-			css
-				.Add("card-footer")
-				.AddIf(Class is null, Card.DefaultSettings.FooterClass);
-		}
-	}
+	protected override void OnComponentClass(CssCompose cssc) =>
+		Ward?.OnTagContentClass(TagPart.Footer, this, cssc);
 
 	// 
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderTreeTag(builder);
+		Ward?.OnTagContentBuildRenderTree(TagPart.Footer, this, builder);
 }
 
 
 /// <summary>
 /// 기본 태그 콘텐트
 /// </summary>
-public class TagContent : TagContentObject<ITagContentAdopter>
+public class TagContent : TagContentBase
 {
 	//
-	protected override void OnComponentClass(CssCompose css)
-	{
-		if (Adopter is Card)
-		{
-			css
-				.Add("card-body")
-				.AddIf(Class is null, Card.DefaultSettings.ContentClass);
-		}
-	}
+	protected override void OnComponentClass(CssCompose cssc) =>
+		Ward?.OnTagContentClass(TagPart.Content, this, cssc);
 
 	// 
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderTreeTag(builder);
+		Ward?.OnTagContentBuildRenderTree(TagPart.Content, this, builder);
+}
+
+
+/// <summary>
+/// 태그 콘텐트 기본
+/// </summary>
+public abstract class TagContentBase : TagContentObject<ITagContentWard>
+{
 }
 
 
@@ -82,9 +84,9 @@ public class TagContent : TagContentObject<ITagContentAdopter>
 /// </summary>
 /// <typeparam name="T">이 클래스를 자식으로 두는 클래스 형식</typeparam>
 public abstract class TagContentObject<T> : ComponentContent
-	where T : ITagContentAdopter
+	where T : ITagContentWard
 {
-	[CascadingParameter] public T? Adopter { get; set; }
+	[CascadingParameter] public T? Ward { get; set; }
 
 	//
 	[Inject] protected ILogger<T> Logger { get; set; } = default!;
@@ -92,7 +94,7 @@ public abstract class TagContentObject<T> : ComponentContent
 	//
 	protected override void OnInitialized()
 	{
-		LogIf.ContainerIsNull(Logger, Adopter);
+		LogIf.ContainerIsNull(Logger, Ward);
 
 		base.OnInitialized();
 	}

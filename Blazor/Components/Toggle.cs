@@ -146,35 +146,32 @@ public class Toggle : ComponentContent, IAsyncDisposable
 	}
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
 		if (NavBar is not null)
 		{
 			if (DropDown is null)
-				css.Add("navbar-toggler");
+				cssc.Add("navbar-toggler");
 			else
 			{
-				css
-					.Add("nav-link")
+				cssc.Add("nav-link")
 					.Add("dropdown-toggle"); // 밑에도 나오지만, 그때는 _use_collapse가 false임 여긴 true
 			}
 		}
 
 		if (Layout == ToggleLayout.Button)
 		{
-			css
-				.AddIf(_use_collapse is false, "dropdown-toggle")
+			cssc.AddIf(_use_collapse is false, "dropdown-toggle")
 				.Add("btn")
 				.Add(ActualColor.ToButtonCss(ActualOutline))
 				.Add(ActualSize.ToCss("btn"));
 		}
 		else
 		{
-			css.AddIf(Caret && _use_collapse is false, "dropdown-toggle");
+			cssc.AddIf(Caret && _use_collapse is false, "dropdown-toggle");
 		}
 
-		css
-			.AddIf(Split, "dropdown-toggle-split")
+		cssc.AddIf(Split, "dropdown-toggle-split")
 			.Register(() => (DropDown?.Expanded ?? false).IfTrue("show"));
 	}
 

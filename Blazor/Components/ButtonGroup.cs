@@ -13,10 +13,9 @@ public  class ButtonGroup : ComponentContent
 	[Parameter] public TagSize Size { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add(Layout switch
+		cssc.Add(Layout switch
 			{
 				ButtonLayout.Button => "btn-group",
 				ButtonLayout.Vertical => "btn-group-vertical",

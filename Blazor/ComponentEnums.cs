@@ -1,5 +1,14 @@
 ﻿namespace Du.Blazor;
 
+/// <summary>태그 콘텐트 부위</summary>
+public enum TagPart
+{
+	Header,
+	Footer,
+	Content,
+	Item,
+}
+
 /// <summary>컴포넌트 크기</summary>
 public enum TagSize
 {

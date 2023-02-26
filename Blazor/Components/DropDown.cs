@@ -40,10 +40,9 @@ public class DropDown : ComponentContent
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add(Direction.ToCss())
+		cssc.Add(Direction.ToCss())
 			.AddIf(NavBar is null, "btn-group");
 	}
 

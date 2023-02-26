@@ -3,8 +3,14 @@
   --du-serif: "Malgun Gothic","Segoe UI","Apple SD Gothic Neo","Helvetica Neue","Noto Sans",Helvetica,Arial,sans-serif,"Segoe UI Emoji","Segoe UI Symbol","Apple Color Emoji","Noto Color Emoji";
   --bs-font-sans-serif: var(--du-serif); }
 
-.cursor-pointer {
-  cursor: pointer; }
+.du-test-box {
+  padding: 1rem 1.5rem 1rem 1.5rem;
+  margin: 0 1rem 2rem 1rem;
+  border: thick double #a9f27d; }
+  .du-test-box.purple {
+    border: 2px solid rebeccapurple; }
+  .du-test-box.blue {
+    border: 2px solid blue; }
 
 .ff-column {
   flex-flow: column; }
@@ -42,14 +48,10 @@
   border-style: none;
   text-align: start; }
 
-.du-test-box {
-  padding: 1rem 1.5rem 1rem 1.5rem;
-  margin: 0 1rem 2rem 1rem;
-  border: thick double #a9f27d; }
-  .du-test-box .purple {
-    border: 2px solid rebeccapurple; }
-  .du-test-box .blue {
-    border: 2px solid blue; }
+.offcanvas-footer {
+  display: flex;
+  align-items: center;
+  padding: 1rem 1rem; }
 
 /* Bit's 피벗 */
 .hpvt {

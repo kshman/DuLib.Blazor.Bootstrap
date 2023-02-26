@@ -80,10 +80,9 @@
 	private DotNetObjectReference<Carousel>? _drf;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add("carousel")
+		cssc.Add("carousel")
 			.Add("slide")
 			.AddIf(Fade, "carousel-fade");
 	}

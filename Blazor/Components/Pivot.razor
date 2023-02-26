@@ -44,10 +44,9 @@
 	[Parameter] public bool PivotOnly { get; set; } //= false;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add("hpvt")
+		cssc.Add("hpvt")
 			.Add(Size switch
 			{
 				TagSize.Medium or

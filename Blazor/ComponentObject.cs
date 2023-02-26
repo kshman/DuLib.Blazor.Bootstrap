@@ -47,7 +47,7 @@ public abstract class ComponentObject : ComponentBase
 	{ }
 
 	/// <summary>컴포넌트의 CSS 클래스 값을 지정</summary>
-	protected virtual void OnComponentClass(CssCompose css)
+	protected virtual void OnComponentClass(CssCompose cssc)
 	{ }
 
 	// 태스크 상태를 봐서 기다렸다가 StateHasChanged 호출
@@ -70,8 +70,8 @@ public abstract class ComponentObject : ComponentBase
 	}
 
 	//
-	internal static uint _atomic_index = 1;
-	internal static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
+	private static uint _atomic_index = 1;
+	private static uint NextAtomicIndex => Interlocked.Increment(ref _atomic_index);
 
 	//
 	public override string ToString() => $"<{GetType().Name}#{Id}>";
@@ -86,8 +86,17 @@ public abstract class ComponentContent : ComponentObject
 	/// <summary>자식 콘텐트</summary>
 	[Parameter] public RenderFragment? ChildContent { get; set; }
 
-	//
-	protected void InternalRenderTreeTag(RenderTreeBuilder builder, string tag = "div")
+	/// <summary>
+	/// 태그를 이용해서 자식 콘텐트를 그린다
+	/// <example><code>
+	/// &lt;tag class="@CssClass" @attributes="UserAttrs"&gt;
+	///     @ChildContent
+	/// &lt;/tag&gt;
+	/// </code></example>
+	/// </summary>
+	/// <param name="builder"></param>
+	/// <param name="tag"></param>
+	internal void InternalRenderTreeTag(RenderTreeBuilder builder, string tag = "div")
 	{
 		/*
 		 * <tag class="@CssClass" @attributes="UserAttrs">
@@ -102,8 +111,20 @@ public abstract class ComponentContent : ComponentObject
 		builder.CloseElement(); // tag
 	}
 
-	//
-	protected void InternalRenderTreeCascadingTag<TType>(RenderTreeBuilder builder, string tag = "div")
+	/// <summary>
+	/// 태그를 이용해서 자식 콘텐트를 캐스케이딩해서 그린다
+	/// <example><code>
+	/// &lt;tag class="@CssClass" @attributes="@UserAttrs"&gt;
+	///     &lt;CascadingValue Value="this" IsFixed="true&gt;
+	///         @Content
+	///     &lt;/CascadingValue&gt;
+	/// &lt;/tag&gt;
+	/// </code></example>
+	/// </summary>
+	/// <typeparam name="TType"></typeparam>
+	/// <param name="builder"></param>
+	/// <param name="tag"></param>
+	internal void InternalRenderTreeCascadingTag<TType>(RenderTreeBuilder builder, string tag = "div")
 	{
 		/*
 		 * <tag class="@CssClass" @attributes="@UserAttrs">

@@ -92,4 +92,12 @@ internal static class ThrowIf
 			? $"{objName}:{typeof(TItem)} 인수는 비어있으면 안됩니다."
 			: $"{objName}:{typeof(TItem)} must not be null.");
 	}
+
+	[DoesNotReturn]
+	internal static void ArgumentOutOfRange(string name, object value)
+	{
+		throw new ArgumentOutOfRangeException(name, value, Settings.UseLocaleMesg
+			? "인수 값의 범위가 벗어났습니다."
+			: "Aruguemt out of range.");
+	}
 }

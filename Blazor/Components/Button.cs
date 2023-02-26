@@ -17,13 +17,18 @@ public class Button : ButtonBase
 	}
 
 	/// <summary>버튼 기본값</summary>
-	public static Settings DefaultSettings { get; set; } = new Settings()
+	public static Settings DefaultSettings { get; }
+
+	static Button()
 	{
-		Type = ButtonType.Button,
-		Color = TagColor.Primary,
-		Size = TagSize.Medium,
-		Outline = false
-	};
+		DefaultSettings = new Settings
+		{
+			Type = ButtonType.Button,
+			Color = TagColor.Primary,
+			Size = TagSize.Medium,
+			Outline = false
+		};
+	}
 	#endregion
 
 	/// <summary>드랍 메뉴, 이게 있으면 드랍 메뉴용으로 처리함</summary>
@@ -38,21 +43,19 @@ public class Button : ButtonBase
 	[Parameter] public string? ListClass { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
 		if (DropMenu is null)
 		{
-			css
-				.Add("btn")
+			cssc.Add("btn")
 				.Add(ActualColor.ToButtonCss(ActualOutline));
 		}
 		else
 		{
-			css
-				.Add("dropdown-item");
+			cssc.Add("dropdown-item");
 		}
 
-		css.Add(ActualSize.ToCss("btn"));
+		cssc.Add(ActualSize.ToCss("btn"));
 	}
 
 	//

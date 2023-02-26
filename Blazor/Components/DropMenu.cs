@@ -30,7 +30,7 @@ public class DropContent : DropMenu
 /// </list>
 /// </para>
 /// </remarks>
-public class DropMenu : ComponentContent, ITagItemAdopter
+public class DropMenu : ComponentContent, ITagItemWard
 {
 	/// <summary>드랍다운. 이게 캐스케이딩되면 드랍다운에 맞게 콤포넌트가 동작한다</summary>
 	[CascadingParameter] public DropDown? DropDown { get; set; }
@@ -45,18 +45,16 @@ public class DropMenu : ComponentContent, ITagItemAdopter
 	protected virtual string TagName => "ul";
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add("dropdown-menu")
+		cssc.Add("dropdown-menu")
 			.Add(Alignment.ToCss());
 
 		if (DropDown is not null)
-			css.Register(() => (DropDown.Expanded).IfTrue("show"));
+			cssc.Register(() => (DropDown.Expanded).IfTrue("show"));
 		else
 		{
-			css
-				.Add(Position.ToCss())
+			cssc.Add(Position.ToCss())
 				.Add("show");
 		}
 	}
@@ -64,4 +62,35 @@ public class DropMenu : ComponentContent, ITagItemAdopter
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
 		InternalRenderTreeCascadingTag<DropMenu>(builder, TagName);
+
+	//
+	void ITagItemWard.OnTagItemClass(TagItem item, CssCompose cssc) =>
+		cssc.AddSelect(item.TextMode, "dropdown-item-text", "dropdown-item");
+
+	//
+	void ITagItemWard.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder)
+	{
+		/*
+		 * 	<li>
+		 * 		<div class="@CssClass" @attributes="@UserAttrs">
+		 * 			@Text
+		 * 			@ChildContent
+		 * 		</div>
+		 * 	</li>
+		 */
+
+		builder.OpenElement(0, "li");
+
+		if (item.ListClass.IsHave(true))
+			builder.AddAttribute(1, item.ListClass);
+
+		builder.OpenElement(2, item.Tag);
+		builder.AddAttribute(3, "class", item.CssClass);
+		builder.AddMultipleAttributes(4, item.UserAttrs);
+		builder.AddContent(5, item.Text);
+		builder.AddContent(6, item.ChildContent);
+		builder.CloseElement(); // tag
+
+		builder.CloseElement(); // li
+	}
 }

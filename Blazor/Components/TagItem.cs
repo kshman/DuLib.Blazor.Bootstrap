@@ -4,29 +4,41 @@ namespace Du.Blazor.Components;
 
 /// <summary>태그 아이템의 채용자</summary>
 /// <remarks>컨테이너가 아니고 채용자것은 그냥 포함만 하지 관리는 않기 때문</remarks>
-public interface ITagItemAdopter
+public interface ITagItemWard
 {
+	/// <summary>
+	/// 태그 아이템의 CSS클래스를 설정
+	/// </summary>
+	/// <param name="item"></param>
+	/// <param name="cssc"></param>
+	void OnTagItemClass(TagItem item, CssCompose cssc);
+	/// <summary>
+	/// 태그 아이템의 렌더 트리를 만듦
+	/// </summary>
+	/// <param name="item"></param>
+	/// <param name="builder"></param>
+	void OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder);
 }
 
 
 /// <summary>태그 DIV 아이템</summary>
 public class TagDiv : TagItem
 {
-	protected override string Tag => "div";
+	internal override string Tag => "div";
 }
 
 
 /// <summary>태그 SPAN 아이템</summary>
 public class TagSpan : TagItem
 {
-	protected override string Tag => "span";
+	internal override string Tag => "span";
 }
 
 
 /// <summary>
 /// 태그 아이템. 
 /// </summary>
-public class TagItem : TagItemObject<ITagItemAdopter>
+public class TagItem : TagItemObject<ITagItemWard>
 {
 	/// <summary>참일 경우 리스트 모드로 출력한다</summary>
 	/// <remarks>드랍일경우 드랍 텍스트로 출력한다 (마우스로 활성화되지 않는 기능)</remarks>
@@ -36,53 +48,19 @@ public class TagItem : TagItemObject<ITagItemAdopter>
 	[Parameter] public string? ListClass { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose css)
-	{
-		switch (Adopter)
-		{
-			case DropMenu:
-				css.AddSelect(TextMode, "dropdown-item-text", "dropdown-item");
-				break;
-			case Card:
-				css.Add("card-text");
-				break;
-		}
-	}
+	protected override void OnComponentClass(CssCompose cssc) =>
+		Ward?.OnTagItemClass(this, cssc);
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
-		if (Adopter is DropMenu)
-			InternalRenderTreeDropMenu(builder);
+		if (Ward is not null)
+			Ward.OnTagItemBuildRenderTree(this, builder);
 		else
+		{
+			// 캐스터 없이도 그릴 수 있다!
 			InternalRenderTreeTextChild(builder);
-	}
-
-	//
-	protected void InternalRenderTreeDropMenu(RenderTreeBuilder builder)
-	{
-		/*
-		 * 	<li>
-		 * 		<div class="@CssClass" @attributes="@UserAttrs">
-		 * 			@Text
-		 * 			@ChildContent
-		 * 		</div>
-		 * 	</li>
-		 */
-
-		builder.OpenElement(0, "li");
-
-		if (ListClass.IsHave(true))
-			builder.AddAttribute(1, ListClass);
-
-		builder.OpenElement(2, Tag);
-		builder.AddAttribute(3, "class", CssClass);
-		builder.AddMultipleAttributes(4, UserAttrs);
-		builder.AddContent(5, Text);
-		builder.AddContent(6, ChildContent);
-		builder.CloseElement(); // tag
-
-		builder.CloseElement(); // li
+		}
 	}
 }
 
@@ -92,10 +70,10 @@ public class TagItem : TagItemObject<ITagItemAdopter>
 /// </summary>
 /// <typeparam name="T"></typeparam>
 public abstract class TagItemObject<T> : TagItemBase
-	where T : ITagItemAdopter
+	where T : ITagItemWard
 {
 	/// <summary>컨테이너 컴포넌트</summary>
-	[CascadingParameter] public T? Adopter { get; set; }
+	[CascadingParameter] public T? Ward { get; set; }
 }
 
 
@@ -109,10 +87,10 @@ public abstract class TagItemBase : ComponentContent
 	[Parameter] public string? Text { get; set; }
 
 	//
-	protected virtual string Tag => "p";
+	internal virtual string Tag => "p";
 
 	//
-	protected void InternalRenderTreeTextChild(RenderTreeBuilder builder)
+	internal void InternalRenderTreeTextChild(RenderTreeBuilder builder)
 	{
 		/*
 		 * <div class="@CssClass" @attributes="@UserAttrs">

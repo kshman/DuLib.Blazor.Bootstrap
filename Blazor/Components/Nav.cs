@@ -19,10 +19,9 @@ public class Nav : ComponentContent
 	[Parameter] public NavLayout Layout { get; set; } = NavLayout.None;
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.AddSelect(NavBar is null, "nav", "navbar-nav")
+		cssc.AddSelect(NavBar is null, "nav", "navbar-nav")
 			.Add(Direction switch
 			{
 				TagDirection.Vertical => "flex-column",

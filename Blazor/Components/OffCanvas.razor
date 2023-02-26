@@ -1,12 +1,13 @@
 ﻿@inherits ComponentContent
 
-<div @ref="_self" class="@CssClass" tabindex="-1" id="@Id" data-bs-backdrop="">
-
+<div @ref="_self" class="@CssClass" tabindex="-1" id="@Id" data-bs-backdrop="@ActualBackDrop.ToBootStrap()">
+	@if (_expanded || Always || Responsive != TagDimension.None)
+	{
+		<CascadingValue Value="this" IsFixed="true">
+			@ChildContent
+		</CascadingValue>
+	}
 </div>
 
-<h3>OffCanvas</h3>
-
 @code {
-	//
-	private ElementReference _self;
 }

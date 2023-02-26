@@ -40,10 +40,9 @@ public class NavButton : ComponentContent, IDisposable
 	}
 
 	//
-	protected override void OnComponentClass(CssCompose css)
+	protected override void OnComponentClass(CssCompose cssc)
 	{
-		css
-			.Add(DropDown is null ? "nav-link" : "dropdown-item")
+		cssc.Add(DropDown is null ? "nav-link" : "dropdown-item")
 			.Register(() => _is_active ? ActiveClass : null);
 	}
 
