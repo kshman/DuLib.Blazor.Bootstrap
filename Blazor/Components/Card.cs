@@ -60,7 +60,7 @@ public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
 		InternalRenderCascadingTagFragment<Card>(builder);
 
 	//
-	void ITagContentAgency.OnTagContentClass(TagContentRole part, TagContentBase content, CssCompose cssc)
+	void ITagContentAgency.OnTagContentClass(TagContentRole part, TagContent content, CssCompose cssc)
 	{
 		switch (part)
 		{
@@ -76,7 +76,6 @@ public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
 				cssc.Add(Location is CardImageLocation.Overlay ? "card-img-overlay" : "card-body")
 					.AddIf(Class is null, DefaultSettings.ContentClass);
 				break;
-			case TagContentRole.Item:
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(part), part);
 				break;
@@ -84,18 +83,17 @@ public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
 	}
 
 	//
-	void ITagContentAgency.OnTagContentBuildRenderTree(TagContentRole part, TagContentBase content, RenderTreeBuilder builder)
+	void ITagContentAgency.OnTagContentBuildRenderTree(TagContentRole part, TagContent content, RenderTreeBuilder builder)
 	{
 		switch (part)
 		{
 			case TagContentRole.Header:
 			case TagContentRole.Footer:
-				content.InternalRenderTreeTag(builder);
+				content.InternalRenderTagFragment(builder);
 				break;
 			case TagContentRole.Content:
 				InternalRenderTreeContent(content, builder);
 				break;
-			case TagContentRole.Item:
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(part), part);
 				break;
@@ -103,7 +101,7 @@ public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
 	}
 
 	//
-	private void InternalRenderTreeContent(TagContentBase content, RenderTreeBuilder builder)
+	private void InternalRenderTreeContent(TagContent content, RenderTreeBuilder builder)
 	{
 		/*
 		 * @if (Image.IsHave(true) && istop)
