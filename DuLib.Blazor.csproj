@@ -64,6 +64,8 @@
     <None Remove="wwwroot\ref\**" />
     <Compile Remove="Blazor\Unused\RemoveIntellisence.cs" />
     <None Include="Blazor\Unused\RemoveIntellisence.cs" />
+    <Compile Remove="Blazor\Unused\TempDoNotUse.razor" />
+    <None Include="Blazor\Unused\TempDoNotUse.razor" />
   </ItemGroup>
 
 </Project>

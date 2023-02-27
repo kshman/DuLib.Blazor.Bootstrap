@@ -18,7 +18,7 @@ namespace Du.Blazor.Components;
 /// <item><term><see cref="TagContent"/></term><description>콘텐트</description></item>
 /// </list>
 /// </remarks>
-public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
+public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 {
 	#region 기본 세팅
 	public class Settings
@@ -57,12 +57,13 @@ public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderCascadingTagFragment<Card>(builder);
+		InternalRenderTreeCascadingTagFragment<Card>(builder);
 
+	#region ITagContentHandler
 	//
-	void ITagContentAgency.OnTagContentClass(TagContentRole part, TagContent content, CssCompose cssc)
+	void ITagContentHandler.OnTagContentClass(TagContent content, CssCompose cssc)
 	{
-		switch (part)
+		switch (content.Role)
 		{
 			case TagContentRole.Header:
 				cssc.Add("card-header")
@@ -77,25 +78,25 @@ public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
 					.AddIf(Class is null, DefaultSettings.ContentClass);
 				break;
 			default:
-				ThrowIf.ArgumentOutOfRange(nameof(part), part);
+				ThrowIf.ArgumentOutOfRange(nameof(content.Role), content.Role);
 				break;
 		}
 	}
 
 	//
-	void ITagContentAgency.OnTagContentBuildRenderTree(TagContentRole part, TagContent content, RenderTreeBuilder builder)
+	void ITagContentHandler.OnTagContentBuildRenderTree(TagContent content, RenderTreeBuilder builder)
 	{
-		switch (part)
+		switch (content.Role)
 		{
 			case TagContentRole.Header:
 			case TagContentRole.Footer:
-				content.InternalRenderTagFragment(builder);
+				content.InternalRenderTreeTagFragment(builder);
 				break;
 			case TagContentRole.Content:
 				InternalRenderTreeContent(content, builder);
 				break;
 			default:
-				ThrowIf.ArgumentOutOfRange(nameof(part), part);
+				ThrowIf.ArgumentOutOfRange(nameof(content.Role), content.Role);
 				break;
 		}
 	}
@@ -148,12 +149,15 @@ public class Card : ComponentFragment, ITagContentAgency, ITagItemAgency
 			builder.CloseElement(); // img
 		}
 	}
+	#endregion
 
+	#region ITagItemHandler
 	//
-	void ITagItemAgency.OnTagItemClass(TagItem item, CssCompose cssc) =>
+	void ITagItemHandler.OnTagItemClass(TagItem item, CssCompose cssc) =>
 		cssc.Add("card-text");
 
 	//
-	void ITagItemAgency.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder) =>
-		item.InternalRenderTreeTextChild(builder);
+	void ITagItemHandler.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder) =>
+		item.InternalRenderTreeTagText(builder); 
+	#endregion
 }

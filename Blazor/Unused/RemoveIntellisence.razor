@@ -1,8 +1,36 @@
-﻿namespace Du.Blazor.Unused;
+﻿<Accordion/>
+<Badge/>
+<Card/>
+<CardTitle/>
+<Collapse/>
+<ContentItem></ContentItem>
+<Divider/>
+<DropDown/>
+<DropMenu/>
+<Icon/>
+<ListGroup/>
+<Nav></Nav>
+<NavBar/>
+<NavBrand/>
+<NavButton/>
+<Button></Button>
+<ButtonGroup />
+<Nulo/>
+<NuloGroup/>
+<Pivot/>
+<Tab/>
+<TagContent />
+<TagHeader/>
+<TagFooter/>
+<TagItem/>
+<TagSpan/>
+<TagDiv/>
+<Toggle/>
 
-public static class RemoveIntellisence
-{
-	public static void RemoveComponents()
+@code {
+
+	// ReSharper disable once UnusedMember.Local
+	static void Settings()
 	{
 		// 카드
 		Card.DefaultSettings.Class = null;
@@ -13,7 +41,7 @@ public static class RemoveIntellisence
 		// 오프캔바스
 		OffCanvas.DefaultSettings.CloseButton = true;
 		OffCanvas.DefaultSettings.Scrollable = false;
-		OffCanvas.DefaultSettings.BackDrop =OffCanvasBackDrop.True;
+		OffCanvas.DefaultSettings.BackDrop = OffCanvasBackDrop.True;
 		OffCanvas.DefaultSettings.Responsive = TagDimension.None;
 		OffCanvas.DefaultSettings.Placement = TagPlacement.Right;
 		OffCanvas.DefaultSettings.Class = null;

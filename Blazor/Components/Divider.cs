@@ -6,7 +6,7 @@ namespace Du.Blazor.Components;
 public class Divider : ComponentObject
 {
 	/// <summary>드랍메뉴. 이 내용이 캐스케이딩되면 리스트(li)를 추가한다</summary>
-	[CascadingParameter] public ITagListAgency? ListAgency { get; set; }
+	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
 
 	/// <summary>리스트(li)로 출력할 때 사용하는 css클래스</summary>
 	[Parameter] public string? ListClass { get; set; }

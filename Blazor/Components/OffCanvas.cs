@@ -5,7 +5,7 @@ namespace Du.Blazor.Components;
 /// <summary>
 /// 오프캔바스
 /// </summary>
-public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentAgency
+public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 {
 	#region 기본 설정
 	public class Settings
@@ -198,10 +198,11 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentAgency
 	private Task InvokeOnExpanded(ExpandedEventArgs e) => OnExpanded.InvokeAsync(e);
 	private Task InvokeExpandedChanged(bool e) => ExpandedChanged.InvokeAsync(e);
 
+	#region ITagContentHandler
 	//
-	void ITagContentAgency.OnTagContentClass(TagContentRole part, TagContent content, CssCompose cssc)
+	void ITagContentHandler.OnTagContentClass(TagContent content, CssCompose cssc)
 	{
-		switch (part)
+		switch (content.Role)
 		{
 			case TagContentRole.Header:
 				cssc.Add("offcanvas-header")
@@ -216,25 +217,25 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentAgency
 					.AddIf(content.Class is null, Set?.ContentClass ?? DefaultSettings.ContentClass);
 				break;
 			default:
-				ThrowIf.ArgumentOutOfRange(nameof(part), part);
+				ThrowIf.ArgumentOutOfRange(nameof(content.Role), content.Role);
 				break;
 		}
 	}
 
 	//
-	void ITagContentAgency.OnTagContentBuildRenderTree(TagContentRole part, TagContent content, RenderTreeBuilder builder)
+	void ITagContentHandler.OnTagContentBuildRenderTree(TagContent content, RenderTreeBuilder builder)
 	{
-		switch (part)
+		switch (content.Role)
 		{
 			case TagContentRole.Header:
 				InternalRenderTreeHeader(content, builder);
 				break;
 			case TagContentRole.Footer:
 			case TagContentRole.Content:
-				content.InternalRenderTagFragment(builder);
+				content.InternalRenderTreeTagFragment(builder);
 				break;
 			default:
-				ThrowIf.ArgumentOutOfRange(nameof(part), part);
+				ThrowIf.ArgumentOutOfRange(nameof(content.Role), content.Role);
 				break;
 		}
 	}
@@ -258,5 +259,6 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentAgency
 		}
 
 		builder.CloseElement(); // div
-	}
+	} 
+	#endregion
 }

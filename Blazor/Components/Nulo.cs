@@ -2,9 +2,14 @@
 
 namespace Du.Blazor.Components;
 
+/// <inheritdoc/>
+public class Button : Nulo
+{
+}
+
+
 /// <summary>버튼</summary>
-/// <seealso cref="Du.Blazor.Components.ButtonBase" />
-public class Button : ButtonBase
+public class Nulo : NuloBase
 {
 	#region 기본 설정
 	/// <summary>버튼 설정</summary>
@@ -19,7 +24,7 @@ public class Button : ButtonBase
 	/// <summary>버튼 기본값</summary>
 	public static Settings DefaultSettings { get; }
 
-	static Button()
+	static Nulo()
 	{
 		DefaultSettings = new Settings
 		{
@@ -32,7 +37,7 @@ public class Button : ButtonBase
 	#endregion
 
 	/// <summary>리스트 에이전시, 이게 있으면 리스트 메뉴용으로 처리함</summary>
-	[CascadingParameter] public ITagListAgency? ListAgency { get; set; }
+	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
 
 	/// <summary>URL 링크 지정.</summary>
 	[Parameter] public string? Link { get; set; }
@@ -49,7 +54,7 @@ public class Button : ButtonBase
 			cssc.Add("btn")
 				.Add(ActualVariant.ToButtonCss(ActualOutline));
 		else
-			cssc.Add(ListAgency.ItemActionClass);
+			cssc.Add(ListAgency.ActionClass);
 
 		cssc.Add(ActualSize.ToCss("btn"));
 	}
@@ -159,7 +164,7 @@ public class Button : ButtonBase
 
 /// <summary>버튼 베이스</summary>
 /// <seealso cref="ComponentFragment" />
-public abstract class ButtonBase : ComponentFragment
+public abstract class NuloBase : ComponentFragment
 {
 	/// <summary>에디트 컨텍스트</summary>
 	[CascadingParameter] public EditContext? EditContext { get; set; }
@@ -183,10 +188,10 @@ public abstract class ButtonBase : ComponentFragment
 	[Parameter] public EventCallback<MouseEventArgs> OnInvalidClick { get; set; }
 
 	//
-	protected ButtonType ActualType => Type ?? Button.DefaultSettings.Type;
-	protected TagVariant ActualVariant => Variant ?? Button.DefaultSettings.Variant;
-	protected TagSize ActualSize => Size ?? Button.DefaultSettings.Size;
-	protected bool ActualOutline => Outline ?? Button.DefaultSettings.Outline;
+	protected ButtonType ActualType => Type ?? Nulo.DefaultSettings.Type;
+	protected TagVariant ActualVariant => Variant ?? Nulo.DefaultSettings.Variant;
+	protected TagSize ActualSize => Size ?? Nulo.DefaultSettings.Size;
+	protected bool ActualOutline => Outline ?? Nulo.DefaultSettings.Outline;
 
 	//
 	private bool _handle_click;

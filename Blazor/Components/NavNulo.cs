@@ -3,14 +3,20 @@ using Microsoft.AspNetCore.Components.Routing;
 
 namespace Du.Blazor.Components;
 
+/// <inheritdoc/>
+public class NavButton : NavNulo
+{
+}
+
+
 /// <summary>
 /// 나브 링크 제공. NavLink는 닷넷 콤포넌트라 이름을 못씀...<br/>
 /// 버튼이라는 이름이지만 버튼이 아님.
 /// </summary>
-public class NavButton : ComponentFragment, IDisposable
+public class NavNulo : ComponentFragment, IDisposable
 {
 	/// <summary>리스트 에이전시. 이게 캐스케이딩되어 있으면 리스트(li)를 추가한다</summary>
-	[CascadingParameter] public ITagListAgency? ListAgency { get; set; }
+	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
 
 	/// <summary>나브 링크 매치</summary>
 	[Parameter] public NavLinkMatch Match { get; set; }
@@ -42,7 +48,7 @@ public class NavButton : ComponentFragment, IDisposable
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(ListAgency?.ItemActionClass ?? "nav-link")
+		cssc.Add(ListAgency?.ActionClass ?? "nav-link")
 			.Register(() => _is_active ? ActiveClass : null);
 	}
 

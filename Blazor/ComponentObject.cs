@@ -96,7 +96,7 @@ public abstract class ComponentFragment : ComponentObject
 	/// </summary>
 	/// <param name="builder"></param>
 	/// <param name="tag"></param>
-	internal void InternalRenderTagFragment(RenderTreeBuilder builder, string tag = "div")
+	internal void InternalRenderTreeTagFragment(RenderTreeBuilder builder, string tag = "div")
 	{
 		/*
 		 * <tag class="@CssClass" @attributes="UserAttrs">
@@ -124,7 +124,7 @@ public abstract class ComponentFragment : ComponentObject
 	/// <typeparam name="TType"></typeparam>
 	/// <param name="builder"></param>
 	/// <param name="tag"></param>
-	internal void InternalRenderCascadingTagFragment<TType>(RenderTreeBuilder builder, string tag = "div")
+	internal void InternalRenderTreeCascadingTagFragment<TType>(RenderTreeBuilder builder, string tag = "div")
 	{
 		/*
 		 * <tag class="@CssClass" @attributes="@UserAttrs">

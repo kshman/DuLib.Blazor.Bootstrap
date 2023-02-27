@@ -57,9 +57,9 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	[Inject] private ILogger<Toggle> Logger { get; set; } = default!;
 
 	//
-	protected TagVariant ActualVariant => Variant ?? Button.DefaultSettings.Variant;
-	protected TagSize ActualSize => Size ?? Button.DefaultSettings.Size;
-	protected bool ActualOutline => Outline ?? Button.DefaultSettings.Outline;
+	protected TagVariant ActualVariant => Variant ?? Nulo.DefaultSettings.Variant;
+	protected TagSize ActualSize => Size ?? Nulo.DefaultSettings.Size;
+	protected bool ActualOutline => Outline ?? Nulo.DefaultSettings.Outline;
 
 	//
 	private ElementReference _self;
