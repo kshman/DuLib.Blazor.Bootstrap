@@ -17,7 +17,6 @@ public class Divider : ComponentObject
 		cssc.Add(ListAgency switch
 		{
 			DropMenu => "dropdown-divider",
-			ListGroup => "dropdown-divider",
 			_ => null,
 		});
 	}
@@ -37,7 +36,10 @@ public class Divider : ComponentObject
 		 * 	<hr class="@CssClass" @attributes="UserAttrs" />
 		 * }
 		 */
-		if (ListAgency is not null)
+
+		var list = ListAgency?.SurroundTag ?? false;
+
+		if (list)
 		{
 			builder.OpenElement(0, "li");
 
@@ -52,7 +54,7 @@ public class Divider : ComponentObject
 
 		builder.CloseElement(); // hr
 
-		if (ListAgency is not null)
+		if (list)
 			builder.CloseElement(); // li
 	}
 }

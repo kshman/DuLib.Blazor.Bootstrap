@@ -3,6 +3,19 @@ using Microsoft.Extensions.Logging;
 
 namespace Du.Blazor.Components;
 
+
+/// <summary>
+/// 리스트 콘텐트 에이전시
+/// </summary>
+public interface ITagListAgency
+{
+	bool SurroundTag { get; }
+	string ItemClass { get; }
+	string ItemTextClass { get; }
+	string ItemActionClass { get; }
+}
+
+
 /// <summary>태그 아이템의 보호자</summary>
 /// <remarks>컨테이너가 아닌것은 개체를 소유하지 않고 처리만 도와주기 때문</remarks>
 public interface ITagItemAgency
@@ -48,9 +61,14 @@ public class TagItem : TagItemObject<ITagItemAgency>
 	/// <summary>리스트(li)에 있을 경우 사용할 css클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
+	/// <summary>바리언트 색깔</summary>
+	[Parameter] public TagVariant? Variant { get; set; }
+
 	//
-	protected override void OnComponentClass(CssCompose cssc) =>
+	protected override void OnComponentClass(CssCompose cssc)
+	{
 		ItemAgency?.OnTagItemClass(this, cssc);
+	}
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -62,6 +80,41 @@ public class TagItem : TagItemObject<ITagItemAgency>
 			// 캐스터 없이도 그릴 수 있다!
 			InternalRenderTreeTextChild(builder);
 		}
+	}
+
+	//
+	internal void InternalRenderTreeListTag(RenderTreeBuilder builder)
+	{
+		/*
+		 * 	<li>
+		 * 		<div class="@CssClass" @attributes="@UserAttrs">
+		 * 			@Text
+		 * 			@ChildContent
+		 * 		</div>
+		 * 	</li>
+		 */
+
+		builder.OpenElement(0, "li");
+
+		if (ListClass.IsHave(true))
+			builder.AddAttribute(1, ListClass);
+
+		builder.OpenElement(2, Tag);
+		builder.AddAttribute(3, "class", CssClass);
+
+		if (OnClick.HasDelegate)
+		{
+			builder.AddAttribute(4, "role", "button");
+			builder.AddAttribute(5, "onclick", InvokeOnClick);
+			builder.AddEventStopPropagationAttribute(6, "onclick", true);
+		}
+
+		builder.AddMultipleAttributes(7, UserAttrs);
+		builder.AddContent(8, Text);
+		builder.AddContent(9, ChildContent);
+		builder.CloseElement(); // tag
+
+		builder.CloseElement(); // li
 	}
 }
 
@@ -102,6 +155,7 @@ public abstract class TagTextBase : ComponentFragment
 {
 	/// <summary>텍스트 속성</summary>
 	[Parameter] public string? Text { get; set; }
+	[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
 	//
 	internal virtual string Tag => "p";
@@ -117,9 +171,20 @@ public abstract class TagTextBase : ComponentFragment
 		 */
 		builder.OpenElement(0, Tag);
 		builder.AddAttribute(1, "class", CssClass);
-		builder.AddMultipleAttributes(2, UserAttrs);
-		builder.AddContent(3, Text);
-		builder.AddContent(4, ChildContent);
+
+		if (OnClick.HasDelegate)
+		{
+			builder.AddAttribute(2, "role", "button");
+			builder.AddAttribute(3, "onclick", InvokeOnClick);
+			builder.AddEventStopPropagationAttribute(4, "onclick", true);
+		}
+
+		builder.AddMultipleAttributes(5, UserAttrs);
+		builder.AddContent(6, Text);
+		builder.AddContent(7, ChildContent);
 		builder.CloseElement(); // tag
 	}
+
+	//
+	protected virtual Task InvokeOnClick(MouseEventArgs e) => OnClick.InvokeAsync(e);
 }

@@ -42,13 +42,7 @@ public class NavButton : ComponentFragment, IDisposable
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(ListAgency switch
-		{
-			null => "nav-link",
-			DropMenu => "dropdown-item",
-			ListGroup => "listgroup-item",
-			_ => null,
-		})
+		cssc.Add(ListAgency?.ItemActionClass ?? "nav-link")
 			.Register(() => _is_active ? ActiveClass : null);
 	}
 
@@ -62,7 +56,7 @@ public class NavButton : ComponentFragment, IDisposable
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
-		var list = ListAgency is not null;
+		var list = ListAgency?.SurroundTag ?? false;
 
 		if (list)
 		{

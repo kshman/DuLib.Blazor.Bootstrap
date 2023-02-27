@@ -11,7 +11,7 @@ public class Button : ButtonBase
 	public class Settings
 	{
 		public ButtonType Type { get; set; }
-		public TagColor Color { get; set; }
+		public TagVariant Variant { get; set; }
 		public TagSize Size { get; set; }
 		public bool Outline { get; set; }
 	}
@@ -24,7 +24,7 @@ public class Button : ButtonBase
 		DefaultSettings = new Settings
 		{
 			Type = ButtonType.Button,
-			Color = TagColor.Primary,
+			Variant = TagVariant.Primary,
 			Size = TagSize.Medium,
 			Outline = false
 		};
@@ -45,19 +45,11 @@ public class Button : ButtonBase
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		switch (ListAgency)
-		{
-			case null:
-				cssc.Add("btn")
-					.Add(ActualColor.ToButtonCss(ActualOutline));
-				break;
-			case DropMenu:
-				cssc.Add("dropdown-item");
-				break;
-			case ListGroup:
-				cssc.Add("listgroup-item");
-				break;
-		}
+		if (ListAgency is null)
+			cssc.Add("btn")
+				.Add(ActualVariant.ToButtonCss(ActualOutline));
+		else
+			cssc.Add(ListAgency.ItemActionClass);
 
 		cssc.Add(ActualSize.ToCss("btn"));
 	}
@@ -65,7 +57,7 @@ public class Button : ButtonBase
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
-		if (ListAgency is not null)
+		if (ListAgency?.SurroundTag ?? false)
 			InternalRenderTreeListedButton(builder);
 		else
 			InternalRenderTreeButton(builder);
@@ -176,8 +168,8 @@ public abstract class ButtonBase : ComponentFragment
 	[Parameter] public string? Text { get; set; }
 	/// <summary>버튼 타입. <see cref="ButtonType" /> 참고</summary>
 	[Parameter] public ButtonType? Type { get; set; }
-	/// <summary>레이아웃 타입. <see cref="TagColor" /> 참고</summary>
-	[Parameter] public TagColor? Color { get; set; }
+	/// <summary>레이아웃 타입. <see cref="TagVariant" /> 참고</summary>
+	[Parameter] public TagVariant? Variant { get; set; }
 	/// <summary>컴포넌트 크기. <see cref="TagSize" /> 참고</summary>
 	[Parameter] public TagSize? Size { get; set; }
 	/// <summary>아웃라인 적용.</summary>
@@ -192,7 +184,7 @@ public abstract class ButtonBase : ComponentFragment
 
 	//
 	protected ButtonType ActualType => Type ?? Button.DefaultSettings.Type;
-	protected TagColor ActualColor => Color ?? Button.DefaultSettings.Color;
+	protected TagVariant ActualVariant => Variant ?? Button.DefaultSettings.Variant;
 	protected TagSize ActualSize => Size ?? Button.DefaultSettings.Size;
 	protected bool ActualOutline => Outline ?? Button.DefaultSettings.Outline;
 

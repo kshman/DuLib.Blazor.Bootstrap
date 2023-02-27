@@ -64,33 +64,19 @@ public class DropMenu : ComponentFragment, ITagItemAgency, ITagListAgency
 		InternalRenderCascadingTagFragment<DropMenu>(builder, TagName);
 
 	//
+	bool ITagListAgency.SurroundTag => true;
+	//
+	string ITagListAgency.ItemClass => "dropdown-item";
+	//
+	string ITagListAgency.ItemTextClass => "dropdown-item-text";
+	//
+	string ITagListAgency.ItemActionClass => "dropdown-item-text";
+
+	//
 	void ITagItemAgency.OnTagItemClass(TagItem item, CssCompose cssc) =>
 		cssc.AddSelect(item.TextMode, "dropdown-item-text", "dropdown-item");
 
 	//
-	void ITagItemAgency.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder)
-	{
-		/*
-		 * 	<li>
-		 * 		<div class="@CssClass" @attributes="@UserAttrs">
-		 * 			@Text
-		 * 			@ChildContent
-		 * 		</div>
-		 * 	</li>
-		 */
-
-		builder.OpenElement(0, "li");
-
-		if (item.ListClass.IsHave(true))
-			builder.AddAttribute(1, item.ListClass);
-
-		builder.OpenElement(2, item.Tag);
-		builder.AddAttribute(3, "class", item.CssClass);
-		builder.AddMultipleAttributes(4, item.UserAttrs);
-		builder.AddContent(5, item.Text);
-		builder.AddContent(6, item.ChildContent);
-		builder.CloseElement(); // tag
-
-		builder.CloseElement(); // li
-	}
+	void ITagItemAgency.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder) =>
+		item.InternalRenderTreeListTag(builder);
 }

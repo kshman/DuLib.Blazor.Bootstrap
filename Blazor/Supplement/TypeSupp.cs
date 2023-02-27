@@ -39,28 +39,28 @@ namespace Du.Blazor.Supplement
 			_ => null,
 		};
 
-		internal static string? ToCss(this TagColor color, string lead)
+		internal static string? ToCss(this TagVariant variant, string lead)
 		{
-			var cs = color switch
+			var cs = variant switch
 			{
-				TagColor.Primary => "primary",
-				TagColor.Secondary => "secondary",
-				TagColor.Success => "success",
-				TagColor.Danger => "danger",
-				TagColor.Warning => "warning",
-				TagColor.Info => "info",
-				TagColor.Light => "light",
-				TagColor.Dark => "dark",
-				TagColor.None or
+				TagVariant.Primary => "primary",
+				TagVariant.Secondary => "secondary",
+				TagVariant.Success => "success",
+				TagVariant.Danger => "danger",
+				TagVariant.Warning => "warning",
+				TagVariant.Info => "info",
+				TagVariant.Light => "light",
+				TagVariant.Dark => "dark",
+				TagVariant.None or
 				_ => null,
 			};
 			return cs is null ? null : $"{lead}-{cs}";
 		}
 
-		internal static string? ToButtonCss(this TagColor color, bool outline) => color switch
+		internal static string? ToButtonCss(this TagVariant variant, bool outline) => variant switch
 		{
-			TagColor.Link => "btn-link",
-			_ => color.ToCss(outline ? "btn-outline" : "btn"),
+			TagVariant.Link => "btn-link",
+			_ => variant.ToCss(outline ? "btn-outline" : "btn"),
 		};
 
 		internal static string? ToCss(this TagPosition pos) => pos switch
@@ -145,29 +145,30 @@ namespace Du.Blazor.Supplement
 			_ => null,
 		};
 
-		internal static string? ToContainerCss(this TagDimension layout) => layout switch
+		internal static string? ToCss(this TagDimension dim, string lead, bool nullToNull = true)
 		{
-			TagDimension.Small => "container-sm",
-			TagDimension.Medium => "container-md",
-			TagDimension.Large => "container-lg",
-			TagDimension.ExtraLarge => "container-xl",
-			TagDimension.ExtraExtraLarge => "container-xxl",
-			TagDimension.NavFluid => "container-fluid",
-			TagDimension.None or
-			_ => null
-		};
+			var ds = dim switch
+			{
+				TagDimension.Small => "sm",
+				TagDimension.Medium => "md",
+				TagDimension.Large => "lg",
+				TagDimension.ExtraLarge => "xl",
+				TagDimension.ExtraExtraLarge => "xxl",
+				TagDimension.None or
+				_ => null,
+			};
+			// 널일 경우 nullToNull이 참이면 널을, 거짓이면 그냥 lead를 보냄
+			return ds is null ? nullToNull ? null : lead : $"{lead}-{ds}";
+		}
 
-		internal static string ToOffCanvasCss(this TagDimension responsive) => responsive switch
-		{
-			TagDimension.Small => "offcanvas-sm",
-			TagDimension.Medium => "offcanvas-md",
-			TagDimension.Large => "offcanvas-lg",
-			TagDimension.ExtraLarge => "offcanvas-xl",
-			TagDimension.ExtraExtraLarge => "offcanvas-xxl",
-			TagDimension.NavFluid or
-			TagDimension.None or
-			_ => "offcanvas",
-		};
+		internal static string? ToContainerCss(this TagDimension layout) =>
+			layout == TagDimension.NavFluid ? "container-fluid" : layout.ToCss("container");
+
+		internal static string? ToOffCanvasCss(this TagDimension responsive) =>
+			responsive.ToCss("offcanvas", false);
+
+		internal static string? ToListGroupCss(this TagDimension horizontal) =>
+			horizontal == TagDimension.None ? null : horizontal.ToCss("list-group-horizontal", false);
 
 		internal static string ToOffCanvasCss(this TagPlacement replacement) => replacement switch
 		{
