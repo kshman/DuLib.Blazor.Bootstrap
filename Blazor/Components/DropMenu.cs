@@ -30,7 +30,7 @@ public class DropContent : DropMenu
 /// </list>
 /// </para>
 /// </remarks>
-public class DropMenu : ComponentFragment, ITagItemAgency
+public class DropMenu : ComponentFragment, ITagItemAgency, ITagListAgency
 {
 	/// <summary>드랍다운. 이게 캐스케이딩되면 드랍다운에 맞게 콤포넌트가 동작한다</summary>
 	[CascadingParameter] public DropDown? DropDown { get; set; }
@@ -64,33 +64,19 @@ public class DropMenu : ComponentFragment, ITagItemAgency
 		InternalRenderCascadingTagFragment<DropMenu>(builder, TagName);
 
 	//
+	bool ITagListAgency.SurroundTag => true;
+	//
+	string ITagListAgency.ItemClass => "dropdown-item";
+	//
+	string ITagListAgency.ItemTextClass => "dropdown-item-text";
+	//
+	string ITagListAgency.ItemActionClass => "dropdown-item-text";
+
+	//
 	void ITagItemAgency.OnTagItemClass(TagItem item, CssCompose cssc) =>
 		cssc.AddSelect(item.TextMode, "dropdown-item-text", "dropdown-item");
 
 	//
-	void ITagItemAgency.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder)
-	{
-		/*
-		 * 	<li>
-		 * 		<div class="@CssClass" @attributes="@UserAttrs">
-		 * 			@Text
-		 * 			@ChildContent
-		 * 		</div>
-		 * 	</li>
-		 */
-
-		builder.OpenElement(0, "li");
-
-		if (item.ListClass.IsHave(true))
-			builder.AddAttribute(1, item.ListClass);
-
-		builder.OpenElement(2, item.Tag);
-		builder.AddAttribute(3, "class", item.CssClass);
-		builder.AddMultipleAttributes(4, item.UserAttrs);
-		builder.AddContent(5, item.Text);
-		builder.AddContent(6, item.ChildContent);
-		builder.CloseElement(); // tag
-
-		builder.CloseElement(); // li
-	}
+	void ITagItemAgency.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder) =>
+		item.InternalRenderTreeListTag(builder);
 }

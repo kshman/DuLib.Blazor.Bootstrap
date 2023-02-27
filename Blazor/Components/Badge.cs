@@ -11,8 +11,8 @@ public class Badge : ComponentFragment
 	/// <summary>배지 설정</summary>
 	public class Settings
 	{
-		public TagColor Fore { get; set; }
-		public TagColor Back { get; set; }
+		public TagVariant Fore { get; set; }
+		public TagVariant Back { get; set; }
 		public BadgeLayout Layout { get; set; }
 		public string? AdditionalCss { get; set; }
 	}
@@ -24,8 +24,8 @@ public class Badge : ComponentFragment
 	{
 		DefaultSettings  = new Settings
 		{
-			Fore = TagColor.Light,
-			Back = TagColor.Primary,
+			Fore = TagVariant.Light,
+			Back = TagVariant.Primary,
 			Layout = BadgeLayout.None,
 			AdditionalCss = null,
 		};
@@ -33,9 +33,9 @@ public class Badge : ComponentFragment
 	#endregion
 
 	/// <summary>글자색</summary>
-	[Parameter] public TagColor? Fore { get; set; }
+	[Parameter] public TagVariant? Fore { get; set; }
 	/// <summary>배경색</summary>
-	[Parameter] public TagColor? Back { get; set; }
+	[Parameter] public TagVariant? Back { get; set; }
 	/// <summary>레이아웃 <see cref="BadgeLayout"/></summary>
 	[Parameter] public BadgeLayout? Layout { get; set; }
 

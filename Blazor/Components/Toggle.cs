@@ -35,8 +35,8 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	[Parameter] public ToggleLayout Layout { get; set; } = ToggleLayout.Button;
 	/// <summary>드랍다운일 때 자동으로 닫기 방법 <see cref="DropAutoClose"/></summary>
 	[Parameter] public DropAutoClose AutoClose { get; set; } = DropAutoClose.True;
-	/// <summary>버튼 모양일 때 색깔 <see cref="TagColor"/></summary>
-	[Parameter] public TagColor? Color { get; set; }
+	/// <summary>버튼 모양일 때 색깔 <see cref="TagVariant"/></summary>
+	[Parameter] public TagVariant? Variant { get; set; }
 	/// <summary>버튼 모양일 때 크기 <see cref="TagSize"/></summary>
 	[Parameter] public TagSize? Size { get; set; }
 	/// <summary>버튼 모양일 때 외곽선 모양인가 여부</summary>
@@ -57,7 +57,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	[Inject] private ILogger<Toggle> Logger { get; set; } = default!;
 
 	//
-	protected TagColor ActualColor => Color ?? Button.DefaultSettings.Color;
+	protected TagVariant ActualVariant => Variant ?? Button.DefaultSettings.Variant;
 	protected TagSize ActualSize => Size ?? Button.DefaultSettings.Size;
 	protected bool ActualOutline => Outline ?? Button.DefaultSettings.Outline;
 
@@ -106,7 +106,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 
 			if (NavBar is not null) // 나브바 처리
 			{
-				Color ??= TagColor.None;
+				Variant ??= TagVariant.None;
 
 				if (Layout is not ToggleLayout.Button) // 버튼만 됨
 				{
@@ -163,7 +163,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 		{
 			cssc.AddIf(_use_collapse is false, "dropdown-toggle")
 				.Add("btn")
-				.Add(ActualColor.ToButtonCss(ActualOutline))
+				.Add(ActualVariant.ToButtonCss(ActualOutline))
 				.Add(ActualSize.ToCss("btn"));
 		}
 		else

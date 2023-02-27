@@ -25,6 +25,13 @@ DUCKIE = {
   }
 }
 
+// service
+DUSVCS = {
+  getdim: function () {
+    return { width: window.innerWidth, height: window.innerHeight };
+  }
+}
+
 // carousel
 DUCARS = {
   init: function (e, orf, opt) {
@@ -121,7 +128,7 @@ DUDROP = {
 
 // offcanvas
 DUOFCS = {
-  show: function(e, orf, scrl, esck) {
+  show: function (e, orf, scrl, esck) {
     if (window.efofcs) window.efofcs.c?.hide();
     if (!e) return;
     e.orf = orf;
@@ -131,10 +138,10 @@ DUOFCS = {
     window.efofcs = e;
     e.c?.show();
   },
-  hide: function(e) {
+  hide: function (e) {
     e.c?.hide();
   },
-  disp: function(e) {
+  disp: function (e) {
     if (!e) return;
     e.removeEventListener('shown.bs.offcanvas', this.os);
     e.removeEventListener('hidden.bs.offcanvas', this.oh);

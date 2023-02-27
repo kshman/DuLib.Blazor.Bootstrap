@@ -11,7 +11,7 @@ public class Button : ButtonBase
 	public class Settings
 	{
 		public ButtonType Type { get; set; }
-		public TagColor Color { get; set; }
+		public TagVariant Variant { get; set; }
 		public TagSize Size { get; set; }
 		public bool Outline { get; set; }
 	}
@@ -24,36 +24,32 @@ public class Button : ButtonBase
 		DefaultSettings = new Settings
 		{
 			Type = ButtonType.Button,
-			Color = TagColor.Primary,
+			Variant = TagVariant.Primary,
 			Size = TagSize.Medium,
 			Outline = false
 		};
 	}
 	#endregion
 
-	/// <summary>드랍 메뉴, 이게 있으면 드랍 메뉴용으로 처리함</summary>
-	[CascadingParameter] public DropMenu? DropMenu { get; set; }
+	/// <summary>리스트 에이전시, 이게 있으면 리스트 메뉴용으로 처리함</summary>
+	[CascadingParameter] public ITagListAgency? ListAgency { get; set; }
 
 	/// <summary>URL 링크 지정.</summary>
 	[Parameter] public string? Link { get; set; }
 	/// <summary>타겟 지정.</summary>
 	[Parameter] public string? Target { get; set; }
 
-	/// <summary>드랍 메뉴가 있을 때 리스트(li)의 CSS클래스</summary>
+	/// <summary>리스트 에이전시가 있을 때 리스트(li)의 CSS클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		if (DropMenu is null)
-		{
+		if (ListAgency is null)
 			cssc.Add("btn")
-				.Add(ActualColor.ToButtonCss(ActualOutline));
-		}
+				.Add(ActualVariant.ToButtonCss(ActualOutline));
 		else
-		{
-			cssc.Add("dropdown-item");
-		}
+			cssc.Add(ListAgency.ItemActionClass);
 
 		cssc.Add(ActualSize.ToCss("btn"));
 	}
@@ -61,13 +57,13 @@ public class Button : ButtonBase
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
-		if (DropMenu is not null)
-			BuildForDropMenu(builder);
+		if (ListAgency?.SurroundTag ?? false)
+			InternalRenderTreeListedButton(builder);
 		else
-			BuildForButton(builder);
+			InternalRenderTreeButton(builder);
 	}
 
-	private void BuildForDropMenu(RenderTreeBuilder builder)
+	private void InternalRenderTreeListedButton(RenderTreeBuilder builder)
 	{
 		/*
 		 * <li class="@ListClass">
@@ -115,7 +111,7 @@ public class Button : ButtonBase
 		builder.CloseElement(); // li
 	}
 
-	private void BuildForButton(RenderTreeBuilder builder)
+	private void InternalRenderTreeButton(RenderTreeBuilder builder)
 	{
 		/*
 		 * if (Href.IsHave())
@@ -172,8 +168,8 @@ public abstract class ButtonBase : ComponentFragment
 	[Parameter] public string? Text { get; set; }
 	/// <summary>버튼 타입. <see cref="ButtonType" /> 참고</summary>
 	[Parameter] public ButtonType? Type { get; set; }
-	/// <summary>레이아웃 타입. <see cref="TagColor" /> 참고</summary>
-	[Parameter] public TagColor? Color { get; set; }
+	/// <summary>레이아웃 타입. <see cref="TagVariant" /> 참고</summary>
+	[Parameter] public TagVariant? Variant { get; set; }
 	/// <summary>컴포넌트 크기. <see cref="TagSize" /> 참고</summary>
 	[Parameter] public TagSize? Size { get; set; }
 	/// <summary>아웃라인 적용.</summary>
@@ -188,7 +184,7 @@ public abstract class ButtonBase : ComponentFragment
 
 	//
 	protected ButtonType ActualType => Type ?? Button.DefaultSettings.Type;
-	protected TagColor ActualColor => Color ?? Button.DefaultSettings.Color;
+	protected TagVariant ActualVariant => Variant ?? Button.DefaultSettings.Variant;
 	protected TagSize ActualSize => Size ?? Button.DefaultSettings.Size;
 	protected bool ActualOutline => Outline ?? Button.DefaultSettings.Outline;
 

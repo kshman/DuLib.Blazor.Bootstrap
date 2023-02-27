@@ -10,8 +10,10 @@ public class NavBar : ComponentFragment
 	#region 나브
 	/// <summary>나브 크기 <see cref="NavBarExpand"/></summary>
 	[Parameter] public NavBarExpand Expand { get; set; } = NavBarExpand.Large;
-	/// <summary>나브 색깔 <see cref="TagColor"/></summary>
-	[Parameter] public TagColor Color { get; set; } = TagColor.None;
+	/// <summary>나브 색깔 <see cref="TagVariant"/></summary>
+	[Parameter] public TagVariant Variant { get; set; } = TagVariant.None;
+	/// <summary>nav 대신 header 태그를 사용합니다.</summary>
+	[Parameter] public bool HeaderTag { get; set; }
 	#endregion
 
 	#region 컨테이너
@@ -36,7 +38,7 @@ public class NavBar : ComponentFragment
 	{
 		cssc.Add("navbar")
 			.Add(Expand.ToCss())
-			.Add(Color.ToCss("bg"));
+			.Add(Variant.ToCss("bg"));
 	}
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -50,7 +52,7 @@ public class NavBar : ComponentFragment
 		 *     </div>
 		 * </nav>
 		 */
-		builder.OpenElement(0, "nav");
+		builder.OpenElement(0, HeaderTag ? "header" : "nav");
 		builder.AddAttribute(1, "class", CssClass);
 		builder.AddAttribute(2, "id", Id);
 		builder.AddMultipleAttributes(3, UserAttrs);

@@ -18,12 +18,15 @@ public enum TagDimension
 	ExtraLarge,
 	ExtraExtraLarge,
 
-	/// <summary>나브 전용 Fluid, 그외에는 Medium으로 대체</summary>
+	/// <summary>나브용 Fluid, 그외에는 Medium으로 대체</summary>
 	NavFluid,
+
+	/// <summary>리스트 그룹</summary>
+	Auto
 }
 
 /// <summary>컴포넌트 색깔</summary>
-public enum TagColor
+public enum TagVariant
 {
 	None,
 	Primary,
