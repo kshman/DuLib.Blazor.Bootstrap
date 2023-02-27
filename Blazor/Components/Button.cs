@@ -31,28 +31,32 @@ public class Button : ButtonBase
 	}
 	#endregion
 
-	/// <summary>드랍 메뉴, 이게 있으면 드랍 메뉴용으로 처리함</summary>
-	[CascadingParameter] public DropMenu? DropMenu { get; set; }
+	/// <summary>리스트 에이전시, 이게 있으면 리스트 메뉴용으로 처리함</summary>
+	[CascadingParameter] public ITagListAgency? ListAgency { get; set; }
 
 	/// <summary>URL 링크 지정.</summary>
 	[Parameter] public string? Link { get; set; }
 	/// <summary>타겟 지정.</summary>
 	[Parameter] public string? Target { get; set; }
 
-	/// <summary>드랍 메뉴가 있을 때 리스트(li)의 CSS클래스</summary>
+	/// <summary>리스트 에이전시가 있을 때 리스트(li)의 CSS클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		if (DropMenu is null)
+		switch (ListAgency)
 		{
-			cssc.Add("btn")
-				.Add(ActualColor.ToButtonCss(ActualOutline));
-		}
-		else
-		{
-			cssc.Add("dropdown-item");
+			case null:
+				cssc.Add("btn")
+					.Add(ActualColor.ToButtonCss(ActualOutline));
+				break;
+			case DropMenu:
+				cssc.Add("dropdown-item");
+				break;
+			case ListGroup:
+				cssc.Add("listgroup-item");
+				break;
 		}
 
 		cssc.Add(ActualSize.ToCss("btn"));
@@ -61,13 +65,13 @@ public class Button : ButtonBase
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
-		if (DropMenu is not null)
-			BuildForDropMenu(builder);
+		if (ListAgency is not null)
+			InternalRenderTreeListedButton(builder);
 		else
-			BuildForButton(builder);
+			InternalRenderTreeButton(builder);
 	}
 
-	private void BuildForDropMenu(RenderTreeBuilder builder)
+	private void InternalRenderTreeListedButton(RenderTreeBuilder builder)
 	{
 		/*
 		 * <li class="@ListClass">
@@ -115,7 +119,7 @@ public class Button : ButtonBase
 		builder.CloseElement(); // li
 	}
 
-	private void BuildForButton(RenderTreeBuilder builder)
+	private void InternalRenderTreeButton(RenderTreeBuilder builder)
 	{
 		/*
 		 * if (Href.IsHave())

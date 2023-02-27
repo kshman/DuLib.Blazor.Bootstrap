@@ -13,7 +13,15 @@ public enum TagContentRole
 
 
 /// <summary>
-/// 태그 콘텐트 채용자
+/// 리스트 콘텐트 에이전시
+/// </summary>
+public interface ITagListAgency
+{
+}
+
+
+/// <summary>
+/// 태그 콘텐트 에이전시
 /// </summary>
 public interface ITagContentAgency
 {

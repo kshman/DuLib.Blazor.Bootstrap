@@ -6,20 +6,27 @@ namespace Du.Blazor.Components;
 public class Divider : ComponentObject
 {
 	/// <summary>드랍메뉴. 이 내용이 캐스케이딩되면 리스트(li)를 추가한다</summary>
-	[CascadingParameter] public DropMenu? DropMenu { get; set; }
+	[CascadingParameter] public ITagListAgency? ListAgency { get; set; }
 
 	/// <summary>리스트(li)로 출력할 때 사용하는 css클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc) => 
-		cssc.AddIf(DropMenu is not null, "dropdown-divider");
+	protected override void OnComponentClass(CssCompose cssc)
+	{
+		cssc.Add(ListAgency switch
+		{
+			DropMenu => "dropdown-divider",
+			ListGroup => "dropdown-divider",
+			_ => null,
+		});
+	}
 
 	// 
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
 		/*
-		 * @if (DropDown is not null)
+		 * @if (ListAgency is not null)
 		 * {
 		 * 	<li class="@ListClass">
 		 * 		<hr class="@CssClass" @attributes="UserAttrs" />
@@ -30,7 +37,7 @@ public class Divider : ComponentObject
 		 * 	<hr class="@CssClass" @attributes="UserAttrs" />
 		 * }
 		 */
-		if (DropMenu is not null)
+		if (ListAgency is not null)
 		{
 			builder.OpenElement(0, "li");
 
@@ -45,7 +52,7 @@ public class Divider : ComponentObject
 
 		builder.CloseElement(); // hr
 
-		if (DropMenu is not null)
+		if (ListAgency is not null)
 			builder.CloseElement(); // li
 	}
 }

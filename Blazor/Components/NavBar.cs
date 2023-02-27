@@ -12,6 +12,8 @@ public class NavBar : ComponentFragment
 	[Parameter] public NavBarExpand Expand { get; set; } = NavBarExpand.Large;
 	/// <summary>나브 색깔 <see cref="TagColor"/></summary>
 	[Parameter] public TagColor Color { get; set; } = TagColor.None;
+	/// <summary>nav 대신 header 태그를 사용합니다.</summary>
+	[Parameter] public bool HeaderTag { get; set; }
 	#endregion
 
 	#region 컨테이너
@@ -50,7 +52,7 @@ public class NavBar : ComponentFragment
 		 *     </div>
 		 * </nav>
 		 */
-		builder.OpenElement(0, "nav");
+		builder.OpenElement(0, HeaderTag ? "header" : "nav");
 		builder.AddAttribute(1, "class", CssClass);
 		builder.AddAttribute(2, "id", Id);
 		builder.AddMultipleAttributes(3, UserAttrs);

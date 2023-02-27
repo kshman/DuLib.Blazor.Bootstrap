@@ -9,8 +9,8 @@ namespace Du.Blazor.Components;
 /// </summary>
 public class NavButton : ComponentFragment, IDisposable
 {
-	/// <summary>드랍다운. 이게 캐스케이딩되어 있으면 리스트(li)를 추가한다</summary>
-	[CascadingParameter] public DropMenu? DropDown { get; set; }
+	/// <summary>리스트 에이전시. 이게 캐스케이딩되어 있으면 리스트(li)를 추가한다</summary>
+	[CascadingParameter] public ITagListAgency? ListAgency { get; set; }
 
 	/// <summary>나브 링크 매치</summary>
 	[Parameter] public NavLinkMatch Match { get; set; }
@@ -42,7 +42,13 @@ public class NavButton : ComponentFragment, IDisposable
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(DropDown is null ? "nav-link" : "dropdown-item")
+		cssc.Add(ListAgency switch
+		{
+			null => "nav-link",
+			DropMenu => "dropdown-item",
+			ListGroup => "listgroup-item",
+			_ => null,
+		})
 			.Register(() => _is_active ? ActiveClass : null);
 	}
 
@@ -56,7 +62,7 @@ public class NavButton : ComponentFragment, IDisposable
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
-		var list = DropDown is not null;
+		var list = ListAgency is not null;
 
 		if (list)
 		{
@@ -98,10 +104,10 @@ public class NavButton : ComponentFragment, IDisposable
 			StateHasChanged();
 		}
 
-		if (DropDown is not null)
+		if (ListAgency is not null)
 		{
 			// 이전 드랍다운은 이거했어야 했지만... 
-			//InvokeAsync(DropDown.HideAsync);
+			//InvokeAsync(ListAgency.HideAsync);
 		}
 	}
 
@@ -147,6 +153,6 @@ public class NavButton : ComponentFragment, IDisposable
 	}
 
 	//
-	public void Dispose() => 
+	public void Dispose() =>
 		NavMan.LocationChanged -= OnLocationChanged;
 }

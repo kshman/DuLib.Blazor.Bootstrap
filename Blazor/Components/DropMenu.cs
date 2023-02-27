@@ -30,7 +30,7 @@ public class DropContent : DropMenu
 /// </list>
 /// </para>
 /// </remarks>
-public class DropMenu : ComponentFragment, ITagItemAgency
+public class DropMenu : ComponentFragment, ITagItemAgency, ITagListAgency
 {
 	/// <summary>드랍다운. 이게 캐스케이딩되면 드랍다운에 맞게 콤포넌트가 동작한다</summary>
 	[CascadingParameter] public DropDown? DropDown { get; set; }
