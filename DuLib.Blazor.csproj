@@ -9,7 +9,7 @@
     <RootNamespace>Du</RootNamespace>
 
     <RepositoryUrl>https://github.com/kshman/DuLib.Blazor</RepositoryUrl>
-    <Version>0.1.7</Version>
+    <Version>0.1.9</Version>
     <Title>DuLib.Blazor</Title>
     <PackageId>DuLib.Blazor</PackageId>
     <Product>DuLib.Blazor</Product>
@@ -64,6 +64,8 @@
     <None Remove="wwwroot\ref\**" />
     <Compile Remove="Blazor\Unused\RemoveIntellisence.cs" />
     <None Include="Blazor\Unused\RemoveIntellisence.cs" />
+    <Compile Remove="Blazor\Unused\TempDoNotUse.razor" />
+    <None Include="Blazor\Unused\TempDoNotUse.razor" />
   </ItemGroup>
 
 </Project>

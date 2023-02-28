@@ -189,16 +189,14 @@ namespace Du.Blazor.Supplement
 		#endregion 컴포넌트
 
 		#region 자바스크립트
-
 		// 모듈 임포트
 		internal static ValueTask<IJSObjectReference> ImportModuleAsync(this IJSRuntime js, string moduleName, string? subPath)
 		{
 			var path = subPath.IsHave() ?
-				"./_content/Du.Blazor/" + subPath + "/" + moduleName + ".razor.js" :
-				"./_content/Du.Blazor/" + moduleName + ".js";
+				"./_content/DuLib.Blazor/" + subPath + "/" + moduleName + ".razor.js" :
+				"./_content/DuLib.Blazor/" + moduleName + ".js";
 			return js.InvokeAsync<IJSObjectReference>("import", path);
 		}
-
 		#endregion
 	}
 }

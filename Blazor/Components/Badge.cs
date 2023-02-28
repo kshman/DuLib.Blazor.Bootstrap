@@ -56,5 +56,5 @@ public class Badge : ComponentFragment
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderTagFragment(builder, "span");
+		InternalRenderTreeTagFragment(builder, "span");
 }

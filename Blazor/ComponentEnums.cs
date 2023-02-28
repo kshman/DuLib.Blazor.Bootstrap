@@ -26,6 +26,24 @@ public enum TagDimension
 }
 
 /// <summary>컴포넌트 색깔</summary>
+/// <remarks>
+/// <para>
+/// 바리언트 지원 <br/>
+/// - bg / text <br/>
+/// - table <br/>
+/// - alert <br/>
+/// - border <br/>
+/// </para>
+/// <para>
+/// 별도로 처리됨 <br/>
+/// - btn / btn-outline <br/>
+/// - list-group-item <br/>
+/// </para>
+/// <para>
+/// 별도록 처리해야 하는데... <br/>
+/// - link → Button 컴포넌트<br/>
+/// </para>
+/// </remarks>
 public enum TagVariant
 {
 	None,
@@ -97,9 +115,11 @@ public enum ButtonType
 /// <summary>버튼 그룹</summary>
 public enum ButtonLayout
 {
-	Button,
+	Nulo,
 	Vertical,
 	Toolbar,
+
+	Button = Nulo,
 }
 
 /// <summary>carousel 재생 방법</summary>

@@ -4,6 +4,7 @@ global using Microsoft.AspNetCore.Components.Web;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.JSInterop;
 global using Du.Blazor.Components;
+global using Du.Blazor.Components.Props;
 global using Du.Blazor.Supplement;
 
 namespace Du;

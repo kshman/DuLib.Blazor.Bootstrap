@@ -2,10 +2,16 @@
 
 namespace Du.Blazor.Components;
 
+/// <inheritdoc/>
+public class ButtonGroup : NuloGroup
+{
+}
+
+
 /// <summary>
 /// 버튼 그룹 
 /// </summary>
-public  class ButtonGroup : ComponentFragment
+public  class NuloGroup : ComponentFragment
 {
 	/// <summary>버튼 그룹 형식</summary>
 	[Parameter] public ButtonLayout Layout { get; set; }

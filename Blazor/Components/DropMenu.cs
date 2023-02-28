@@ -24,13 +24,13 @@ public class DropContent : DropMenu
 /// <item><term><see cref="TagItem"/></term><description>P 태그 제공</description></item>
 /// <item><term><see cref="TagSpan"/></term><description>SPAN 태그 제공</description></item>
 /// <item><term><see cref="TagDiv"/></term><description>DIV 태그 제공</description></item>
-/// <item><term><see cref="Button"/></term><description>버튼/링크</description></item>
+/// <item><term><see cref="Nulo"/></term><description>버튼/링크</description></item>
 /// <item><term><see cref="Divider"/></term><description>구분 가로줄</description></item>
-/// <item><term><see cref="NavButton"/></term><description>나브 링크</description></item>
+/// <item><term><see cref="NavNulo"/></term><description>나브 링크</description></item>
 /// </list>
 /// </para>
 /// </remarks>
-public class DropMenu : ComponentFragment, ITagItemAgency, ITagListAgency
+public class DropMenu : ComponentFragment, ITagItemHandler, ITagListAgent
 {
 	/// <summary>드랍다운. 이게 캐스케이딩되면 드랍다운에 맞게 콤포넌트가 동작한다</summary>
 	[CascadingParameter] public DropDown? DropDown { get; set; }
@@ -61,22 +61,54 @@ public class DropMenu : ComponentFragment, ITagItemAgency, ITagListAgency
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		InternalRenderCascadingTagFragment<DropMenu>(builder, TagName);
+		InternalRenderTreeCascadingTagFragment<DropMenu>(builder, TagName);
+
+	#region ITagListAgency
+	//
+	bool ITagListAgent.SurroundTag => true;
 
 	//
-	bool ITagListAgency.SurroundTag => true;
-	//
-	string ITagListAgency.ItemClass => "dropdown-item";
-	//
-	string ITagListAgency.ItemTextClass => "dropdown-item-text";
-	//
-	string ITagListAgency.ItemActionClass => "dropdown-item-text";
+	string ITagListAgent.ActionClass => "dropdown-item-text";
+	#endregion
 
+	#region ITagItemAgency
 	//
-	void ITagItemAgency.OnTagItemClass(TagItem item, CssCompose cssc) =>
+	void ITagItemHandler.OnTagItemClass(TagItem item, CssCompose cssc) =>
 		cssc.AddSelect(item.TextMode, "dropdown-item-text", "dropdown-item");
 
 	//
-	void ITagItemAgency.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder) =>
-		item.InternalRenderTreeListTag(builder);
+	void ITagItemHandler.OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder) 
+	{
+		/*
+		 * 	<li>
+		 * 		<div class="@CssClass" @attributes="@UserAttrs">
+		 * 			@Text
+		 * 			@ChildContent
+		 * 		</div>
+		 * 	</li>
+		 */
+
+		builder.OpenElement(0, "li");
+
+		if (item.ListClass.IsHave(true))
+			builder.AddAttribute(1, item.ListClass);
+
+		builder.OpenElement(2, item.Tag);
+		builder.AddAttribute(3, "class", item.CssClass);
+
+		if (item.OnClick.HasDelegate)
+		{
+			builder.AddAttribute(4, "role", "button");
+			builder.AddAttribute(5, "onclick", item.InvokeOnClick);
+			builder.AddEventStopPropagationAttribute(6, "onclick", true);
+		}
+
+		builder.AddMultipleAttributes(7, item.UserAttrs);
+		builder.AddContent(8, item.Text);
+		builder.AddContent(9, item.ChildContent);
+		builder.CloseElement(); // tag
+
+		builder.CloseElement(); // li
+	}
+	#endregion
 }

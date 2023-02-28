@@ -21,6 +21,8 @@ public class ContentItem : TagTextBase, IAsyncDisposable
 	/// <summary>이 컴포넌트를 포함하는 컨테이너</summary>
 	[CascadingParameter] public ComponentStorage<ContentItem>? Container { get; set; }
 
+	/// <summary>디스플레이 CSS클래스. 제목에 쓰임</summary>
+	[Parameter] public string? DisplayClass { get; set; }
 	/// <summary>디스플레이 태그. 제목에 쓰임</summary>
 	[Parameter] public RenderFragment? Display { get; set; }
 	/// <summary>콘텐트 태그. 내용에 쓰임</summary>

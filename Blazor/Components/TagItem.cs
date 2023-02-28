@@ -3,38 +3,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Du.Blazor.Components;
 
-
-/// <summary>
-/// 리스트 콘텐트 에이전시
-/// </summary>
-public interface ITagListAgency
-{
-	bool SurroundTag { get; }
-	string ItemClass { get; }
-	string ItemTextClass { get; }
-	string ItemActionClass { get; }
-}
-
-
-/// <summary>태그 아이템의 보호자</summary>
-/// <remarks>컨테이너가 아닌것은 개체를 소유하지 않고 처리만 도와주기 때문</remarks>
-public interface ITagItemAgency
-{
-	/// <summary>
-	/// 태그 아이템의 CSS클래스를 설정
-	/// </summary>
-	/// <param name="item"></param>
-	/// <param name="cssc"></param>
-	void OnTagItemClass(TagItem item, CssCompose cssc);
-	/// <summary>
-	/// 태그 아이템의 렌더 트리를 만듦
-	/// </summary>
-	/// <param name="item"></param>
-	/// <param name="builder"></param>
-	void OnTagItemBuildRenderTree(TagItem item, RenderTreeBuilder builder);
-}
-
-
 /// <summary>태그 DIV 아이템</summary>
 public class TagDiv : TagItem
 {
@@ -52,8 +20,11 @@ public class TagSpan : TagItem
 /// <summary>
 /// 태그 아이템. 
 /// </summary>
-public class TagItem : TagItemObject<ITagItemAgency>
+public class TagItem : TagTextBase
 {
+	/// <summary>아이템 핸들러</summary>
+	[CascadingParameter] public ITagItemHandler? ItemHandler { get; set; }
+
 	/// <summary>참일 경우 리스트 모드로 출력한다</summary>
 	/// <remarks>드랍일경우 드랍 텍스트로 출력한다 (마우스로 활성화되지 않는 기능)</remarks>
 	[Parameter] public bool TextMode { get; set; }
@@ -61,85 +32,37 @@ public class TagItem : TagItemObject<ITagItemAgency>
 	/// <summary>리스트(li)에 있을 경우 사용할 css클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
-	/// <summary>바리언트 색깔</summary>
+	/// <summary>바리언트 색깔. 지원되는 애들만 쓸 수 있음</summary>
 	[Parameter] public TagVariant? Variant { get; set; }
+
+	//
+	[Inject] protected ILogger<TagItem> Logger { get; set; } = default!;
+
+	/// <inheritdoc />
+	protected override void OnInitialized()
+	{
+		// 단독으로 써도 좋은데 디버그 중일 때는 표시하자
+		LogIf.ContainerIsNull(Logger, ItemHandler); 
+
+		base.OnInitialized();
+	}
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		ItemAgency?.OnTagItemClass(this, cssc);
+		ItemHandler?.OnTagItemClass(this, cssc);
 	}
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
-		if (ItemAgency is not null)
-			ItemAgency.OnTagItemBuildRenderTree(this, builder);
+		if (ItemHandler is not null)
+			ItemHandler.OnTagItemBuildRenderTree(this, builder);
 		else
 		{
-			// 캐스터 없이도 그릴 수 있다!
-			InternalRenderTreeTextChild(builder);
+			// 핸들러 없이도 그릴 수 있다!
+			InternalRenderTreeTagText(builder);
 		}
-	}
-
-	//
-	internal void InternalRenderTreeListTag(RenderTreeBuilder builder)
-	{
-		/*
-		 * 	<li>
-		 * 		<div class="@CssClass" @attributes="@UserAttrs">
-		 * 			@Text
-		 * 			@ChildContent
-		 * 		</div>
-		 * 	</li>
-		 */
-
-		builder.OpenElement(0, "li");
-
-		if (ListClass.IsHave(true))
-			builder.AddAttribute(1, ListClass);
-
-		builder.OpenElement(2, Tag);
-		builder.AddAttribute(3, "class", CssClass);
-
-		if (OnClick.HasDelegate)
-		{
-			builder.AddAttribute(4, "role", "button");
-			builder.AddAttribute(5, "onclick", InvokeOnClick);
-			builder.AddEventStopPropagationAttribute(6, "onclick", true);
-		}
-
-		builder.AddMultipleAttributes(7, UserAttrs);
-		builder.AddContent(8, Text);
-		builder.AddContent(9, ChildContent);
-		builder.CloseElement(); // tag
-
-		builder.CloseElement(); // li
-	}
-}
-
-
-/// <summary>
-/// 태그 아이템 오브젝트
-/// </summary>
-/// <typeparam name="T"></typeparam>
-public abstract class TagItemObject<T> : TagTextBase
-	where T : ITagItemAgency
-{
-	/// <summary>컨테이너 컴포넌트</summary>
-	[CascadingParameter] public T? ItemAgency { get; set; }
-
-	//
-	[Inject] protected ILogger<TagItemObject<T>> Logger { get; set; } = default!;
-
-	//
-	/// <inheritdoc />
-	protected override void OnInitialized()
-	{
-		// 단독으로 써도 좋은데 디버그 중일 때는 표시하자
-		LogIf.ContainerIsNull(Logger, ItemAgency); 
-
-		base.OnInitialized();
 	}
 }
 
@@ -149,7 +72,7 @@ public abstract class TagItemObject<T> : TagTextBase
 /// 이 클래스에서는 컨테이너/부모/채용자/연결자 등을 정의하지 않음<br/>
 /// </summary>
 /// <remarks>
-/// 태그를 정의할때 텍스트가 필요하면 이 클래스를 상속할것. <see cref="TagItemObject{T}"/>를 사용하지 말고.
+/// 태그를 정의할때 텍스트가 필요하면 이 클래스를 상속할것.
 /// </remarks>
 public abstract class TagTextBase : ComponentFragment
 {
@@ -161,7 +84,7 @@ public abstract class TagTextBase : ComponentFragment
 	internal virtual string Tag => "p";
 
 	//
-	internal void InternalRenderTreeTextChild(RenderTreeBuilder builder)
+	internal void InternalRenderTreeTagText(RenderTreeBuilder builder)
 	{
 		/*
 		 * <div class="@CssClass" @attributes="@UserAttrs">
@@ -186,5 +109,5 @@ public abstract class TagTextBase : ComponentFragment
 	}
 
 	//
-	protected virtual Task InvokeOnClick(MouseEventArgs e) => OnClick.InvokeAsync(e);
+	internal virtual Task InvokeOnClick(MouseEventArgs e) => OnClick.InvokeAsync(e);
 }
