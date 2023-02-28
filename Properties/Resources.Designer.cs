@@ -63,9 +63,9 @@ namespace Du.Properties {
         /// <summary>
         ///   Du.Blazor과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
-        internal static string WhatsBlazor {
+        internal static string WhatsBlazorBootstrap {
             get {
-                return ResourceManager.GetString("WhatsBlazor", resourceCulture);
+                return ResourceManager.GetString("WhatsBlazorBootstrap", resourceCulture);
             }
         }
     }
