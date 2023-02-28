@@ -31,7 +31,7 @@
 		@foreach (var item in Items)
 		{
 			var selected = item == SelectedItem;
-			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass)"
+			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass, item.DisplayClass)"
 			 id="@item.Id"
 			 @attributes="item.UserAttrs">
 				@item.Text

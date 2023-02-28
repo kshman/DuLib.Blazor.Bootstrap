@@ -23,10 +23,10 @@
 		}
 	</div>
 
-	@if (PivotOnly is false)
+	@if (PivotOnly is false && SelectedItem is not null)
 	{
-		<div role="tabpanel" class="hpvt-ctx" aria-hidden="false" aria-labelledby="@Id">
-			@(SelectedItem?.Content ?? SelectedItem?.ChildContent)
+		<div role="tabpanel" class="@CssCompose.Join("hpvt-ctx", SelectedItem.CssClass)" aria-hidden="false" aria-labelledby="@Id">
+			@(SelectedItem.Content ?? SelectedItem.ChildContent)
 		</div>
 	}
 </div>

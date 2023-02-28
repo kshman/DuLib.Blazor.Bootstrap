@@ -8,10 +8,10 @@
 	@foreach (var item in Items)
 	{
 		var expanded = AlwaysOpen ? item.AcnExtend!.Expanded : item == SelectedItem;
-		<div class="@CssCompose.Join("accordion-item", item.CssClass)" @attributes="@item.UserAttrs">
+		<div class="accordion-item" @attributes="@item.UserAttrs">
 			<h2 class="accordion-header">
 				<button type="button"
-					class="@CssCompose.Join("accordion-button", expanded.IfFalse("collapsed"))"
+					class="@CssCompose.Join("accordion-button", expanded.IfFalse("collapsed"), item.DisplayClass)"
 					data-bs-toggle="collapse"
 					data-bs-target="#@item.Id"
 					aria-controls="@item.Id"
@@ -26,7 +26,7 @@
 				  Id="@item.Id"
 				  OnExpanding="HandleOnExpandingAsync"
 				  OnExpanded="HandleOnExpandedAsync">
-				<div class="accordion-body">
+				<div class="@CssCompose.Join("accordion-body", item.CssClass)">
 					@(item.Content ?? item.ChildContent)
 				</div>
 			</Collapse>
