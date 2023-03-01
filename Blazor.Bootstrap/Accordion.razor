@@ -1,4 +1,5 @@
-﻿@inherits ComponentAddendumItemContainer
+﻿@namespace Du.Blazor.Bootstrap
+@inherits AddendumItemContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -11,7 +12,7 @@
 		<div class="accordion-item" @attributes="@item.UserAttrs">
 			<h2 class="accordion-header">
 				<button type="button"
-					class="@CssCompose.Join("accordion-bsButton", expanded.IfFalse("collapsed"), item.DisplayClass)"
+					class="@CssCompose.Join("accordion-button", expanded.IfFalse("collapsed"), item.DisplayClass)"
 					data-bs-toggle="collapse"
 					data-bs-target="#@item.Id"
 					aria-controls="@item.Id"

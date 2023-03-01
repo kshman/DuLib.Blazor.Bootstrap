@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace Du.Blazor.Bootstrap;
+﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>아코디언</summary>
 public partial class Accordion

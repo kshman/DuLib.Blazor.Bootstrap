@@ -66,10 +66,10 @@ public class DropMenu : ComponentFragment, ITagItemHandler, ITagListAgent
 	string ITagListAgent.Tag => "li";
 
 	//
-	string ITagListAgent.Class => "dropdown-item-text";
+	string ITagListAgent.Class => "dropdown-item";
 	#endregion
 
-	#region ITagItemAgency
+	#region ITagItemHandler
 	//
 	void ITagItemHandler.OnClass(TagItem item, CssCompose cssc) =>
 		cssc.Add(item.TextMode, "dropdown-item-text", "dropdown-item");

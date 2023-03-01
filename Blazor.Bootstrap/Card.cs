@@ -88,7 +88,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 		{
 			case TagContentRole.Header:
 			case TagContentRole.Footer:
-				ComponentRenderer.TagFragment(this, builder);
+				ComponentRenderer.TagFragment(content, builder);
 				break;
 			case TagContentRole.Content:
 				InternalRenderTreeContent(content, builder);

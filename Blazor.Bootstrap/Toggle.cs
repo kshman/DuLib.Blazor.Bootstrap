@@ -132,7 +132,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 		{
 			Logger.LogError(Settings.UseLocaleMesg
 				? "{name}: 스플릿 모드를 쓰려거든 레이아웃을 반드시 버튼으로 하세요."
-				: "{name}: Layout must be bsButton when split mode.",
+				: "{name}: Layout must be button when split mode.",
 				nameof(Split));
 			Layout = BsToggle.Button;
 		}

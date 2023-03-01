@@ -263,7 +263,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 
 		if (ActualCloseButton)
 		{
-			// <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></bsButton>
+			// <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 			builder.OpenElement(4, "button");
 			builder.AddAttribute(5, "class", "btn-close");
 			builder.AddAttribute(6, "data-bs-target", '#' + Id);

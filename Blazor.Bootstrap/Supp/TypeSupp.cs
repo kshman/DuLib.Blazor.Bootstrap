@@ -17,6 +17,9 @@ namespace Du.Blazor.Bootstrap.Supp
 		internal static string? ToCss(this string? value, string rootElement) =>
 			value.IsHave() ? $"{rootElement}-{value}" : null;
 
+		internal static string ToHtml(this bool value) =>
+			value ? "true" : "false";
+
 		internal static string? IfTrue(this bool condition, string? value) =>
 			condition ? value : null;
 
@@ -71,12 +74,12 @@ namespace Du.Blazor.Bootstrap.Supp
 			_ => null,
 		};
 
-		internal static string ToHtml(this BsButtonType bsButtonType) => bsButtonType switch
+		internal static string ToHtml(this BsButtonType button) => button switch
 		{
 			BsButtonType.Submit => "submit",
 			BsButtonType.Reset => "reset",
 			BsButtonType.Button or
-			_ => "bsButtonType",
+			_ => "button",
 		};
 
 		internal static string? ToCss(this BsButtonGroup layout) => layout switch
@@ -119,7 +122,7 @@ namespace Du.Blazor.Bootstrap.Supp
 			BsToggle.Span => "span",
 			BsToggle.A => "a",
 			BsToggle.Button or
-			_ => "bsButtonType",
+			_ => "button",
 		};
 
 		internal static string? ToCss(this BsNavLayout bsNav) => bsNav switch

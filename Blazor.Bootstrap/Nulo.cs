@@ -126,16 +126,16 @@ public class Nulo : NuloBase
 		 * }
 		 * else
 		 * {
-		 *     <bsButton type="@Actual.ToHtml()" class="@CssClass" formtarget="@Target" id="@Id" 		
+		 *     <button type="@Actual.ToHtml()" class="@CssClass" formtarget="@Target" id="@Id" 		
 		 *        @attributes="UserAttrs" @onclick="HandleOnClickAsync">
 		 *         @Text
 		 *         @ChildContent
-		 *     </bsButton>
+		 *     </button>
 		 *     }
 		 */
 		var link = Link.IsHave();
 
-		builder.OpenElement(0, link ? "a" : "button"); // a or bsButton
+		builder.OpenElement(0, link ? "a" : "button"); // a or button
 		builder.AddAttribute(1, "class", CssClass);
 
 		if (link)
@@ -155,7 +155,7 @@ public class Nulo : NuloBase
 		if (Text.IsHave())
 			builder.AddContent(9, Text);
 		builder.AddContent(10, ChildContent);
-		builder.CloseElement(); // a or bsButton
+		builder.CloseElement(); // a or button
 	}
 }
 

@@ -1,4 +1,5 @@
-﻿@inherits ComponentAddendumItemContainer
+﻿@namespace Du.Blazor.Bootstrap
+@inherits AddendumItemContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -10,7 +11,7 @@
 		var current = item == SelectedItem;
 		<a 
 			role="button" 
-			class="@CssCompose.Join("bsNav-link", current.IfTrue("active"), item.DisplayClass)" 
+			class="@CssCompose.Join("nav-link", current.IfTrue("active"), item.DisplayClass)" 
 			id="@item.Id"
 			@onclick="async () => await HandleOnClickAsync(item)">
 			@item.Text
@@ -41,7 +42,7 @@
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add("bsNav")
+		cssc.Add("nav")
 			.Add(Layout.ToCss());
 	}
 

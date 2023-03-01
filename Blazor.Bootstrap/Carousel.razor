@@ -1,4 +1,5 @@
-﻿@inherits ComponentAddendumItemContainer
+﻿@namespace Du.Blazor.Bootstrap
+@inherits AddendumItemContainer
 @inject IJSRuntime JSRuntime
 
 <CascadingValue Value="this" IsFixed="true">
@@ -6,10 +7,10 @@
 </CascadingValue>
 
 <div @ref="_self"
-  class="@CssClass"
-  data-bs-interval="@(Interval == 0 ? "false" : Interval)"
-  data-bs-touch="@Touch"
-  id="@Id"
+	 class="@CssClass"
+	 data-bs-interval="@(Interval == 0 ? "false" : Interval)"
+	 data-bs-touch="@Touch.ToHtml()"
+	 id="@Id"
 	 @attributes="UserAttrs">
 	@if (Indicators)
 	{
@@ -32,8 +33,8 @@
 		{
 			var selected = item == SelectedItem;
 			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass, item.DisplayClass)"
-		id="@item.Id"
-			 @attributes="item.UserAttrs">
+				 id="@item.Id"
+				 @attributes="item.UserAttrs">
 				@item.Text
 				@item.Display
 				@item.Content
