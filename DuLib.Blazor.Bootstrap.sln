@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DuLib.Blazor.Bootstrap", "DuLib.Blazor.Bootstrap.csproj", "{8296D716-45D4-4512-8D6B-37C161E26432}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DuLib.Blazor", "..\DuLib.Blazor\DuLib.Blazor.csproj", "{32492B2F-CCC1-4ED4-A379-76F4DD289512}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8296D716-45D4-4512-8D6B-37C161E26432}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8296D716-45D4-4512-8D6B-37C161E26432}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8296D716-45D4-4512-8D6B-37C161E26432}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32492B2F-CCC1-4ED4-A379-76F4DD289512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32492B2F-CCC1-4ED4-A379-76F4DD289512}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32492B2F-CCC1-4ED4-A379-76F4DD289512}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32492B2F-CCC1-4ED4-A379-76F4DD289512}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
