@@ -3,6 +3,7 @@ function showDuLibBlazor(message) {
 }
 
 // cookie
+/*
 DUCKIE = {
   rd: function () {
     return (document.cookie.length === 0) ? 'z=0' : decodeURIComponent(document.cookie);
@@ -31,8 +32,10 @@ DUSVCS = {
     return { width: window.innerWidth, height: window.innerHeight };
   }
 }
+*/
 
 // carousel
+/*
 DUCARS = {
   init: function (e, orf, opt) {
     if (!e) return;
@@ -67,8 +70,10 @@ DUCARS = {
   bs: (e) => e.target.orf.invokeMethodAsync('ivk_cars_bs', e.from, e.to, e.direction === 'left'),
   es: (e) => e.target.orf.invokeMethodAsync('ivk_cars_es', e.from, e.to, e.direction === 'left')
 }
+*/
 
 // collapse
+/*
 DUCLPS = {
   init: function (e, orf, tg) {
     if (!e) return;
@@ -99,8 +104,10 @@ DUCLPS = {
   eh: (e) => e.target.orf.invokeMethodAsync('ivk_clps_eh'),
   ehn: (e) => e.target.orf.invokeMethodAsync('ivk_clps_ehn')
 }
+*/
 
 // dropdown toggle
+/*
 DUDROP = {
   init: function (e, orf) {
     if (!e) return;
@@ -125,8 +132,10 @@ DUDROP = {
   ds: (e) => e.target.orf.invokeMethodAsync('ivk_drop_show'),
   dh: (e) => e.target.orf.invokeMethodAsync('ivk_drop_hide')
 }
+*/
 
 // offcanvas
+/*
 DUOFCS = {
   show: function (e, orf, scrl, esck) {
     if (window.efofcs) window.efofcs.c?.hide();
@@ -152,3 +161,4 @@ DUOFCS = {
   os: (e) => e.target.orf.invokeMethodAsync('ivk_ofcs_os'),
   oh: (e) => e.target.orf.invokeMethodAsync('ivk_ofcs_oh')
 }
+*/

@@ -1,0 +1,83 @@
+﻿@inherits ComponentAddendumItemContainer
+
+<CascadingValue Value="this" IsFixed="true">
+	@ChildContent
+</CascadingValue>
+
+<div role="toolbar" class="@CssClass" id="@Id" @attributes="UserAttrs">
+	<div class="hpvt-hdr" role="tablist">
+		@foreach (var item in Items)
+		{
+			var current = item == SelectedItem;
+			<button 
+				type="button" 
+				role="tab"
+				class="@CssCompose.Join("hpvt-item", current.IfTrue("hpvt-sel"), item.CssClass)"
+				tabindex="@(current ? 0 : -1)"
+				aria-selected="@current"
+				id="@Id" @attributes="UserAttrs"
+				@onclick="async () => await HandleOnClickAsync(item)">
+				@item.Text
+				@item.Display
+			</button>
+		}
+	</div>
+
+	@if (PivotOnly is false && SelectedItem is not null)
+	{
+		<div role="tabpanel" class="@CssCompose.Join("hpvt-ctx", SelectedItem.CssClass)" aria-hidden="false" aria-labelledby="@Id">
+			@(SelectedItem.Content ?? SelectedItem.ChildContent)
+		</div>
+	}
+</div>
+
+@code {
+	/// <summary>피벗 레이아웃. <see cref="BitsPivotLayout"/></summary>
+	[Parameter] public BitsPivotLayout Layout { get; set; } = BitsPivotLayout.Flat;
+	/// <summary>피벗 위치. <see cref="BsPlacement"/></summary>
+	[Parameter] public BsPlacement Position { get; set; } = BsPlacement.Top;
+	/// <summary>피벗이 범위를 넘어서면 처리할 방법. <see cref="BsOverflow"/></summary>
+	[Parameter] public BsOverflow Overflow { get; set; } = BsOverflow.None;
+	/// <summary>피벗 크기. <see cref="BsSize"/></summary>
+	[Parameter] public BsSize Size { get; set; } = BsSize.Medium;
+	/// <summary>피벗만 보이고 콘텐트는 보이지 않게함</summary>
+	[Parameter] public bool PivotOnly { get; set; } //= false;
+
+	//
+	protected override void OnComponentClass(CssCompose cssc)
+	{
+		cssc.Add("hpvt")
+			.Add(Size switch
+			{
+				BsSize.Medium or
+				BsSize.Small => "hpvt-nm",
+				BsSize.Large => "hpvt-lg",
+				_ => null
+			})
+			.Add(Layout switch
+			{
+				BitsPivotLayout.Flat => "hpvt-lnk",
+				BitsPivotLayout.Box => "hpvt-box",
+				_ => null
+			})
+			.Add(Overflow switch
+			{
+				BsOverflow.None => null,
+				BsOverflow.Menu => null,
+				BsOverflow.Scroll => "hpvt-scrl",
+				_ => null
+			})
+			.Add(Position switch
+			{
+				BsPlacement.Top => "ff-column",
+				BsPlacement.Right => "ff-row-reverse",
+				BsPlacement.Bottom => "ff-column-reverse",
+				BsPlacement.Left => "ff-row",
+				_ => null
+			});
+	}
+
+	//
+	protected Task HandleOnClickAsync(AddendumItem item) =>
+		SelectItemAsync(item);
+}

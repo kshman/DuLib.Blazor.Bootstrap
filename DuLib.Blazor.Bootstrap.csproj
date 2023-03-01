@@ -9,7 +9,7 @@
     <RootNamespace>Du</RootNamespace>
 
     <RepositoryUrl>https://github.com/kshman/DuLib.Blazor.Bootstrap</RepositoryUrl>
-    <Version>0.1.9</Version>
+    <Version>0.1.10</Version>
     <Title>DuLib.Blazor.Bootstrap</Title>
     <PackageId>DuLib.Blazor.Bootstrap</PackageId>
     <Product>DuLib.Blazor.Bootstrap</Product>
@@ -32,7 +32,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Markdig.Signed" Version="0.30.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.2" />
   </ItemGroup>
 
@@ -41,6 +40,7 @@
 
     <Content Remove="sassconfig.json" />
     <None Include="sassconfig.json" />
+    <ProjectReference Include="..\DuLib.Blazor\DuLib.Blazor.csproj" />
 
     <Compile Update="Properties\Resources.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -62,10 +62,6 @@
   <ItemGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <Content Remove="wwwroot\ref\**" />
     <None Remove="wwwroot\ref\**" />
-    <Compile Remove="Blazor\Unused\RemoveIntellisence.cs" />
-    <None Include="Blazor\Unused\RemoveIntellisence.cs" />
-    <Compile Remove="Blazor\Unused\TempDoNotUse.razor" />
-    <None Include="Blazor\Unused\TempDoNotUse.razor" />
   </ItemGroup>
 
 </Project>

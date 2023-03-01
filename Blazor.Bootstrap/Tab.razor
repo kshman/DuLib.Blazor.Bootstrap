@@ -1,0 +1,51 @@
+﻿@inherits ComponentAddendumItemContainer
+
+<CascadingValue Value="this" IsFixed="true">
+	@ChildContent
+</CascadingValue>
+
+<nav class="@CssClass" id="@Id" @attributes="UserAttrs">
+	@foreach (var item in Items)
+	{
+		var current = item == SelectedItem;
+		<a 
+			role="button" 
+			class="@CssCompose.Join("bsNav-link", current.IfTrue("active"), item.DisplayClass)" 
+			id="@item.Id"
+			@onclick="async () => await HandleOnClickAsync(item)">
+			@item.Text
+			@item.Display
+		</a>
+	}
+</nav>
+
+@if (TabOnly is false)
+{
+	<div class="tab-content">
+		@foreach (var item in Items)
+		{
+			var current = item == SelectedItem;
+			<div class="@CssCompose.Join("tab-pane", current.IfTrue("active"), item.CssClass)">
+				@(item.Content ?? item.ChildContent)
+			</div>
+		}
+	</div>
+}
+
+@code {
+	/// <summary>탭을 표현할 레이아웃. <see cref="BsNavLayout"/></summary>
+	[Parameter] public BsNavLayout Layout { get; set; } = BsNavLayout.None;
+	/// <summary>탭만 보이고 내용은 표시하지 않는다</summary>
+	[Parameter] public bool TabOnly { get; set; } //= false;
+
+	//
+	protected override void OnComponentClass(CssCompose cssc)
+	{
+		cssc.Add("bsNav")
+			.Add(Layout.ToCss());
+	}
+
+	//
+	protected Task HandleOnClickAsync(AddendumItem tab) =>
+		SelectItemAsync(tab);
+}

@@ -1,0 +1,193 @@
+﻿@inherits ComponentAddendumItemContainer
+@inject IJSRuntime JSRuntime
+
+<CascadingValue Value="this" IsFixed="true">
+	@ChildContent
+</CascadingValue>
+
+<div @ref="_self"
+  class="@CssClass"
+  data-bs-interval="@(Interval == 0 ? "false" : Interval)"
+  data-bs-touch="@Touch"
+  id="@Id"
+	 @attributes="UserAttrs">
+	@if (Indicators)
+	{
+		<div class="carousel-indicators">
+			@for (var i = 0; i < Items.Count; i++)
+			{
+				var selected = Items[i] == SelectedItem;
+				<button type="button"
+						class="@selected.IfTrue("active")"
+						data-bs-target="#@Id"
+						data-bs-slide-to="@i"
+						aria-label="Slide @i"
+						aria-current="@selected.IfTrue("true")">
+				</button>
+			}
+		</div>
+	}
+	<div class="carousel-inner">
+		@foreach (var item in Items)
+		{
+			var selected = item == SelectedItem;
+			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass, item.DisplayClass)"
+		id="@item.Id"
+			 @attributes="item.UserAttrs">
+				@item.Text
+				@item.Display
+				@item.Content
+				@item.ChildContent
+			</div>
+		}
+	</div>
+	@if (Controls)
+	{
+		<button class="carousel-control-prev" type="button" data-bs-target="#@Id" data-bs-slide="prev" id="@($"{Id}_PR")">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next" type="button" data-bs-target="#@Id" data-bs-slide="next" id="@($"{Id}_NE")">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span>
+			<span class="visually-hidden">Next</span>
+		</button>
+	}
+</div>
+
+@code {
+	/// <summary>슬라이드 대신 페이드로 표시</summary>
+	[Parameter] public bool Fade { get; set; }
+	/// <summary>하단 선택 표시</summary>
+	[Parameter] public bool Indicators { get; set; }
+	/// <summary>좌우 이동 컨트롤 표시</summary>
+	[Parameter] public bool Controls { get; set; } = true;
+	/// <summary>슬라이드 변경 시간 밀리초 단위(1초=1000밀리초)<br/>기본값은 5000 (5초)</summary>
+	[Parameter] public int? Interval { get; set; } = 5000;
+	/// <summary>터치 지원 여부</summary>
+	[Parameter] public bool Touch { get; set; } = true;
+	/// <summary>마우스가 올라가 있을때 중지 여부</summary>
+	[Parameter] public bool Hover { get; set; } = true;
+	/// <summary>플레이 방법, 기본은 처음부터 재생</summary>
+	[Parameter] public BsCarouselPlay Play { get; set; }
+
+	/// <summary>이벤트: 슬라이드가 시작될 때</summary>
+	[Parameter] public EventCallback<SlideEventArgs> OnBeginSlide { get; set; }
+	/// <summary>이벤트: 슬라이드가 끝날 때</summary>
+	[Parameter] public EventCallback<SlideEventArgs> OnEndSlide { get; set; }
+
+	//
+	private ElementReference _self;
+	private IJSObjectReference? _js;
+	private DotNetObjectReference<Carousel>? _drf;
+
+	//
+	protected override void OnComponentClass(CssCompose cssc)
+	{
+		cssc.Add("carousel")
+			.Add("slide")
+			.Add(Fade, "carousel-fade");
+	}
+
+	//
+	protected override async Task OnAfterFirstRenderAsync()
+	{
+		var options = new Dictionary<string, object>
+			{
+				["ride"] = Play switch
+				{
+					BsCarouselPlay.Auto => "carousel",
+					BsCarouselPlay.True => true,
+					BsCarouselPlay.False or _ => false
+				},
+				["pause"] = Hover ? "hover" : false,
+			};
+
+		_drf ??= DotNetObjectReference.Create(this);
+		await PrepareModule();
+		if (_js is not null)
+			await _js.InvokeVoidAsync("initialize", _self, _drf, options);
+	}
+
+	//
+	private async Task PrepareModule()
+	{
+		_js ??= await JSRuntime.ImportModuleAsync("carousel");
+	}
+
+	//
+	protected override async ValueTask DisposeAsyncCore()
+	{
+		if (_js is not null)
+		{
+			try
+			{
+				await _js.InvokeVoidAsync("dispose", _self);
+				await _js.DisposeAsync();
+			}
+			catch (JSDisconnectedException)
+			{
+				// 그럴 수도 있음
+			}
+		}
+
+		_drf?.Dispose();
+	}
+
+	/// <summary>지정한 슬라이드로 이동</summary>
+	public async Task MoveToAsync(int index)
+	{
+		await PrepareModule();
+		if (_js is not null)
+			await _js.InvokeVoidAsync("goTo", _self, index);
+	}
+
+	/// <summary>앞 슬라이드로 이동</summary>
+	public async Task MovePreviousAsync()
+	{
+		await PrepareModule();
+		if (_js is not null)
+			await _js.InvokeVoidAsync("goPrev", _self);
+	}
+
+	/// <summary>다음 슬라이드로  이동</summary>
+	public async Task MoveNextAsync()
+	{
+		await PrepareModule();
+		if (_js is not null)
+			await _js.InvokeVoidAsync("goNext", _self);
+	}
+
+	/// <summary>슬라이드를 재개함</summary>
+	public async Task CycleAsync()
+	{
+		await PrepareModule();
+		if (_js is not null)
+			await _js.InvokeVoidAsync("cycle", _self);
+	}
+
+	/// <summary>슬라이드를 멈춤</summary>
+	public async Task PauseAsync()
+	{
+		await PrepareModule();
+		if (_js is not null)
+			await _js.InvokeVoidAsync("pause", _self);
+	}
+
+	// 반드시 public
+	[JSInvokable("ivk_cars_bs")]
+	public Task InternalHandleBeginSlideAsync(int from, int to, string isLeft)
+	{
+		return _js is not null ? InvokeOnBeginSlideAsync(new SlideEventArgs(from, to)) : Task.CompletedTask;
+	}
+
+	// 반드시 public
+	[JSInvokable("ivk_cars_es")]
+	public Task InternalHandleEndSlideAsync(int from, int to, string isLeft)
+	{
+		return _js is not null ? InvokeOnEndSlideAsync(new SlideEventArgs(from, to)) : Task.CompletedTask;
+	}
+
+	//
+	protected virtual Task InvokeOnBeginSlideAsync(SlideEventArgs e) => OnBeginSlide.InvokeAsync(e);
+	protected virtual Task InvokeOnEndSlideAsync(SlideEventArgs e) => OnEndSlide.InvokeAsync(e);
+}

@@ -1,4 +1,4 @@
-# DuLib.Blazor
+# DuLib.Blazor.Bootstrap
 
 Bootstrap으로 만드는 블레이저용 DuLib 컴포넌트 모음
 
