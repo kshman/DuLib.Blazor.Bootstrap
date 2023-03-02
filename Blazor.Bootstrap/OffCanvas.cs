@@ -91,17 +91,14 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		if (_internal_expanding)
 		{
 			_internal_expanding = false;
-			await PrepareModule();
-			if (_js is not null)
-				await _js.InvokeVoidAsync("show", _self, _drf, ActualScrollable, true);
+			await (await PrepareModule())
+				.InvokeVoidAsync("show", _self, _drf, ActualScrollable, true);
 		}
 	}
 
 	//
-	private async Task PrepareModule()
-	{
-		_js ??= await JSRuntime.ImportModuleAsync("offcanvas");
-	}
+	private async ValueTask<IJSObjectReference> PrepareModule() =>
+		_js ??= await JSRuntime.ImportModuleAsync<OffCanvas>();
 
 	/// <inheritdoc />
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -185,9 +182,8 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		if (Expanded)
 			return;
 
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("hide", _self);
+		await (await PrepareModule())
+			.InvokeVoidAsync("hide", _self);
 	}
 
 	//
@@ -273,6 +269,6 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		}
 
 		builder.CloseElement(); // div
-	} 
+	}
 	#endregion
 }

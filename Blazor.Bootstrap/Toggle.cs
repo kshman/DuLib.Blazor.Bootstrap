@@ -183,16 +183,13 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 			return;
 
 		_drf ??= DotNetObjectReference.Create(this);
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("initialize", _self, _drf);
+		await (await PrepareModule())
+			.InvokeVoidAsync("initialize", _self, _drf);
 	}
 
 	//
-	private async Task PrepareModule()
-	{
-		_js ??= await JSRuntime.ImportModuleAsync("toggle");
-	}
+	private async ValueTask<IJSObjectReference> PrepareModule() =>
+		_js ??= await JSRuntime.ImportModuleAsync<Toggle>();
 
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{

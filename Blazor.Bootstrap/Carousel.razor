@@ -104,16 +104,13 @@
 			};
 
 		_drf ??= DotNetObjectReference.Create(this);
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("initialize", _self, _drf, options);
+		await (await PrepareModule())
+			.InvokeVoidAsync("initialize", _self, _drf, options);
 	}
 
 	//
-	private async Task PrepareModule()
-	{
-		_js ??= await JSRuntime.ImportModuleAsync("carousel");
-	}
+	private async ValueTask<IJSObjectReference> PrepareModule() =>
+		_js ??= await JSRuntime.ImportModuleAsync<Carousel>();
 
 	//
 	protected override async ValueTask DisposeAsyncCore()
@@ -137,56 +134,51 @@
 	/// <summary>지정한 슬라이드로 이동</summary>
 	public async Task MoveToAsync(int index)
 	{
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("goTo", _self, index);
+		await (await PrepareModule())
+			.InvokeVoidAsync("goTo", _self, index);
 	}
 
 	/// <summary>앞 슬라이드로 이동</summary>
 	public async Task MovePreviousAsync()
 	{
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("goPrev", _self);
+		await (await PrepareModule())
+			.InvokeVoidAsync("goPrev", _self);
 	}
 
 	/// <summary>다음 슬라이드로  이동</summary>
 	public async Task MoveNextAsync()
 	{
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("goNext", _self);
+		await (await PrepareModule())
+			.InvokeVoidAsync("goNext", _self);
 	}
 
 	/// <summary>슬라이드를 재개함</summary>
 	public async Task CycleAsync()
 	{
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("cycle", _self);
+		await (await PrepareModule())
+			.InvokeVoidAsync("cycle", _self);
 	}
 
 	/// <summary>슬라이드를 멈춤</summary>
 	public async Task PauseAsync()
 	{
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("pause", _self);
+		await (await PrepareModule())
+			.InvokeVoidAsync("pause", _self);
 	}
 
 	// 반드시 public
 	[JSInvokable("ivk_cars_bs")]
-	public Task InternalHandleBeginSlideAsync(int from, int to, string isLeft)
-	{
-		return _js is not null ? InvokeOnBeginSlideAsync(new SlideEventArgs(from, to)) : Task.CompletedTask;
-	}
+	public Task InternalHandleBeginSlideAsync(int from, int to, string isLeft) =>
+		_js is not null 
+			? InvokeOnBeginSlideAsync(new SlideEventArgs(from, to)) 
+			: Task.CompletedTask;
 
 	// 반드시 public
 	[JSInvokable("ivk_cars_es")]
-	public Task InternalHandleEndSlideAsync(int from, int to, string isLeft)
-	{
-		return _js is not null ? InvokeOnEndSlideAsync(new SlideEventArgs(from, to)) : Task.CompletedTask;
-	}
+	public Task InternalHandleEndSlideAsync(int from, int to, string isLeft) =>
+		_js is not null 
+			? InvokeOnEndSlideAsync(new SlideEventArgs(from, to)) 
+			: Task.CompletedTask;
 
 	//
 	protected virtual Task InvokeOnBeginSlideAsync(SlideEventArgs e) => OnBeginSlide.InvokeAsync(e);

@@ -195,6 +195,13 @@ namespace Du.Blazor.Bootstrap.Supp
 			var path = "./_content/DuLib.Blazor.Bootstrap/module_" + moduleName + ".js";
 			return js.InvokeAsync<IJSObjectReference>("import", path);
 		}
+
+		//
+		internal static ValueTask<IJSObjectReference> ImportModuleAsync<TType>(this IJSRuntime js)
+		{
+			var name = nameof(TType).ToLowerInvariant();
+			return ImportModuleAsync(js, name);
+		}
 		#endregion
 	}
 }

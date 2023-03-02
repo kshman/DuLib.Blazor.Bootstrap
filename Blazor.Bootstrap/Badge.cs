@@ -16,11 +16,11 @@ public class Badge : ComponentFragment
 	}
 
 	/// <summary>배지 기본값</summary>
-	public static Settings DefaultSettings { get; }
+	public static Settings DefaultSettings { get; set; }
 
 	static Badge()
 	{
-		DefaultSettings  = new Settings
+		DefaultSettings = new Settings
 		{
 			Fore = BsVariant.Light,
 			Back = BsVariant.Primary,

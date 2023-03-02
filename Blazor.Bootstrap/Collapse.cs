@@ -65,16 +65,13 @@ public class Collapse : ComponentFragment, IAsyncDisposable
 			return;
 
 		_drf ??= DotNetObjectReference.Create(this);
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("initialize", _self, _drf, Expanded);
+		await (await PrepareModule())
+			.InvokeVoidAsync("initialize", _self, _drf, Expanded);
 	}
 
 	//
-	private async Task PrepareModule()
-	{
-		_js ??= await JSRuntime.ImportModuleAsync("collapse");
-	}
+	private async ValueTask<IJSObjectReference> PrepareModule() =>
+		_js ??= await JSRuntime.ImportModuleAsync<Collapse>();
 
 	//
 	protected override bool ShouldRender() =>
@@ -112,9 +109,8 @@ public class Collapse : ComponentFragment, IAsyncDisposable
 
 		_now_show = true;
 
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("show", _self);
+		await (await PrepareModule())
+			.InvokeVoidAsync("show", _self);
 	}
 
 	//
@@ -126,9 +122,8 @@ public class Collapse : ComponentFragment, IAsyncDisposable
 
 		_now_hide = true;
 
-		await PrepareModule();
-		if (_js is not null)
-			await _js.InvokeVoidAsync("hide", _self);
+		await (await PrepareModule())
+			.InvokeVoidAsync("hide", _self);
 	}
 
 	//

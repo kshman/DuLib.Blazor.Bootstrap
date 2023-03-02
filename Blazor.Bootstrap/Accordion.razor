@@ -51,6 +51,7 @@
 
 	//
 	private bool _now_transition;
+	private int _transition_delay = 50;
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -120,6 +121,7 @@
 	private async Task HandleOnExpandingAsync(ExpandedEventArgs e)
 	{
 		_now_transition = true;
+		await Task.Delay(_transition_delay);
 		await InvokeOnExpanding(e);
 	}
 
@@ -127,6 +129,8 @@
 	private async Task HandleOnExpandedAsync(ExpandedEventArgs e)
 	{
 		_now_transition = false;
+
+		await Task.Delay(_transition_delay);
 
 		var item = GetItem(e.Id);
 		if (item?.ExtendObject is null)

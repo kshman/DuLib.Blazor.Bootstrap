@@ -27,7 +27,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 		public string? ContentClass { get; set; }
 	}
 
-	public static Settings DefaultSettings { get; }
+	public static Settings DefaultSettings { get; set; }
 
 	static Card()
 	{
@@ -38,7 +38,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 	/// <summary>카드에 넣을 이미지 URL</summary>
 	[Parameter] public string? Image { get; set; }
 	/// <summary>카드에 넣을 이미지의 별명(이게 없으면 브라우저에서 욕함)</summary>
-	[Parameter] public string Alt { get; set; } = "Card image";
+	[Parameter] public string Text { get; set; } = "Card image";
 	/// <summary>카드에 넣을 이미지의 가로 너비</summary>
 	[Parameter] public int? Width { get; set; }
 	/// <summary>카드에 넣을 이미지의 세로 높이</summary>
@@ -124,7 +124,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 			builder.OpenElement(0, "img");
 			builder.AddAttribute(1, "class", Location == BsCardImageLocation.Top ? "card-img-top" : "card-img");
 			builder.AddAttribute(2, "src", Image);
-			builder.AddAttribute(3, "alt", Alt);
+			builder.AddAttribute(3, "alt", Text);
 			builder.AddAttribute(4, "width", Width);
 			builder.AddAttribute(5, "height", Height);
 			builder.CloseElement(); // img
@@ -141,7 +141,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 			builder.OpenElement(20, "img");
 			builder.AddAttribute(21, "class", "card-img-bottom");
 			builder.AddAttribute(22, "src", Image);
-			builder.AddAttribute(23, "alt", Alt);
+			builder.AddAttribute(23, "alt", Text);
 			builder.AddAttribute(24, "width", Width);
 			builder.AddAttribute(25, "height", Height);
 			builder.CloseElement(); // img
