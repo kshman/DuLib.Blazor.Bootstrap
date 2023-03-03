@@ -42,6 +42,8 @@ public class BsCollapse : ComponentFragment, IAsyncDisposable
 		{
 			// 나브바 아래 있을 땐 나브바에서 준 아이디를 쓴다
 			Id = NavBar.TargetId;
+
+			NavBar.CollapseRef ??= this;
 		}
 	}
 

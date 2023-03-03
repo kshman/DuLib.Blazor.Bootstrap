@@ -30,8 +30,12 @@ public class BsNavBar : ComponentFragment
 	//
 	/// <summary>나브바 토글/충돌/오프캔버스에서 쓰이는 아이디</summary>
 	public string TargetId { get; private set; } = default!;
-	/// <summary>나브바에 등록된 토글의 아이디</summary>
-	public string? ToggleId { get; set; }
+	/// <summary>나브바의 토글</summary>
+	public BsToggle? ToggleRef { get; set; }
+	/// <summary>나브바의 오프캔바스</summary>
+	public BsOffCanvas? OffCanvasRef { get; set; }
+	/// <summary>나브바의 충돌</summary>
+	public BsCollapse? CollapseRef { get; set; }
 
 	//
 	private string? ContainerCssClass => _css_container.Class;

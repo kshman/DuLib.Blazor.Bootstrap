@@ -74,7 +74,14 @@ public class BsNavLink : ComponentFragment, IDisposable
 		builder.AddAttribute(11, "class", CssClass);
 		builder.AddAttribute(12, "href", Link);
 
-		if (OnClick.HasDelegate)
+		/*if (NavBar is not null)
+		{
+			builder.AddAttribute(13, "role", "button");
+			builder.AddAttribute(14, "onclick", HandleOnClick);
+			builder.AddEventPreventDefaultAttribute(15, "onclick", true);
+			builder.AddEventStopPropagationAttribute(16, "onclick", true);
+		}
+		else*/ if (OnClick.HasDelegate)
 		{
 			builder.AddAttribute(13, "role", "button");
 			builder.AddAttribute(14, "onclick", OnClick);
@@ -90,6 +97,21 @@ public class BsNavLink : ComponentFragment, IDisposable
 
 		if (list is not null)
 			builder.CloseElement(); // li
+	}
+
+	//
+	private async Task HandleOnClick(MouseEventArgs e)
+	{
+		if (NavBar is not null)
+		{
+			if (NavBar.OffCanvasRef is not null)
+				await NavBar.OffCanvasRef.CollapseAsync();
+			else if (NavBar.CollapseRef is not null)
+				await NavBar.CollapseRef.CollapseAsync();
+		}
+
+		if (OnClick.HasDelegate)
+			await OnClick.InvokeAsync(e);
 	}
 
 	//

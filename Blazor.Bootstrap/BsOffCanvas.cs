@@ -53,6 +53,8 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 			// 나브바 아래 있을 땐 나브바에서 준 아이디를 쓴다
 			Id = NavBar.TargetId;
 			Responsive ??= NavBar.Expand;
+
+			NavBar.OffCanvasRef ??= this;
 		}
 
 		_internal_expanding = Expanded;
@@ -111,8 +113,10 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 		if (backdrop is not null)
 			builder.AddAttribute(4, "data-bs-backdrop", ((BsBackDrop)backdrop).ToBootStrap());
 
+#if false
 		if (NavBar is not null) // 나브바 모드일 때는 무조건 스크롤
 			builder.AddAttribute(5, "data-bs-scroll", "true");
+#endif
 
 		builder.AddElementReferenceCapture(6, (p) => _self = p);
 
