@@ -1,15 +1,9 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-/// <inheritdoc/>
-public class ButtonGroup : NuloGroup
-{
-}
-
-
 /// <summary>
 /// 버튼 그룹 
 /// </summary>
-public  class NuloGroup : ComponentFragment
+public  class BsButtonGroup : ComponentFragment
 {
 	/// <summary>버튼 그룹 형식</summary>
 	[Parameter] public BsGroupType Layout { get; set; }

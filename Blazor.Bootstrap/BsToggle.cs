@@ -5,7 +5,7 @@
 ///   <para>드랍다운의 펼치기/닫기 버튼으로 쓰이며, NavBar 버튼으로도 쓸 수 있음</para>
 /// </summary>
 /// <seealso cref="DropDown" />
-public class Toggle : ComponentFragment, IAsyncDisposable
+public class BsToggle : ComponentFragment, IAsyncDisposable
 {
 	// 우선순위
 	//	1. 드랍다운			=> nav-link dropdown-toggle
@@ -24,7 +24,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	/// <summary>드랍다운</summary>
 	[CascadingParameter] public BsDropDown? DropDown { get; set; }
 	/// <summary>나브바</summary>
-	[CascadingParameter] public NavBar? NavBar { get; set; }
+	[CascadingParameter] public BsNavBar? NavBar { get; set; }
 	/// <summary>붕괴 아이디. 나브바가 붕괴면 나브바에서 가져옴</summary>
 	[Parameter] public string? CollapseId { get; set; }
 	/// <summary>오프캔바스 아이디. 나브바가 오프면 나브바에서 가져옴</summary>
@@ -60,17 +60,17 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 
 	//
 	[Inject] private IJSRuntime JSRuntime { get; set; } = default!;
-	[Inject] private ILogger<Toggle> Logger { get; set; } = default!;
+	[Inject] private ILogger<BsToggle> Logger { get; set; } = default!;
 
 	//
-	protected BsVariant ActualVariant => Variant ?? Nulo.DefaultSettings.Variant;
-	protected BsSize ActualSize => Size ?? Nulo.DefaultSettings.Size;
-	protected bool ActualOutline => Outline ?? Nulo.DefaultSettings.Outline;
+	private BsVariant ActualVariant => Variant ?? BsDefaults.ButtonVariant;
+	private BsSize ActualSize => Size ?? BsDefaults.ButtonSize;
+	private bool ActualOutline => Outline ?? BsDefaults.ButtonOutline;
 
 	//
 	private ElementReference _self;
 	private IJSObjectReference? _js;
-	private DotNetObjectReference<Toggle>? _drf;
+	private DotNetObjectReference<BsToggle>? _drf;
 	private Mode _mode;
 
 	//
@@ -135,7 +135,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 		Logger.LogTrace(Settings.UseLocaleMesg
 			? "{name}: 성공적으로 초기화 했어요."
 			: "{name}: initialized successfully.",
-			nameof(Toggle));
+			nameof(BsToggle));
 	}
 
 	//
@@ -226,7 +226,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 
 	//
 	private async ValueTask<IJSObjectReference> PrepareModule() =>
-		_js ??= await JSRuntime.ImportModuleAsync<Toggle>();
+		_js ??= await JSRuntime.ImportModuleAsync<BsToggle>();
 
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
@@ -321,7 +321,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	}
 
 	//
-	protected virtual async Task DisposeAsyncCore()
+	private async Task DisposeAsyncCore()
 	{
 		if (_mode is not Mode.None)
 			return;

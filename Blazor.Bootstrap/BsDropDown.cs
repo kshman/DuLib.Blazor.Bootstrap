@@ -8,8 +8,8 @@
 /// 내부에서 지원하는 컴포넌트:
 /// <list type="table">
 /// <listheader><term>컴포넌트</term><description>설명</description></listheader>
-/// <item><term><see cref="Toggle"/></term><description>토글 버튼 제공</description></item>
-/// <item><term><see cref="DropMenu"/></term><description>실제 메뉴 아이템 목록의 처리</description></item>
+/// <item><term><see cref="BsToggle"/></term><description>토글 버튼 제공</description></item>
+/// <item><term><see cref="BsDropMenu"/></term><description>실제 메뉴 아이템 목록의 처리</description></item>
 /// </list>
 /// </para>
 /// <para>
@@ -24,10 +24,10 @@
 /// </code>
 /// </para>
 /// </remarks>
-public class DropDown : ComponentFragment
+public class BsDropDown : ComponentFragment
 {
 	/// <summary>나브바. 캐스케이딩되면 아래 딸려오는 컴포넌트가 나브바를 지원하게 동작한다</summary>
-	[CascadingParameter] public NavBar? NavBar { get; set; }
+	[CascadingParameter] public BsNavBar? NavBar { get; set; }
 
 	/// <summary>드랍 방향 <see cref="BsDropDirection"/></summary>
 	[Parameter] public BsDropDirection Direction { get; set; }
@@ -66,7 +66,7 @@ public class DropDown : ComponentFragment
 		builder.AddAttribute(2, "id", Id);
 		builder.AddMultipleAttributes(3, UserAttrs);
 
-		builder.OpenComponent<CascadingValue<DropDown>>(4);
+		builder.OpenComponent<CascadingValue<BsDropDown>>(4);
 		builder.AddAttribute(5, "Value", this);
 		builder.AddAttribute(6, "IsFixed", true);
 		builder.AddAttribute(7, "ChildContent", (RenderFragment)((b) =>

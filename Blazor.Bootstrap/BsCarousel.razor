@@ -79,7 +79,7 @@
 	//
 	private ElementReference _self;
 	private IJSObjectReference? _js;
-	private DotNetObjectReference<Carousel>? _drf;
+	private DotNetObjectReference<BsCarousel>? _drf;
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -110,7 +110,7 @@
 
 	//
 	private async ValueTask<IJSObjectReference> PrepareModule() =>
-		_js ??= await JSRuntime.ImportModuleAsync<Carousel>();
+		_js ??= await JSRuntime.ImportModuleAsync<BsCarousel>();
 
 	//
 	protected override async ValueTask DisposeAsyncCore()

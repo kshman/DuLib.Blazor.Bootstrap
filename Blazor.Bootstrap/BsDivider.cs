@@ -1,7 +1,7 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>가로 줄 그리기</summary>
-public class Divider : ComponentObject
+public class BsDivider : ComponentObject
 {
 	/// <summary>드랍메뉴. 이 내용이 캐스케이딩되면 리스트(li)를 추가한다</summary>
 	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
@@ -17,7 +17,7 @@ public class Divider : ComponentObject
 		cssc
 			.Add(ListAgency switch
 			{
-				DropMenu => "dropdown-divider",
+				BsDropMenu => "dropdown-divider",
 				_ => null,
 			})
 			.Add(Color.ToCss("text"));

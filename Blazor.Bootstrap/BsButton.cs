@@ -1,39 +1,8 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-/// <inheritdoc/>
-public class Button : Nulo
-{
-}
-
-
 /// <summary>버튼</summary>
-public class Nulo : NuloBase
+public class BsButton : NuloBase
 {
-	#region 기본 설정
-	/// <summary>버튼 설정</summary>
-	public class Settings
-	{
-		public BsButtonType Type { get; set; }
-		public BsVariant Variant { get; set; }
-		public BsSize Size { get; set; }
-		public bool Outline { get; set; }
-	}
-
-	/// <summary>버튼 기본값</summary>
-	public static Settings DefaultSettings { get; }
-
-	static Nulo()
-	{
-		DefaultSettings = new Settings
-		{
-			Type = BsButtonType.Button,
-			Variant = BsVariant.Primary,
-			Size = BsSize.Medium,
-			Outline = false
-		};
-	}
-	#endregion
-
 	/// <summary>리스트 에이전시, 이게 있으면 리스트 메뉴용으로 처리함</summary>
 	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
 
@@ -186,10 +155,10 @@ public abstract class NuloBase : ComponentFragment
 	[Parameter] public EventCallback<MouseEventArgs> OnInvalidClick { get; set; }
 
 	//
-	protected BsButtonType Actual => Type ?? Nulo.DefaultSettings.Type;
-	protected BsVariant ActualVariant => Variant ?? Nulo.DefaultSettings.Variant;
-	protected BsSize ActualSize => Size ?? Nulo.DefaultSettings.Size;
-	protected bool ActualOutline => Outline ?? Nulo.DefaultSettings.Outline;
+	protected BsButtonType Actual => Type ?? BsDefaults.ButtonType;
+	protected BsVariant ActualVariant => Variant ?? BsDefaults.ButtonVariant;
+	protected BsSize ActualSize => Size ?? BsDefaults.ButtonSize;
+	protected bool ActualOutline => Outline ?? BsDefaults.ButtonOutline;
 
 	//
 	private bool _handle_click;

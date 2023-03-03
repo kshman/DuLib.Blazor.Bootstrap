@@ -1,7 +1,7 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>아이콘을 표시합니다. oi/bi/fa 같은데 쓸 수 있음</summary>
-public class Icon : ComponentObject
+public class BsIcon : ComponentObject
 {
 	/// <summary>아이콘 이름</summary>
 	[Parameter] public string Name { get; set; } = string.Empty;

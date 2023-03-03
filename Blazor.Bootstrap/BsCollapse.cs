@@ -4,10 +4,10 @@
 /// 붕괴?! (콜랩스)<br/>
 /// 기능은... 뻔하져
 /// </summary>
-public class Collapse : ComponentFragment, IAsyncDisposable
+public class BsCollapse : ComponentFragment, IAsyncDisposable
 {
 	/// <summary>윗단에 놓이는 나브바</summary>
-	[CascadingParameter] public NavBar? NavBar { get; set; }
+	[CascadingParameter] public BsNavBar? NavBar { get; set; }
 
 	/// <summary>부모 아이디</summary>
 	[Parameter] public string? ParentId { get; set; }
@@ -29,7 +29,7 @@ public class Collapse : ComponentFragment, IAsyncDisposable
 	//
 	private ElementReference _self;
 	private IJSObjectReference? _js;
-	private DotNetObjectReference<Collapse>? _drf;
+	private DotNetObjectReference<BsCollapse>? _drf;
 
 	private bool _expanded;
 	private bool _now_show;
@@ -71,7 +71,7 @@ public class Collapse : ComponentFragment, IAsyncDisposable
 
 	//
 	private async ValueTask<IJSObjectReference> PrepareModule() =>
-		_js ??= await JSRuntime.ImportModuleAsync<Collapse>();
+		_js ??= await JSRuntime.ImportModuleAsync<BsCollapse>();
 
 	//
 	protected override bool ShouldRender() =>
@@ -134,7 +134,7 @@ public class Collapse : ComponentFragment, IAsyncDisposable
 	}
 
 	//
-	protected virtual async ValueTask DisposeAsyncCore()
+	private async ValueTask DisposeAsyncCore()
 	{
 		if (_js is not null)
 			await _js.DisposeModuleAsync(_self);

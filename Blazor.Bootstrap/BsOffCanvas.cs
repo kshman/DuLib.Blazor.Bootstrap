@@ -3,7 +3,7 @@
 /// <summary>
 /// 오프캔바스
 /// </summary>
-public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
+public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 {
 	/// <summary>윗단에 놓이는 나브바</summary>
 	[CascadingParameter] public BsNavBar? NavBar { get; set; }
@@ -42,7 +42,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 	//
 	private ElementReference _self;
 	private IJSObjectReference? _js;
-	private DotNetObjectReference<OffCanvas>? _drf;
+	private DotNetObjectReference<BsOffCanvas>? _drf;
 	private bool _internal_expanding;
 
 	/// <inheritdoc />
@@ -85,7 +85,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 
 	//
 	private async ValueTask<IJSObjectReference> PrepareModule() =>
-		_js ??= await JSRuntime.ImportModuleAsync<OffCanvas>();
+		_js ??= await JSRuntime.ImportModuleAsync<BsOffCanvas>();
 
 	/// <inheritdoc />
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -118,7 +118,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 
 		if (Expanded || Always || responsive != BsExpand.None)
 		{
-			builder.OpenComponent<CascadingValue<OffCanvas>>(7);
+			builder.OpenComponent<CascadingValue<BsOffCanvas>>(7);
 			builder.AddAttribute(8, "Value", this);
 			builder.AddAttribute(9, "IsFixed", true);
 			builder.AddAttribute(10, "ChildContent", (RenderFragment)((b) =>
@@ -137,7 +137,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 	}
 
 	//
-	protected virtual async Task DisposeAsyncCore()
+	private async Task DisposeAsyncCore()
 	{
 		if (Expanded)
 		{

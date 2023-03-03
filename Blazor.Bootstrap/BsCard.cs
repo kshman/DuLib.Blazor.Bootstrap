@@ -16,25 +16,8 @@
 /// <item><term><see cref="TagContent"/></term><description>콘텐트</description></item>
 /// </list>
 /// </remarks>
-public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
+public class BsCard : ComponentFragment, ITagContentHandler, ITagItemHandler
 {
-	#region 기본 세팅
-	public class Settings
-	{
-		public string? Class { get; set; }
-		public string? HeaderClass { get; set; }
-		public string? FooterClass { get; set; }
-		public string? ContentClass { get; set; }
-	}
-
-	public static Settings DefaultSettings { get; set; }
-
-	static Card()
-	{
-		DefaultSettings = new Settings();
-	}
-	#endregion
-
 	/// <summary>카드에 넣을 이미지 URL</summary>
 	[Parameter] public string? Image { get; set; }
 	/// <summary>카드에 넣을 이미지의 별명(이게 없으면 브라우저에서 욕함)</summary>
@@ -50,12 +33,12 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc.Add("card")
-			.Add(Class is null, DefaultSettings.Class);
+			.Add(Class is null, BsDefaults.CardClass);
 	}
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		ComponentRenderer.CascadingTagFragment<Card>(this, builder);
+		ComponentRenderer.CascadingTagFragment<BsCard>(this, builder);
 
 	#region ITagContentHandler
 	/// <inheritdoc />
@@ -65,15 +48,15 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 		{
 			case TagContentRole.Header:
 				cssc.Add("card-header")
-					.Add(Class is null, DefaultSettings.HeaderClass);
+					.Add(Class is null, BsDefaults.CardHeaderClass);
 				break;
 			case TagContentRole.Footer:
 				cssc.Add("card-footer")
-					.Add(Class is null, DefaultSettings.FooterClass);
+					.Add(Class is null, BsDefaults.CardFooterClass);
 				break;
 			case TagContentRole.Content:
 				cssc.Add(Location is BsCardImage.Overlay ? "card-img-overlay" : "card-body")
-					.Add(Class is null, DefaultSettings.ContentClass);
+					.Add(Class is null, BsDefaults.CardContentClass);
 				break;
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(role), role);

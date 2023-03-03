@@ -3,7 +3,7 @@
 /// <summary>
 /// 나브바 컴포넌트
 /// </summary>
-public class NavBar : ComponentFragment
+public class BsNavBar : ComponentFragment
 {
 	#region 나브
 	/// <summary>나브 크기 <see cref="BsExpand"/></summary>
@@ -79,7 +79,7 @@ public class NavBar : ComponentFragment
 		builder.OpenElement(4, AsHeader ? "nav" : "div");
 		builder.AddAttribute(5, "class", ContainerCssClass);
 
-		builder.OpenComponent<CascadingValue<NavBar>>(6);
+		builder.OpenComponent<CascadingValue<BsNavBar>>(6);
 		builder.AddAttribute(7, "Value", this);
 		builder.AddAttribute(8, "IsFixed", true);
 		builder.AddAttribute(9, "ChildContent", (RenderFragment)((b) =>

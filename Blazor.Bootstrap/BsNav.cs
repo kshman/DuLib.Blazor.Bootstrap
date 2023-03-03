@@ -3,10 +3,10 @@
 /// <summary>
 /// 나브 컴포넌트
 /// </summary>
-public class Nav : ComponentFragment
+public class BsNav : ComponentFragment
 {
 	/// <summary>나브바. 이게 캐스케이딩되면 나브바에 맞춰 컴포넌트를 설정</summary>
-	[CascadingParameter] public NavBar? NavBar { get; set; }
+	[CascadingParameter] public BsNavBar? NavBar { get; set; }
 
 	/// <summary>이름. 이름이 지정되면 캐스캐이딩함</summary>
 	[Parameter] public string? Name { get; set; }
@@ -49,7 +49,7 @@ public class Nav : ComponentFragment
 			builder.AddContent(4, ChildContent);
 		else
 		{
-			builder.OpenComponent<CascadingValue<NavBar>>(5);
+			builder.OpenComponent<CascadingValue<BsNavBar>>(5);
 			builder.AddAttribute(6, "Value", this);
 			builder.AddAttribute(7, "IsFixed", true);
 			builder.AddAttribute(8, "Name", Name);

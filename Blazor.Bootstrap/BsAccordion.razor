@@ -21,7 +21,7 @@
 					@item.Display
 				</button>
 			</h2>
-			<Collapse @ref="item.GetAcnObject()!.Collapse"
+			<BsCollapse @ref="item.GetAcnObject()!.Collapse"
 				  Class="@CssCompose.Join("accordion-collapse", expanded.IfTrue("show"))"
 				  ParentId="@(AlwaysOpen ? null : $"#{Id}")"
 				  Id="@item.Id"
@@ -30,7 +30,7 @@
 				<div class="@CssCompose.Join("accordion-body", item.CssClass)">
 					@(item.Content ?? item.ChildContent)
 				</div>
-			</Collapse>
+			</BsCollapse>
 		</div>
 	}
 </div>

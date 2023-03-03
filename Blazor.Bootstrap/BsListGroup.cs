@@ -7,17 +7,17 @@
 /// 내부에서 쓸수 있는 컴포넌트:
 /// <list type="table">
 /// <listheader><term>컴포넌트</term><description>설명</description></listheader>
-/// <item><term><see cref="TagVariantItem"/></term><description>P 태그 제공</description></item>
-/// <item><term><see cref="TagVariantSpan"/></term><description>SPAN 태그 제공</description></item>
-/// <item><term><see cref="TagVariantDiv"/></term><description>DIV 태그 제공</description></item>
+/// <item><term><see cref="BsTagItem"/></term><description>P 태그 제공</description></item>
+/// <item><term><see cref="BsTagSpan"/></term><description>SPAN 태그 제공</description></item>
+/// <item><term><see cref="BsTagDiv"/></term><description>DIV 태그 제공</description></item>
 /// <item><term><see cref="TagItem"/></term><description>P 태그 제공</description></item>
 /// <item><term><see cref="TagSpan"/></term><description>SPAN 태그 제공</description></item>
 /// <item><term><see cref="TagDiv"/></term><description>DIV 태그 제공</description></item>
-/// <item><term><see cref="Nulo"/></term><description>버튼/링크</description></item>
-/// <item><term><see cref="NavNulo"/></term><description>나브 링크</description></item>
+/// <item><term><see cref="BsButton"/></term><description>버튼/링크</description></item>
+/// <item><term><see cref="BsNavLink"/></term><description>나브 링크</description></item>
 /// </list>
 /// </remarks>
-public class ListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
+public class BsListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
 {
 	[Parameter] public bool Flush { get; set; }
 	[Parameter] public bool Numbered { get; set; }
@@ -34,7 +34,7 @@ public class ListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
 
 	/// <inheritdoc />
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
-		ComponentRenderer.CascadingTagFragment<ListGroup>(this, builder);
+		ComponentRenderer.CascadingTagFragment<BsListGroup>(this, builder);
 
 	#region ITagListAgent
 	//
@@ -49,7 +49,7 @@ public class ListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
 	{
 		cssc.Add("list-group-item")
 			.Add(item.OnClick.HasDelegate, "list-group-item-action")
-			.Add(((item as TagVariantItem)?.Variant ?? BsVariant.None).ToCss("list-group-item"));
+			.Add(((item as BsTagItem)?.Variant ?? BsVariant.None).ToCss("list-group-item"));
 	}
 
 	/// <inheritdoc />
