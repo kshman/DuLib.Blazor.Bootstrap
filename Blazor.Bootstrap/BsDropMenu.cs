@@ -34,7 +34,7 @@ public class BsDropMenu : ComponentFragment, ITagItemHandler, ITagListAgent
 	[CascadingParameter] public BsDropDown? DropDown { get; set; }
 
 	/// <summary>정렬 방법 <see cref="BsDropAlignment"/></summary>
-	[Parameter] public BsDropAlignment Alignment { get; set; }
+	[Parameter] public BsDropAlignment Align { get; set; }
 	/// <summary>표시 방법 <see cref="BsPosition"/></summary>
 	[Parameter] public BsPosition Position { get; set; } = BsPosition.Static;
 
@@ -46,7 +46,7 @@ public class BsDropMenu : ComponentFragment, ITagItemHandler, ITagListAgent
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc.Add("dropdown-menu")
-			.Add(Alignment.ToCss());
+			.Add(Align.ToCss());
 
 		if (DropDown is not null)
 			cssc.Register(() => (DropDown.Expanded).IfTrue("show"));

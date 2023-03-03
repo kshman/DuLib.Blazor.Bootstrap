@@ -131,6 +131,25 @@ public enum BsToggleType
 	A,
 }
 
+/// <summary>아이템 정렬</summary>
+public enum BsItemAlignment
+{
+	Start,
+	Center,
+	End,
+}
+
+/// <summary>줄단위 맞춤</summary>
+public enum BsJustify
+{
+	Start,
+	Center,
+	End,
+	Around,
+	Between,
+	Evenly,
+}
+
 /// <summary>드랍 방향</summary>
 public enum BsDropDirection
 {

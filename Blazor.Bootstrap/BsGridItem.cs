@@ -4,6 +4,7 @@ public abstract class BsGridItem : ComponentFragment
 {
 	[Parameter] public BsVariant? Fore { get; set; }
 	[Parameter] public BsVariant? Back { get; set; }
+	[Parameter] public BsItemAlignment? Align { get; set; }
 
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
@@ -17,10 +18,14 @@ public abstract class BsGridItem : ComponentFragment
 /// <summary>Grid Row</summary>
 public class BsRow : BsGridItem
 {
+	[Parameter] public BsJustify? Justify { get; set; }
+
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add("row");
+		cssc.Add("row")
+			.Add(Align is not null, ((BsItemAlignment)Align!).ToCss("align-items"))
+			.Add(Justify is not null, ((BsJustify)Justify!).ToCss("justify-content"));
 	}
 
 	/// <inheritdoc />
@@ -36,6 +41,7 @@ public abstract class BsColBase : BsGridItem
 	[Parameter] public string? Lg { get; set; }
 	[Parameter] public string? Xl { get; set; }
 	[Parameter] public string? Xxl { get; set; }
+	[Parameter] public string? Order { get; set; }
 
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
@@ -44,7 +50,9 @@ public abstract class BsColBase : BsGridItem
 			.Add(Md is not null, SizeToString("md", Md))
 			.Add(Lg is not null, SizeToString("lg", Lg))
 			.Add(Xl is not null, SizeToString("xl", Xl))
-			.Add(Xxl is not null, SizeToString("xxl", Xxl));
+			.Add(Xxl is not null, SizeToString("xxl", Xxl))
+			.Add(Order is not null, $"order-{Order}")
+			.Add(Align is not null, ((BsItemAlignment)Align!).ToCss("align-self"));
 
 		base.OnComponentClass(cssc);
 	}

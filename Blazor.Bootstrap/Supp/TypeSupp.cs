@@ -173,6 +173,18 @@ namespace Du.Blazor.Bootstrap.Supp
 			BsBackDrop.False => "false",
 			_ => "static",
 		};
+
+		internal static string ToCss(this BsItemAlignment alignment, string lead)
+		{
+			var s = alignment.ToString("F").ToLowerInvariant();
+			return $"{lead}-{s}";
+		}
+
+		internal static string ToCss(this BsJustify justify, string lead)
+		{
+			var s = justify.ToString("F").ToLowerInvariant();
+			return $"{lead}-{s}";
+		}
 		#endregion 컴포넌트
 
 		#region 자바스크립트
