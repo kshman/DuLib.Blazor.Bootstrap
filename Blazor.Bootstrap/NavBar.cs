@@ -19,9 +19,9 @@ public class NavBar : ComponentFragment
 	#region 컨테이너
 	/// <summary>컨테이너의 css클래스</summary>
 	[Parameter] public string? ContainerClass { get; set; }
-	/// <summary>커네이너의 레이아웃 <see cref="BsDimension"/></summary>
+	/// <summary>커네이너의 레이아웃 <see cref="BsExpand"/></summary>
 	/// <remarks>딱히 지정하지 않는게 좋긴하다! 기본은 container-fluid</remarks>
-	[Parameter] public BsDimension ContainerLayout { get; set; } = BsDimension.NavFluid;
+	[Parameter] public BsExpand ContainerLayout { get; set; } = BsExpand.NavFluid;
 	#endregion
 
 	//

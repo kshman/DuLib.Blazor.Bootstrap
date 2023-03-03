@@ -21,7 +21,7 @@ public class ListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
 {
 	[Parameter] public bool Flush { get; set; }
 	[Parameter] public bool Numbered { get; set; }
-	[Parameter] public BsDimension Horizontal { get; set; } = BsDimension.None;
+	[Parameter] public BsExpand Horizontal { get; set; } = BsExpand.None;
 
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)

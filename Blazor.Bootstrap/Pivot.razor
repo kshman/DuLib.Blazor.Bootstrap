@@ -36,9 +36,9 @@
 	/// <summary>피벗 레이아웃. <see cref="BitsPivotLayout"/></summary>
 	[Parameter] public BitsPivotLayout Layout { get; set; } = BitsPivotLayout.Flat;
 	/// <summary>피벗 위치. <see cref="BsPlacement"/></summary>
-	[Parameter] public BsPlacement Position { get; set; } = BsPlacement.Top;
-	/// <summary>피벗이 범위를 넘어서면 처리할 방법. <see cref="BsOverflow"/></summary>
-	[Parameter] public BsOverflow Overflow { get; set; } = BsOverflow.None;
+	[Parameter] public BsPlacement Placement { get; set; } = BsPlacement.Top;
+	/// <summary>피벗이 범위를 넘어서면 처리할 방법. <see cref="BitsPivotOverflow"/></summary>
+	[Parameter] public BitsPivotOverflow Overflow { get; set; } = BitsPivotOverflow.None;
 	/// <summary>피벗 크기. <see cref="BsSize"/></summary>
 	[Parameter] public BsSize Size { get; set; } = BsSize.Medium;
 	/// <summary>피벗만 보이고 콘텐트는 보이지 않게함</summary>
@@ -63,12 +63,12 @@
 			})
 			.Add(Overflow switch
 			{
-				BsOverflow.None => null,
-				BsOverflow.Menu => null,
-				BsOverflow.Scroll => "hpvt-scrl",
+				BitsPivotOverflow.None => null,
+				BitsPivotOverflow.Menu => null,
+				BitsPivotOverflow.Scroll => "hpvt-scrl",
 				_ => null
 			})
-			.Add(Position switch
+			.Add(Placement switch
 			{
 				BsPlacement.Top => "ff-column",
 				BsPlacement.Right => "ff-row-reverse",

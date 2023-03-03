@@ -145,30 +145,30 @@ namespace Du.Blazor.Bootstrap.Supp
 			_ => null,
 		};
 
-		internal static string? ToCss(this BsDimension dim, string lead, bool nullToNull = true)
+		internal static string? ToCss(this BsExpand dim, string lead, bool nullToNull = true)
 		{
 			var ds = dim switch
 			{
-				BsDimension.Small => "sm",
-				BsDimension.Medium => "md",
-				BsDimension.Large => "lg",
-				BsDimension.ExtraLarge => "xl",
-				BsDimension.ExtraExtraLarge => "xxl",
-				BsDimension.None or
+				BsExpand.Small => "sm",
+				BsExpand.Medium => "md",
+				BsExpand.Large => "lg",
+				BsExpand.ExtraLarge => "xl",
+				BsExpand.ExtraExtraLarge => "xxl",
+				BsExpand.None or
 				_ => null,
 			};
 			// 널일 경우 nullToNull이 참이면 널을, 거짓이면 그냥 lead를 보냄
 			return ds is null ? nullToNull ? null : lead : $"{lead}-{ds}";
 		}
 
-		internal static string? ToContainerCss(this BsDimension layout) =>
-			layout == BsDimension.NavFluid ? "container-fluid" : layout.ToCss("container");
+		internal static string? ToContainerCss(this BsExpand layout) =>
+			layout == BsExpand.NavFluid ? "container-fluid" : layout.ToCss("container");
 
-		internal static string? ToOffCanvasCss(this BsDimension responsive) =>
+		internal static string? ToOffCanvasCss(this BsExpand responsive) =>
 			responsive.ToCss("offcanvas", false);
 
-		internal static string? ToListGroupCss(this BsDimension horizontal) =>
-			horizontal == BsDimension.None ? null : horizontal.ToCss("list-group-horizontal", false);
+		internal static string? ToListGroupCss(this BsExpand horizontal) =>
+			horizontal == BsExpand.None ? null : horizontal.ToCss("list-group-horizontal", false);
 
 		internal static string ToOffCanvasCss(this BsPlacement replacement) => replacement switch
 		{

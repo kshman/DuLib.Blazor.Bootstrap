@@ -1,6 +1,6 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-/// <summary>컴포넌트 크기</summary>
+/// <summary>크기(컴포넌트의 사이즈)</summary>
 public enum BsSize
 {
 	Medium,
@@ -8,8 +8,8 @@ public enum BsSize
 	Large,
 }
 
-/// <summary>컴포넌트 크기</summary>
-public enum BsDimension
+/// <summary>크기(브라우저의 사이즈)</summary>
+public enum BsExpand
 {
 	None,
 	Small,
@@ -21,8 +21,11 @@ public enum BsDimension
 	/// <summary>나브용 Fluid, 그외에는 Medium으로 대체</summary>
 	NavFluid,
 
-	/// <summary>리스트 그룹</summary>
-	Auto
+	/// <summary>나브바용 Collapsed, 그외에는 Medium으로 대체</summary>
+	Collapsed,
+
+	/// <summary>리스트 그룹용, 그외에는 Medium으로 대체</summary>
+	AutoList
 }
 
 /// <summary>컴포넌트 색깔</summary>
@@ -58,14 +61,6 @@ public enum BsVariant
 	Link,
 }
 
-/// <summary>오버플로우 일때 처리</summary>
-public enum BsOverflow
-{
-	None,
-	Menu,
-	Scroll,
-}
-
 /// <summary>방향</summary>
 public enum BsDirection
 {
@@ -84,7 +79,7 @@ public enum BsPosition
 	Sticky,
 }
 
-/// <summary>position 또는 placement 속성</summary>
+/// <summary>placement 속성</summary>
 public enum BsPlacement
 {
 	Top,
@@ -130,13 +125,6 @@ public enum BsCarouselPlay
 	True,   // 한 사이클
 }
 
-/// <summary>Bit's 피벗 타이틀 레이아웃</summary>
-public enum BitsPivotLayout
-{
-	Flat,
-	Box,
-}
-
 /// <summary>토글 레이아웃</summary>
 public enum BsToggle
 {
@@ -180,18 +168,6 @@ public enum BsNavLayout
 	Pills,
 }
 
-/// <summary>NAVBAR 확장</summary>
-public enum BsNavBarExpand
-{
-	None,
-	Small,
-	Medium,
-	Large,
-	ExtraLarge,
-	ExtraExtraLarge,
-	Collapsed,
-}
-
 /// <summary>카드 놓기 위치</summary>
 public enum BsCardImageLocation
 {
@@ -206,4 +182,19 @@ public enum BsBackDrop
 	True,
 	False,
 	Static
+}
+
+/// <summary>오버플로우 일때 처리</summary>
+public enum BitsPivotOverflow
+{
+	None,
+	Menu,
+	Scroll,
+}
+
+/// <summary>Bit's 피벗 타이틀 레이아웃</summary>
+public enum BitsPivotLayout
+{
+	Flat,
+	Box,
 }

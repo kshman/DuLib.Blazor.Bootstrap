@@ -11,7 +11,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		public bool CloseButton { get; set; }
 		public bool Scrollable { get; set; }
 		public BsBackDrop? BackDrop { get; set; }
-		public BsDimension Responsive { get; set; }
+		public BsExpand Responsive { get; set; }
 		public BsPlacement Placement { get; set; }
 		public string? Class { get; set; }
 		public string? HeaderClass { get; set; }
@@ -28,7 +28,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 			CloseButton = true,
 			Scrollable = false,
 			BackDrop = null,
-			Responsive = BsDimension.None,
+			Responsive = BsExpand.None,
 			Placement = BsPlacement.Right,
 		};
 	}
@@ -43,7 +43,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 	[Parameter] public bool? CloseButton { get; set; }
 	[Parameter] public bool? Scrollable { get; set; }
 	[Parameter] public BsBackDrop? BackDrop { get; set; }
-	[Parameter] public BsDimension? Responsive { get; set; }
+	[Parameter] public BsExpand? Responsive { get; set; }
 	[Parameter] public BsPlacement? Placement { get; set; }
 
 	// 언제나 그린다
@@ -60,7 +60,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 	private bool ActualCloseButton => CloseButton ?? Set?.CloseButton ?? DefaultSettings.CloseButton;
 	private bool ActualScrollable => Scrollable ?? Set?.Scrollable ?? DefaultSettings.Scrollable;
 	private BsBackDrop? ActualBackDrop => BackDrop ?? Set?.BackDrop ?? DefaultSettings.BackDrop;
-	private BsDimension ActualResponsive => Responsive ?? Set?.Responsive ?? DefaultSettings.Responsive;
+	private BsExpand ActualResponsive => Responsive ?? Set?.Responsive ?? DefaultSettings.Responsive;
 	private BsPlacement ActualPlacement => Placement ?? Set?.Placement ?? DefaultSettings.Placement;
 
 	//
@@ -114,7 +114,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 	{
 		/*
 		 * <div @ref="_self" class="@CssClass" tabindex="-1" id="@Id" data-bs-backdrop="@ActualBackDrop.ToBootStrap()">
-		 * 	@if (_expanded || Always || Responsive != BsDimension.None)
+		 * 	@if (_expanded || Always || Responsive != BsExpand.None)
 		 * 	{
 		 * 		<CascadingValue Value="this" IsFixed="true">
 		 * 			@ChildContent
@@ -138,7 +138,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 
 		builder.AddElementReferenceCapture(6, (p) => _self = p);
 
-		if (Expanded || Always || responsive != BsDimension.None)
+		if (Expanded || Always || responsive != BsExpand.None)
 		{
 			builder.OpenComponent<CascadingValue<OffCanvas>>(7);
 			builder.AddAttribute(8, "Value", this);
