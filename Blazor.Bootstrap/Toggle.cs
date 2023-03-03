@@ -10,9 +10,16 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	// 우선순위
 	//	1. 드랍다운			=> nav-link dropdown-toggle
 	//	2. 나브바			=> navbar-toggler
-	//	3. 붕괴(=나브바)	=> (none)
+	//  3. 오프캔바스		=> (none)
+	//	4. 붕괴(=나브바)	=> (none)
 	// 우선 순위를 지키지 않으면 나브바 아래 드랍다운이 동작안한다
 	// 한편, 나브바와 붕괴가 같이 있으면... 안된다. 동작이 제대로 안됨
+	private enum Mode
+	{
+		None,
+		OffCanvas,
+		Collapse,
+	}
 
 	/// <summary>드랍다운</summary>
 	[CascadingParameter] public DropDown? DropDown { get; set; }
@@ -20,6 +27,8 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	[CascadingParameter] public NavBar? NavBar { get; set; }
 	/// <summary>붕괴 아이디. 나브바가 지정될 경우 나브바에서 가져옴</summary>
 	[Parameter] public string? CollapseId { get; set; }
+	/// <summary>오프 캔바스 아이디. 나브바가 오프면 거시서 가져옴</summary>
+	[Parameter] public string? OffCanvasId { get; set; }
 
 	/// <summary>표시할 때 사용하는 태그</summary>
 	[Parameter] public string? Tag { get; set; }
@@ -62,7 +71,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	private ElementReference _self;
 	private IJSObjectReference? _js;
 	private DotNetObjectReference<Toggle>? _drf;
-	private bool _use_collapse;
+	private Mode _mode;
 
 	//
 	protected override void OnInitialized()
@@ -84,13 +93,50 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 				NavBar.ToggleId = Id;
 
 				// 나브바에서 아이디 셋팅
-				CollapseId ??= '#' + NavBar.CollapseId;
+				if (NavBar.OffCanvas)
+				{
+					// 나브바가 오프캔바스 모드
+					OffCanvasId ??= '#' + NavBar.TargetId;
+				}
+				else
+				{
+					// 나브바가 컬랩스 모드
+					CollapseId ??= '#' + NavBar.TargetId;
+				}
 
 				AriaLabel ??= "Toggle navigation"; // 이거 지정안하면 브라우저에서 욕함
 			}
 		}
 
-		if (CollapseId.IsHave())
+		if (OffCanvasId.IsHave())
+		{
+			// 오프캔바스 모드
+			if (Split)
+			{
+				Logger.LogCritical(Settings.UseLocaleMesg
+						? "{name}: 오프캔바스와 분리는 함께 쑬 수 없어요."
+						: "{name}: Invalid usage in OffCanvas mode.",
+					nameof(Split));
+				Split = false;
+			}
+
+			if (NavBar is not null) // 나브바 처리
+			{
+				Variant ??= BsVariant.None;
+
+				if (Layout is not BsToggle.Button) // 버튼만 됨
+				{
+					Logger.LogCritical(Settings.UseLocaleMesg
+							? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
+							: "{name}: Must be {type} when contained within NavBar.",
+						nameof(Layout), nameof(BsToggle.Button));
+					Layout = BsToggle.Button;
+				}
+			}
+
+			_mode = Mode.OffCanvas;
+		}
+		else if (CollapseId.IsHave())
 		{
 			// 콜랩스 모드
 			if (Split) // 스플릿 못씀
@@ -116,7 +162,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 				}
 			}
 
-			_use_collapse = true;
+			_mode = Mode.Collapse;
 		}
 		else
 		{
@@ -153,20 +199,21 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 			else
 			{
 				cssc.Add("nav-link")
-					.Add("dropdown-toggle"); // 밑에도 나오지만, 그때는 _use_collapse가 false임 여긴 true
+					.Add("dropdown-toggle");
 			}
 		}
 
 		if (Layout == BsToggle.Button)
 		{
-			cssc.Add(_use_collapse is false, "dropdown-toggle")
-				.Add("btn")
+			cssc.Add(_mode is Mode.None, "dropdown-toggle")
+				.Add(_mode is not Mode.OffCanvas, "btn")
 				.Add(ActualVariant.ToButtonCss(ActualOutline))
 				.Add(ActualSize.ToCss("btn"));
 		}
 		else
 		{
-			cssc.Add(Caret && _use_collapse is false, "dropdown-toggle");
+			// 그냥 드롭다운일 경우
+			cssc.Add(Caret && _mode is Mode.None, "dropdown-toggle");
 		}
 
 		cssc.Add(Split, "dropdown-toggle-split")
@@ -179,7 +226,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 		if (!firstRender)
 			return;
 
-		if (_use_collapse)
+		if (_mode is not Mode.None)
 			return;
 
 		_drf ??= DotNetObjectReference.Create(this);
@@ -214,26 +261,48 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 		builder.AddAttribute(1, Layout == BsToggle.Button ? "type" : "role", "button");
 		builder.AddAttribute(2, "class", CssClass);
 
-		if (_use_collapse && DropDown is null)
+		switch (_mode)
 		{
-			// 붕괴 또는 나브바 일 떄
-			builder.AddAttribute(3, "data-bs-toggle", "collapse");
-			builder.AddAttribute(4, "data-bs-target", CollapseId);
-			if (CollapseId![0] == '#')
-				builder.AddAttribute(5, "aria-controls", CollapseId[1..]);
-		}
-		else
-		{
-			// 드랍다운 일 때
-			builder.AddAttribute(6, "data-bs-toggle", "dropdown");
-			builder.AddAttribute(7, "data-bs-auto-close", AutoClose.ToCss());
+			case Mode.OffCanvas:
+			{
+				// 오프캔바스 일 때
+				builder.AddAttribute(3, "data-bs-toggle", "offcanvas");
+				builder.AddAttribute(4, "data-bs-target", OffCanvasId);
+				if (OffCanvasId![0] == '#')
+					builder.AddAttribute(5, "aria-controls", OffCanvasId[1..]);
+				break;
+			}
+			case Mode.Collapse:
+			{
+				// 붕괴 일때
+				builder.AddAttribute(3, "data-bs-toggle", "collapse");
+				builder.AddAttribute(4, "data-bs-target", CollapseId);
+				if (CollapseId![0] == '#')
+					builder.AddAttribute(5, "aria-controls", CollapseId[1..]);
+				builder.AddAttribute(5, "aria-expanded", "false");
+				break;
+			}
+			case Mode.None when DropDown is not null:
+			{
+				// 드랍다운 일 때
+				builder.AddAttribute(3, "data-bs-toggle", "dropdown");
+				builder.AddAttribute(4, "data-bs-auto-close", AutoClose.ToCss());
+				builder.AddAttribute(5, "aria-expanded", "false");
+				break;
+			}
+			default:
+			{
+				// 별거 안하고 오류 안냄. 드랍다운 취급
+				builder.AddAttribute(3, "data-bs-toggle", "dropdown");
+				builder.AddAttribute(5, "aria-expanded", "false");
+				break;
+			}
 		}
 
-		builder.AddAttribute(8, "aria-expanded", "false");
-		builder.AddAttribute(9, "aria-label", AriaLabel);
-		builder.AddMultipleAttributes(10, UserAttrs);
+		builder.AddAttribute(6, "aria-label", AriaLabel);
+		builder.AddMultipleAttributes(7, UserAttrs);
 
-		if (_use_collapse is false)
+		if (_mode is Mode.None)
 		{
 			// 리퍼런스는 자바스크립트에서 쓰는데 드랍다운에서만 씀
 			builder.AddElementReferenceCapture(11, e => _self = e);
@@ -264,21 +333,11 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	//
 	protected virtual async Task DisposeAsyncCore()
 	{
-		if (_use_collapse)
+		if (_mode is not Mode.None)
 			return;
 
 		if (_js is not null)
-		{
-			try
-			{
-				await _js.InvokeVoidAsync("dispose", _self);
-				await _js.DisposeAsync();
-			}
-			catch (JSDisconnectedException)
-			{
-				// 그럴 수도 있음
-			}
-		}
+			await _js.DisposeModuleAsync(_self);
 
 		_drf?.Dispose();
 	}

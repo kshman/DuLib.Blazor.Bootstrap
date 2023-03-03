@@ -201,7 +201,7 @@ public enum BsCardImageLocation
 }
 
 /// <summary>오프 캔바스 백드랍</summary>
-public enum BsOffCanvasBackDrop
+public enum BsBackDrop
 {
 	True,
 	False,

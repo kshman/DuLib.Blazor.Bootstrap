@@ -11,7 +11,9 @@ public class NavBar : ComponentFragment
 	/// <summary>나브 색깔 <see cref="BsVariant"/></summary>
 	[Parameter] public BsVariant Variant { get; set; } = BsVariant.None;
 	/// <summary>nav 대신 header 태그를 사용합니다.</summary>
-	[Parameter] public bool? AsHeader { get; set; }
+	[Parameter] public bool AsHeader { get; set; }
+	/// <summary>오프캔바스 모드 사용.</summary>
+	[Parameter] public bool OffCanvas { get; set; }
 	#endregion
 
 	#region 컨테이너
@@ -24,12 +26,18 @@ public class NavBar : ComponentFragment
 
 	//
 	/// <summary>나브바 토글과 충돌에 쓰이는 아이디</summary>
-	public string CollapseId => Id + "_collapse";
+	public string TargetId { get; private set; } = default!;
 	/// <summary>나브바에 등록된 토글의 아이디</summary>
 	public string? ToggleId { get; set; }
 
 	//
 	private string? ContainerCssClass => CssCompose.Join(ContainerLayout.ToContainerCss(), ContainerClass);
+
+	/// <inheritdoc />
+	protected override void OnInitialized()
+	{
+		TargetId = Id + "_target";
+	}
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -50,14 +58,12 @@ public class NavBar : ComponentFragment
 		 *     </div>
 		 * </nav>
 		 */
-		var hdr = AsHeader is not null;
-
-		builder.OpenElement(0, hdr ? "header" : "nav");
+		builder.OpenElement(0, AsHeader ? "header" : "nav");
 		builder.AddAttribute(1, "class", CssClass);
 		builder.AddAttribute(2, "id", Id);
 		builder.AddMultipleAttributes(3, UserAttrs);
 
-		builder.OpenElement(4, "div");
+		builder.OpenElement(4, AsHeader ? "nav" : "div");
 		builder.AddAttribute(5, "class", ContainerCssClass);
 
 		builder.OpenComponent<CascadingValue<NavBar>>(6);

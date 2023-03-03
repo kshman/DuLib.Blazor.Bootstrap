@@ -41,7 +41,7 @@ public class Collapse : ComponentFragment, IAsyncDisposable
 		if (NavBar is not null)
 		{
 			// 나브바 아래 있을 땐 나브바에서 준 아이디를 쓴다
-			Id = NavBar.CollapseId;
+			Id = NavBar.TargetId;
 		}
 	}
 
@@ -137,17 +137,7 @@ public class Collapse : ComponentFragment, IAsyncDisposable
 	protected virtual async ValueTask DisposeAsyncCore()
 	{
 		if (_js is not null)
-		{
-			try
-			{
-				await _js.InvokeVoidAsync("dispose", _self);
-				await _js.DisposeAsync();
-			}
-			catch (JSDisconnectedException)
-			{
-				// 그럴 수도 있음
-			}
-		}
+			await _js.DisposeModuleAsync(_self);
 
 		_drf?.Dispose();
 	}

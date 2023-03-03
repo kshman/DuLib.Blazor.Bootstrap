@@ -179,11 +179,11 @@ namespace Du.Blazor.Bootstrap.Supp
 			_ => "offcanvas-end",
 		};
 
-		internal static string ToBootStrap(this BsOffCanvasBackDrop backdrop) => backdrop switch
+		internal static string ToBootStrap(this BsBackDrop backdrop) => backdrop switch
 		{
-			BsOffCanvasBackDrop.True => "true",
-			BsOffCanvasBackDrop.False => "false",
-			BsOffCanvasBackDrop.Static or
+			BsBackDrop.True => "true",
+			BsBackDrop.False => "false",
+			BsBackDrop.Static or
 			_ => "static",
 		};
 		#endregion 컴포넌트
@@ -199,8 +199,31 @@ namespace Du.Blazor.Bootstrap.Supp
 		//
 		internal static ValueTask<IJSObjectReference> ImportModuleAsync<TType>(this IJSRuntime js)
 		{
-			var name = nameof(TType).ToLowerInvariant();
+			var name = typeof(TType).Name.ToLowerInvariant();
 			return ImportModuleAsync(js, name);
+		}
+
+		//
+		internal static async ValueTask DisposeModuleAsync(this IJSObjectReference js, ElementReference self)
+		{
+			try
+			{
+				await js.InvokeVoidAsync("dispose", self);
+				await js.DisposeAsync();
+			}
+#if DEBUG
+			catch (JSDisconnectedException ex)
+			{
+				System.Diagnostics.Debug.WriteLine("[자바스크립트 끊김 시작]");
+				System.Diagnostics.Debug.WriteLine(ex);
+				System.Diagnostics.Debug.WriteLine("[자바스크립트 끊김 끝]");
+			}
+#else
+			catch (JSDisconnectedException)
+			{
+				// 이 예외는 무시함
+			}
+#endif
 		}
 		#endregion
 	}
