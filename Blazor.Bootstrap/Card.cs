@@ -44,7 +44,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 	/// <summary>카드에 넣을 이미지의 세로 높이</summary>
 	[Parameter] public int? Height { get; set; }
 	/// <summary>카드에 넣을 이미지가 놓여지는 방법</summary>
-	[Parameter] public BsCardImageLocation Location { get; set; }
+	[Parameter] public BsCardImage Location { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -72,7 +72,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 					.Add(Class is null, DefaultSettings.FooterClass);
 				break;
 			case TagContentRole.Content:
-				cssc.Add(Location is BsCardImageLocation.Overlay ? "card-img-overlay" : "card-body")
+				cssc.Add(Location is BsCardImage.Overlay ? "card-img-overlay" : "card-body")
 					.Add(Class is null, DefaultSettings.ContentClass);
 				break;
 			default:
@@ -106,7 +106,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 		 * @if (Image.IsHave(true) && istop)
 		 * {
 		 *     <img src="@Image" alt="@Alt" width="@Width" height="@Height" 
-		 *         class="@(Location== BsCardImageLocation.Top ? "card-img-top" : "card-img")" />
+		 *         class="@(Location== BsCardImage.Top ? "card-img-top" : "card-img")" />
 		 * }
 		 * <div class="@CssClass" @attributes="UserAttrs">
 		 *     @ChildContent
@@ -119,10 +119,10 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 
 		var image = Image.IsHave();
 
-		if (image && (Location is BsCardImageLocation.Top or BsCardImageLocation.Overlay))
+		if (image && (Location is BsCardImage.Top or BsCardImage.Overlay))
 		{
 			builder.OpenElement(0, "img");
-			builder.AddAttribute(1, "class", Location == BsCardImageLocation.Top ? "card-img-top" : "card-img");
+			builder.AddAttribute(1, "class", Location == BsCardImage.Top ? "card-img-top" : "card-img");
 			builder.AddAttribute(2, "src", Image);
 			builder.AddAttribute(3, "alt", Text);
 			builder.AddAttribute(4, "width", Width);
@@ -136,7 +136,7 @@ public class Card : ComponentFragment, ITagContentHandler, ITagItemHandler
 		builder.AddContent(13, content.ChildContent);
 		builder.CloseElement(); // div
 
-		if (image && Location is BsCardImageLocation.Bottom)
+		if (image && Location is BsCardImage.Bottom)
 		{
 			builder.OpenElement(20, "img");
 			builder.AddAttribute(21, "class", "card-img-bottom");

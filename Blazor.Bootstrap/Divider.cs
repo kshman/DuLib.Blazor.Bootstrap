@@ -6,17 +6,21 @@ public class Divider : ComponentObject
 	/// <summary>드랍메뉴. 이 내용이 캐스케이딩되면 리스트(li)를 추가한다</summary>
 	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
 
+	/// <summary>색깔</summary>
+	[Parameter] public BsVariant Color { get; set; } = BsVariant.None;
 	/// <summary>리스트(li)로 출력할 때 사용하는 css클래스</summary>
 	[Parameter] public string? ListClass { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(ListAgency switch
-		{
-			DropMenu => "dropdown-divider",
-			_ => null,
-		});
+		cssc
+			.Add(ListAgency switch
+			{
+				DropMenu => "dropdown-divider",
+				_ => null,
+			})
+			.Add(Color.ToCss("text"));
 	}
 
 	// 

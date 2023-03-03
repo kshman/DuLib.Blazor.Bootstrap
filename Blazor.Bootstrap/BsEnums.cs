@@ -21,9 +21,6 @@ public enum BsExpand
 	/// <summary>나브용 Fluid, 그외에는 Medium으로 대체</summary>
 	NavFluid,
 
-	/// <summary>나브바용 Collapsed, 그외에는 Medium으로 대체</summary>
-	Collapsed,
-
 	/// <summary>리스트 그룹용, 그외에는 Medium으로 대체</summary>
 	AutoList
 }
@@ -100,7 +97,7 @@ public enum BsBadge
 }
 
 /// <summary>버튼 기능</summary>
-public enum BsButtonType
+public enum BsButton
 {
 	Button,
 	Submit,
@@ -169,7 +166,7 @@ public enum BsNavLayout
 }
 
 /// <summary>카드 놓기 위치</summary>
-public enum BsCardImageLocation
+public enum BsCardImage
 {
 	Top,
 	Bottom,

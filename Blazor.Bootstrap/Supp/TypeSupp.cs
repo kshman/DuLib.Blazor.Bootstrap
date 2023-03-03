@@ -35,7 +35,6 @@ namespace Du.Blazor.Bootstrap.Supp
 		{
 			BsSize.Small => $"{lead}-sm",
 			BsSize.Large => $"{lead}-lg",
-			BsSize.Medium or
 			_ => null,
 		};
 
@@ -51,7 +50,6 @@ namespace Du.Blazor.Bootstrap.Supp
 				BsVariant.Info => "info",
 				BsVariant.Light => "light",
 				BsVariant.Dark => "dark",
-				BsVariant.None or
 				_ => null,
 			};
 			return cs is null ? null : $"{lead}-{cs}";
@@ -70,15 +68,13 @@ namespace Du.Blazor.Bootstrap.Supp
 			BsPosition.Absolute => "pos-absolute",
 			BsPosition.Fixed => "pos-fixed",
 			BsPosition.Sticky => "pos-sticky",
-			BsPosition.None or
 			_ => null,
 		};
 
-		internal static string ToHtml(this BsButtonType button) => button switch
+		internal static string ToHtml(this BsButton button) => button switch
 		{
-			BsButtonType.Submit => "submit",
-			BsButtonType.Reset => "reset",
-			BsButtonType.Button or
+			BsButton.Submit => "submit",
+			BsButton.Reset => "reset",
 			_ => "button",
 		};
 
@@ -95,7 +91,6 @@ namespace Du.Blazor.Bootstrap.Supp
 			BsDropDirection.Up => "dropup",
 			BsDropDirection.Start => "dropstart",
 			BsDropDirection.End => "dropend",
-			BsDropDirection.Down or
 			_ => "dropdown",
 		};
 
@@ -112,7 +107,6 @@ namespace Du.Blazor.Bootstrap.Supp
 		{
 			BsDropAlignment.Start => "dropdown-menu-start",
 			BsDropAlignment.End => "dropdown-menu-end",
-			BsDropAlignment.None or
 			_ => null
 		};
 
@@ -121,7 +115,6 @@ namespace Du.Blazor.Bootstrap.Supp
 			BsToggle.Div => "div",
 			BsToggle.Span => "span",
 			BsToggle.A => "a",
-			BsToggle.Button or
 			_ => "button",
 		};
 
@@ -129,23 +122,10 @@ namespace Du.Blazor.Bootstrap.Supp
 		{
 			BsNavLayout.Pills => "nav-pills",
 			BsNavLayout.Tabs => "nav-tabs",
-			BsNavLayout.None or
 			_ => null,
 		};
 
-		internal static string? ToCss(this BsNavBarExpand expand) => expand switch
-		{
-			BsNavBarExpand.None => "navbar-expand",
-			BsNavBarExpand.Small => "navbar-expand-sm",
-			BsNavBarExpand.Medium => "navbar-expand-md",
-			BsNavBarExpand.Large => "navbar-expand-lg",
-			BsNavBarExpand.ExtraLarge => "navbar-expand-xl",
-			BsNavBarExpand.ExtraExtraLarge => "navbar-expand-xxl",
-			BsNavBarExpand.Collapsed or
-			_ => null,
-		};
-
-		internal static string? ToCss(this BsExpand dim, string lead, bool nullToNull = true)
+		private static string? ToCss(this BsExpand dim, string lead)
 		{
 			var ds = dim switch
 			{
@@ -154,28 +134,28 @@ namespace Du.Blazor.Bootstrap.Supp
 				BsExpand.Large => "lg",
 				BsExpand.ExtraLarge => "xl",
 				BsExpand.ExtraExtraLarge => "xxl",
-				BsExpand.None or
 				_ => null,
 			};
-			// 널일 경우 nullToNull이 참이면 널을, 거짓이면 그냥 lead를 보냄
-			return ds is null ? nullToNull ? null : lead : $"{lead}-{ds}";
+			return ds is null ? lead : $"{lead}-{ds}";
 		}
 
 		internal static string? ToContainerCss(this BsExpand layout) =>
 			layout == BsExpand.NavFluid ? "container-fluid" : layout.ToCss("container");
 
+		internal static string? ToNavBarCss(this BsExpand expand) =>
+			expand.ToCss("navbar-expand");
+
 		internal static string? ToOffCanvasCss(this BsExpand responsive) =>
-			responsive.ToCss("offcanvas", false);
+			responsive.ToCss("offcanvas");
 
 		internal static string? ToListGroupCss(this BsExpand horizontal) =>
-			horizontal == BsExpand.None ? null : horizontal.ToCss("list-group-horizontal", false);
+			horizontal == BsExpand.None ? null : horizontal.ToCss("list-group-horizontal");
 
 		internal static string ToOffCanvasCss(this BsPlacement replacement) => replacement switch
 		{
 			BsPlacement.Top => "offcanvas-top",
 			BsPlacement.Bottom => "offcanvas-bottom",
 			BsPlacement.Left => "offcanvas-start",
-			BsPlacement.Right or
 			_ => "offcanvas-end",
 		};
 
@@ -183,7 +163,6 @@ namespace Du.Blazor.Bootstrap.Supp
 		{
 			BsBackDrop.True => "true",
 			BsBackDrop.False => "false",
-			BsBackDrop.Static or
 			_ => "static",
 		};
 		#endregion 컴포넌트

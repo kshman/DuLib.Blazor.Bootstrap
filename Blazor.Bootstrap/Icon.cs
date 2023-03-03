@@ -3,7 +3,10 @@
 /// <summary>아이콘을 표시합니다. oi/bi/fa 같은데 쓸 수 있음</summary>
 public class Icon : ComponentObject
 {
+	/// <summary>아이콘 이름</summary>
 	[Parameter] public string Name { get; set; } = string.Empty;
+	/// <summary>색깔</summary>
+	[Parameter] public BsVariant Color { get; set; } = BsVariant.None;
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -27,6 +30,8 @@ public class Icon : ComponentObject
 			// OI 경고
 			cssc.Add("oi oi-warning");
 		}
+
+		cssc.Add(Color.ToCss("text"));
 	}
 
 	//

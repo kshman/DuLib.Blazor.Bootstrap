@@ -13,7 +13,7 @@ public class Nulo : NuloBase
 	/// <summary>버튼 설정</summary>
 	public class Settings
 	{
-		public BsButtonType Type { get; set; }
+		public BsButton Type { get; set; }
 		public BsVariant Variant { get; set; }
 		public BsSize Size { get; set; }
 		public bool Outline { get; set; }
@@ -26,7 +26,7 @@ public class Nulo : NuloBase
 	{
 		DefaultSettings = new Settings
 		{
-			Type = BsButtonType.Button,
+			Type = BsButton.Button,
 			Variant = BsVariant.Primary,
 			Size = BsSize.Medium,
 			Outline = false
@@ -169,8 +169,8 @@ public abstract class NuloBase : ComponentFragment
 
 	/// <summary>텍스트</summary>
 	[Parameter] public string? Text { get; set; }
-	/// <summary>버튼 타입. <see cref="BsButtonType" /> 참고</summary>
-	[Parameter] public BsButtonType? Type { get; set; }
+	/// <summary>버튼 타입. <see cref="BsButton" /> 참고</summary>
+	[Parameter] public BsButton? Type { get; set; }
 	/// <summary>레이아웃 타입. <see cref="BsVariant" /> 참고</summary>
 	[Parameter] public BsVariant? Variant { get; set; }
 	/// <summary>컴포넌트 크기. <see cref="BsSize" /> 참고</summary>
@@ -186,7 +186,7 @@ public abstract class NuloBase : ComponentFragment
 	[Parameter] public EventCallback<MouseEventArgs> OnInvalidClick { get; set; }
 
 	//
-	protected BsButtonType Actual => Type ?? Nulo.DefaultSettings.Type;
+	protected BsButton Actual => Type ?? Nulo.DefaultSettings.Type;
 	protected BsVariant ActualVariant => Variant ?? Nulo.DefaultSettings.Variant;
 	protected BsSize ActualSize => Size ?? Nulo.DefaultSettings.Size;
 	protected bool ActualOutline => Outline ?? Nulo.DefaultSettings.Outline;
@@ -197,7 +197,7 @@ public abstract class NuloBase : ComponentFragment
 	// OnComponentInitialized를 안쓰고 이걸 쓴 이유는... 베이스 컴포넌트니깐!
 	protected override void OnInitialized()
 	{
-		Type ??= EditContext is null ? BsButtonType.Button : BsButtonType.Submit;
+		Type ??= EditContext is null ? BsButton.Button : BsButton.Submit;
 
 		base.OnInitialized();
 	}
@@ -211,7 +211,7 @@ public abstract class NuloBase : ComponentFragment
 
 			if (OnClick.HasDelegate)
 				await InvokeOnClickAsync(e);
-			else if (Type == BsButtonType.Submit && EditContext != null)
+			else if (Type == BsButton.Submit && EditContext != null)
 				switch (EditContext.Validate())
 				{
 					case true when OnValidClick.HasDelegate:
