@@ -1,0 +1,38 @@
+﻿	<NavBar AsHeader="true" OffCanvas="true" Expand="BsExpand.Large"
+		ContainerLayout="BsExpand.ExtraExtraLarge"
+	        ContainerClass="flex-wrap flex-lg-nowrap">
+		<NavBrand Class="p-0 me-0 me-lg-2">브랜드</NavBrand>
+		<div class="d-flex">
+			<Toggle Class="d-flex d-lg-none order-3 p-2" />
+		</div>
+	<OffCanvas Responsive="BsExpand.Large" Placement="BsPlacement.End" Class="flex-grow-1">
+			<TagHeader Class="px-4 pb-0">
+				헤더 메시지
+			</TagHeader>
+			<TagContent Class="p-4 pt-0 p-lg-0">
+				<Nav Class="flex-row flex-wrap">
+					<Divider Class="d-lg-none text-white-50" />
+					<NavNulo Class="col-6 col-lg-auto" Link="">Home</NavNulo>
+					<NavNulo Class="col-6 col-lg-auto" Link="counter">Counter</NavNulo>
+					<NavNulo Class="col-6 col-lg-auto" Link="testblazor">Test Blazor</NavNulo>
+					<NavNulo Class="col-6 col-lg-auto" Link="#">그냥 링크</NavNulo>
+					<Divider Class="d-lg-none" />
+					<NavNulo Class="col-6 col-lg-auto" Enabled="false">DISABLED</NavNulo>
+					<DropDown Class="col-12 col-lg-auto">
+						<Toggle>드랍다운</Toggle>
+						<DropMenu>
+							<TagSpan Variant="BsVariant.Warning">드랍다운도 되나보다</TagSpan>
+							<Divider />
+							<NavNulo Link="">Home</NavNulo>
+							<NavNulo Link="counter">Counter</NavNulo>
+							<NavNulo Link="testblazor">Test Blazor</NavNulo>
+						</DropMenu>
+					</DropDown>
+				</Nav>
+			</TagContent>
+		</OffCanvas>
+	</NavBar>
+
+@code {
+
+}

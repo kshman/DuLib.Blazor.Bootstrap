@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.Routing;
+﻿using System.Collections.Specialized;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace Du.Blazor.Bootstrap;
 
@@ -16,6 +17,8 @@ public class NavNulo : ComponentFragment, IDisposable
 {
 	/// <summary>리스트 에이전시. 이게 캐스케이딩되어 있으면 리스트(li)를 추가한다</summary>
 	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
+	/// <summary>나브바. 이게 캐스케이딩되면 나브바에 맞춰 컴포넌트를 설정</summary>
+	[CascadingParameter] public NavBar? NavBar { get; set; }
 
 	/// <summary>나브 링크 매치</summary>
 	[Parameter] public NavLinkMatch Match { get; set; }
@@ -49,6 +52,13 @@ public class NavNulo : ComponentFragment, IDisposable
 	{
 		cssc.Add(ListAgency?.Class ?? "nav-link")
 			.Register(() => _is_active ? ActiveClass : null);
+
+		// 오프캔버스에 맞춰 컬럼 옵션을 추가
+		if (NavBar?.Mode == BsNavBar.OffCanvas && !cssc.TestAny("col-"))
+		{
+			cssc.Add("col-12")
+				.Add(NavBar.Expand.ToCss("col", "auto"));
+		}
 	}
 
 	//

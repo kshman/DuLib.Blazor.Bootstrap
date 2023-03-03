@@ -25,8 +25,9 @@ public class Nav : ComponentFragment
 				BsDirection.Vertical => "flex-column",
 				BsDirection.Horizontal or
 					_ => null,
-			}).
-			Add(Layout.ToCss());
+			})
+			.Add(NavBar?.Mode == BsNavBar.OffCanvas, "flex-row flex-wrap")
+			.Add(Layout.ToCss());
 	}
 
 	//

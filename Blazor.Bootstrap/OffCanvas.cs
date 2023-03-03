@@ -5,63 +5,39 @@
 /// </summary>
 public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 {
-	#region 기본 설정
-	public class Settings
-	{
-		public bool CloseButton { get; set; }
-		public bool Scrollable { get; set; }
-		public BsBackDrop? BackDrop { get; set; }
-		public BsExpand Responsive { get; set; }
-		public BsPlacement Placement { get; set; }
-		public string? Class { get; set; }
-		public string? HeaderClass { get; set; }
-		public string? ContentClass { get; set; }
-		public string? FooterClass { get; set; }
-	}
-
-	public static Settings DefaultSettings { get; }
-
-	static OffCanvas()
-	{
-		DefaultSettings = new Settings
-		{
-			CloseButton = true,
-			Scrollable = false,
-			BackDrop = null,
-			Responsive = BsExpand.None,
-			Placement = BsPlacement.Right,
-		};
-	}
-	#endregion
-
 	/// <summary>윗단에 놓이는 나브바</summary>
 	[CascadingParameter] public NavBar? NavBar { get; set; }
 
-	[Parameter] public Settings? Set { get; set; }
-
-	[Parameter] public string? Text { get; set; }
+	/// <summary>닫기 버튼 표시. 기본값: 표시</summary>
 	[Parameter] public bool? CloseButton { get; set; }
+	/// <summary>스크롤 가능한가. 기본값: 안씀</summary>
 	[Parameter] public bool? Scrollable { get; set; }
+	/// <summary>백드랍. 기본값: 안씀</summary>
 	[Parameter] public BsBackDrop? BackDrop { get; set; }
+	/// <summary>Responsive. 기본값: None</summary>
 	[Parameter] public BsExpand? Responsive { get; set; }
+	/// <summary>표시 위치. 기본값: 오른쪽</summary>
 	[Parameter] public BsPlacement? Placement { get; set; }
 
-	// 언제나 그린다
+	/// <summary>언제나 그린다. 기본값: 끔</summary>
 	[Parameter] public bool Always { get; set; } //= false;
+	/// <summary>열림 상태</summary>
 	[Parameter] public bool Expanded { get; set; }
 
+	/// <summary>열림 이벤트</summary>
 	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	/// <summary>열림 상태 변경 이벤트</summary>
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
 	//
 	[Inject] private IJSRuntime JSRuntime { get; set; } = default!;
 
 	//
-	private bool ActualCloseButton => CloseButton ?? Set?.CloseButton ?? DefaultSettings.CloseButton;
-	private bool ActualScrollable => Scrollable ?? Set?.Scrollable ?? DefaultSettings.Scrollable;
-	private BsBackDrop? ActualBackDrop => BackDrop ?? Set?.BackDrop ?? DefaultSettings.BackDrop;
-	private BsExpand ActualResponsive => Responsive ?? Set?.Responsive ?? DefaultSettings.Responsive;
-	private BsPlacement ActualPlacement => Placement ?? Set?.Placement ?? DefaultSettings.Placement;
+	private bool ActualCloseButton => CloseButton ?? BsDefaults.OffCanvasCloseButton;
+	private bool ActualScrollable => Scrollable ?? BsDefaults.OffCanvasScrollable;
+	private BsBackDrop? ActualBackDrop => BackDrop ?? BsDefaults.OffCanvasBackDrop;
+	private BsExpand ActualResponsive => Responsive ?? BsDefaults.OffCanvasResponsive;
+	private BsPlacement ActualPlacement => Placement ?? BsDefaults.OffCanvasPlacement;
 
 	//
 	private ElementReference _self;
@@ -76,6 +52,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		{
 			// 나브바 아래 있을 땐 나브바에서 준 아이디를 쓴다
 			Id = NavBar.TargetId;
+			Responsive ??= NavBar.Expand;
 		}
 
 		_internal_expanding = Expanded;
@@ -87,7 +64,8 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		cssc
 			.Add(ActualResponsive.ToOffCanvasCss())
 			.Add(ActualPlacement.ToOffCanvasCss())
-			.Add(Class is null, Set?.Class ?? DefaultSettings.Class)
+			.Add(NavBar?.Mode == BsNavBar.OffCanvas, "flex-grow-1")
+			.Add(Class is null, BsDefaults.OffCanvasClass)
 			.Register(() => Expanded.IfTrue("show"));
 	}
 
@@ -133,8 +111,8 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		if (backdrop is not null)
 			builder.AddAttribute(4, "data-bs-backdrop", ((BsBackDrop)backdrop).ToBootStrap());
 
-		if (NavBar is not null)
-			builder.AddAttribute(5, "data-bs-scroll",  "true");
+		if (NavBar is not null) // 나브바 모드일 때는 무조건 스크롤
+			builder.AddAttribute(5, "data-bs-scroll", "true");
 
 		builder.AddElementReferenceCapture(6, (p) => _self = p);
 
@@ -223,15 +201,15 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		{
 			case TagContentRole.Header:
 				cssc.Add("offcanvas-header")
-					.Add(content.Class is null, Set?.HeaderClass ?? DefaultSettings.HeaderClass);
+					.Add(content.Class is null, BsDefaults.OffCanvasHeaderClass);
 				break;
 			case TagContentRole.Footer:
 				cssc.Add("offcanvas-footer")
-					.Add(content.Class is null, Set?.FooterClass ?? DefaultSettings.FooterClass);
+					.Add(content.Class is null, BsDefaults.OffCanvasFooterClass);
 				break;
 			case TagContentRole.Content:
 				cssc.Add("offcanvas-body")
-					.Add(content.Class is null, Set?.ContentClass ?? DefaultSettings.ContentClass);
+					.Add(content.Class is null, BsDefaults.OffCanvasContentClass);
 				break;
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(role), role);
@@ -273,10 +251,6 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 			builder.AddAttribute(7, "data-bs-target", '#' + Id);
 			builder.AddAttribute(8, "data-bs-dismiss", "offcanvas");
 			builder.AddAttribute(9, "aria-label", "Close");
-
-			if (NavBar is not null)
-				builder.AddAttribute(10, "data-bs-target", '#' + Id);
-
 			builder.CloseElement();
 		}
 

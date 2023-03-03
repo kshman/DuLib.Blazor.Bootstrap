@@ -6,32 +6,38 @@
 public class NavBar : ComponentFragment
 {
 	#region 나브
-	/// <summary>나브 크기 <see cref="BsNavBarExpand"/></summary>
-	[Parameter] public BsNavBarExpand Expand { get; set; } = BsNavBarExpand.Large;
+	/// <summary>나브 크기 <see cref="BsExpand"/></summary>
+	[Parameter] public BsExpand Expand { get; set; } = BsExpand.Large;
 	/// <summary>나브 색깔 <see cref="BsVariant"/></summary>
 	[Parameter] public BsVariant Variant { get; set; } = BsVariant.None;
 	/// <summary>nav 대신 header 태그를 사용합니다.</summary>
 	[Parameter] public bool AsHeader { get; set; }
-	/// <summary>오프캔바스 모드 사용.</summary>
-	[Parameter] public bool OffCanvas { get; set; }
+	/// <summary>나브바 모드 <see cref="BsNavBar"/> </summary>
+	[Parameter] public BsNavBar Mode { get; set; } = BsNavBar.OffCanvas;
 	#endregion
 
 	#region 컨테이너
 	/// <summary>컨테이너의 css클래스</summary>
 	[Parameter] public string? ContainerClass { get; set; }
-	/// <summary>커네이너의 레이아웃 <see cref="BsExpand"/></summary>
+	/// <summary>컨네이너의 레이아웃 <see cref="BsExpand"/></summary>
 	/// <remarks>딱히 지정하지 않는게 좋긴하다! 기본은 container-fluid</remarks>
 	[Parameter] public BsExpand ContainerLayout { get; set; } = BsExpand.NavFluid;
+	/// <summary>컨네이너가 오프캔버스일때 flex 지정 <see cref="BsExpand"/></summary>
+	/// <remarks>딱히 지정하지 않는게 좋긴하다! 기본은 flex-lg-nowrap</remarks>
+	[Parameter] public BsExpand ContainerNoWrap { get; set; } = BsExpand.Large;
 	#endregion
 
 	//
-	/// <summary>나브바 토글과 충돌에 쓰이는 아이디</summary>
+	/// <summary>나브바 토글/충돌/오프캔버스에서 쓰이는 아이디</summary>
 	public string TargetId { get; private set; } = default!;
 	/// <summary>나브바에 등록된 토글의 아이디</summary>
 	public string? ToggleId { get; set; }
 
 	//
-	private string? ContainerCssClass => CssCompose.Join(ContainerLayout.ToContainerCss(), ContainerClass);
+	private string? ContainerCssClass => _css_container.Class;
+
+	//
+	private readonly CssCompose _css_container = new();
 
 	/// <inheritdoc />
 	protected override void OnInitialized()
@@ -43,9 +49,16 @@ public class NavBar : ComponentFragment
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc.Add("navbar")
-			.Add(Expand.ToCss())
+			.Add(Expand.ToNavBarCss())
 			.Add(Variant.ToCss("bg"));
+
+		_css_container
+			.Add(ContainerLayout.ToContainerCss())
+			.Add(Mode == BsNavBar.OffCanvas, "flex-wrap")
+			.Add(Mode == BsNavBar.OffCanvas, ContainerNoWrap.ToCss("flex", "nowrap"))
+			.Add(ContainerClass);
 	}
+
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{

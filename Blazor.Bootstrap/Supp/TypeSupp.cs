@@ -125,27 +125,35 @@ namespace Du.Blazor.Bootstrap.Supp
 			_ => null,
 		};
 
-		private static string? ToCss(this BsExpand dim, string lead)
+		private static string? ToCssName(this BsExpand expand) =>expand switch
 		{
-			var ds = dim switch
-			{
-				BsExpand.Small => "sm",
-				BsExpand.Medium => "md",
-				BsExpand.Large => "lg",
-				BsExpand.ExtraLarge => "xl",
-				BsExpand.ExtraExtraLarge => "xxl",
-				_ => null,
-			};
+			BsExpand.Small => "sm",
+			BsExpand.Medium => "md",
+			BsExpand.Large => "lg",
+			BsExpand.ExtraLarge => "xl",
+			BsExpand.ExtraExtraLarge => "xxl",
+			_ => null,
+		};
+
+		private static string ToCss(this BsExpand expand, string lead)
+		{
+			var ds = expand.ToCssName();
 			return ds is null ? lead : $"{lead}-{ds}";
 		}
 
-		internal static string? ToContainerCss(this BsExpand layout) =>
+		internal static string? ToCss(this BsExpand expand, string lead, string tail)
+		{
+			var ds = expand.ToCssName();
+			return ds is null ? null : $"{lead}-{ds}-{tail}";
+		}
+
+		internal static string ToContainerCss(this BsExpand layout) =>
 			layout == BsExpand.NavFluid ? "container-fluid" : layout.ToCss("container");
 
-		internal static string? ToNavBarCss(this BsExpand expand) =>
+		internal static string ToNavBarCss(this BsExpand expand) =>
 			expand.ToCss("navbar-expand");
 
-		internal static string? ToOffCanvasCss(this BsExpand responsive) =>
+		internal static string ToOffCanvasCss(this BsExpand responsive) =>
 			responsive.ToCss("offcanvas");
 
 		internal static string? ToListGroupCss(this BsExpand horizontal) =>

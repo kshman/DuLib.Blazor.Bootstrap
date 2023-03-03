@@ -42,6 +42,13 @@ public class DropDown : ComponentFragment
 	{
 		cssc.Add(Direction.ToCss())
 			.Add(NavBar is null, "btn-group");
+
+		// 오프캔버스에 맞춰 컬럼 옵션을 추가
+		if (NavBar?.Mode == BsNavBar.OffCanvas && !cssc.TestAny("col-"))
+		{
+			cssc.Add("col-12")
+				.Add(NavBar.Expand.ToCss("col", "auto"));
+		}
 	}
 
 	//

@@ -25,9 +25,9 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	[CascadingParameter] public DropDown? DropDown { get; set; }
 	/// <summary>나브바</summary>
 	[CascadingParameter] public NavBar? NavBar { get; set; }
-	/// <summary>붕괴 아이디. 나브바가 지정될 경우 나브바에서 가져옴</summary>
+	/// <summary>붕괴 아이디. 나브바가 붕괴면 나브바에서 가져옴</summary>
 	[Parameter] public string? CollapseId { get; set; }
-	/// <summary>오프 캔바스 아이디. 나브바가 오프면 거시서 가져옴</summary>
+	/// <summary>오프캔바스 아이디. 나브바가 오프면 나브바에서 가져옴</summary>
 	[Parameter] public string? OffCanvasId { get; set; }
 
 	/// <summary>표시할 때 사용하는 태그</summary>
@@ -93,15 +93,16 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 				NavBar.ToggleId = Id;
 
 				// 나브바에서 아이디 셋팅
-				if (NavBar.OffCanvas)
-				{
-					// 나브바가 오프캔바스 모드
-					OffCanvasId ??= '#' + NavBar.TargetId;
-				}
-				else
+				if (NavBar.Mode == BsNavBar.Collapse)
 				{
 					// 나브바가 컬랩스 모드
 					CollapseId ??= '#' + NavBar.TargetId;
+				}
+				else  /*if (NavBar.Mode == BsNavBar.OffCanvas)*/
+				{
+					// 나브바가 오프캔바스 모드
+					// 오프캔바스가 기본이니깐 걍.. 검사 안함
+					OffCanvasId ??= '#' + NavBar.TargetId;
 				}
 
 				AriaLabel ??= "Toggle navigation"; // 이거 지정안하면 브라우저에서 욕함
@@ -109,61 +110,9 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 		}
 
 		if (OffCanvasId.IsHave())
-		{
-			// 오프캔바스 모드
-			if (Split)
-			{
-				Logger.LogCritical(Settings.UseLocaleMesg
-						? "{name}: 오프캔바스와 분리는 함께 쑬 수 없어요."
-						: "{name}: Invalid usage in OffCanvas mode.",
-					nameof(Split));
-				Split = false;
-			}
-
-			if (NavBar is not null) // 나브바 처리
-			{
-				Variant ??= BsVariant.None;
-
-				if (Layout is not BsToggle.Button) // 버튼만 됨
-				{
-					Logger.LogCritical(Settings.UseLocaleMesg
-							? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
-							: "{name}: Must be {type} when contained within NavBar.",
-						nameof(Layout), nameof(BsToggle.Button));
-					Layout = BsToggle.Button;
-				}
-			}
-
-			_mode = Mode.OffCanvas;
-		}
+			CheckAndSetMode(Mode.OffCanvas);
 		else if (CollapseId.IsHave())
-		{
-			// 콜랩스 모드
-			if (Split) // 스플릿 못씀
-			{
-				Logger.LogCritical(Settings.UseLocaleMesg
-						? "{name}: 붕괴?! 컨트롤의 분리 기능과 나브바를 함께 쓰면 안되요."
-						: "{name}: Cannot use with Collapse control or NavBar.",
-						nameof(Split));
-				Split = false;
-			}
-
-			if (NavBar is not null) // 나브바 처리
-			{
-				Variant ??= BsVariant.None;
-
-				if (Layout is not BsToggle.Button) // 버튼만 됨
-				{
-					Logger.LogCritical(Settings.UseLocaleMesg
-						? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
-						: "{name}: Must be {type} when contained within NavBar.",
-						nameof(Layout), nameof(BsToggle.Button));
-					Layout = BsToggle.Button;
-				}
-			}
-
-			_mode = Mode.Collapse;
-		}
+			CheckAndSetMode(Mode.Collapse);
 		else
 		{
 			// 클랩스가 아닌데 나브바면 이상하쟎아. 예컨데 아이디가 잘못됐다든가
@@ -190,12 +139,44 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	}
 
 	//
+	private void CheckAndSetMode(Mode mode)
+	{
+		if (Split)
+		{
+			Logger.LogCritical(Settings.UseLocaleMesg
+					? "{name}: 오프캔바스와 분리는 함께 쑬 수 없어요."
+					: "{name}: Invalid usage in OffCanvas mode.",
+				nameof(Split));
+			Split = false;
+		}
+
+		if (NavBar is not null) // 나브바 처리
+		{
+			Variant ??= BsVariant.None;
+
+			if (Layout is not BsToggle.Button) // 버튼만 됨
+			{
+				Logger.LogCritical(Settings.UseLocaleMesg
+						? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
+						: "{name}: Must be {type} when contained within NavBar.",
+					nameof(Layout), nameof(BsToggle.Button));
+				Layout = BsToggle.Button;
+			}
+		}
+
+		_mode = mode;
+	}
+
+	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		if (NavBar is not null)
 		{
 			if (DropDown is null)
-				cssc.Add("navbar-toggler");
+			{
+				cssc.Add("navbar-toggler")
+					.Add(OffCanvasId.IsHave(), "d-flex");
+			}
 			else
 			{
 				cssc.Add("nav-link")
@@ -205,10 +186,19 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 
 		if (Layout == BsToggle.Button)
 		{
-			cssc.Add(_mode is Mode.None, "dropdown-toggle")
-				.Add(_mode is not Mode.OffCanvas, "btn")
-				.Add(ActualVariant.ToButtonCss(ActualOutline))
-				.Add(ActualSize.ToCss("btn"));
+			if (NavBar is null)
+			{
+				cssc.Add(_mode is Mode.None, "dropdown-toggle")
+					.Add("btn")
+					.Add(ActualVariant.ToButtonCss(ActualOutline))
+					.Add(ActualSize.ToCss("btn"));
+			}
+			else
+			{
+				cssc.Add(_mode is not Mode.OffCanvas, "btn", NavBar.Expand.ToCss("d", "none"))
+					.Add(ActualVariant.ToButtonCss(ActualOutline))
+					.Add(ActualSize.ToCss("btn"));
+			}
 		}
 		else
 		{

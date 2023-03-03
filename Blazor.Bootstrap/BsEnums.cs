@@ -181,6 +181,13 @@ public enum BsBackDrop
 	Static
 }
 
+/// <summary>NAVBAR 모드</summary>
+public enum BsNavBar
+{
+	OffCanvas,
+	Collapse,
+}
+
 /// <summary>오버플로우 일때 처리</summary>
 public enum BitsPivotOverflow
 {
