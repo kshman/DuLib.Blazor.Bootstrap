@@ -13,8 +13,8 @@ public class BsNav : ComponentFragment
 
 	/// <summary>표시 방향 <see cref="BsDirection"/></summary>
 	[Parameter] public BsDirection Direction { get; set; } = BsDirection.Horizontal;
-	/// <summary>표시 레이아웃 <see cref="BsNavLayout"/></summary>
-	[Parameter] public BsNavLayout Layout { get; set; } = BsNavLayout.None;
+	/// <summary>표시 레이아웃 <see cref="BsNavType"/></summary>
+	[Parameter] public BsNavType Type { get; set; } = BsNavType.None;
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -27,7 +27,7 @@ public class BsNav : ComponentFragment
 					_ => null,
 			})
 			.Add(NavBar?.Mode == BsNavBarType.OffCanvas, "flex-row flex-wrap")
-			.Add(Layout.ToCss());
+			.Add(Type.ToCss());
 	}
 
 	//

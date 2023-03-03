@@ -10,7 +10,7 @@ public class BsBadge : ComponentFragment
 	/// <summary>배경색</summary>
 	[Parameter] public BsVariant? Back { get; set; }
 	/// <summary>레이아웃 <see cref="BsBadgeType"/></summary>
-	[Parameter] public BsBadgeType? Layout { get; set; }
+	[Parameter] public BsBadgeType? Type { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -18,7 +18,7 @@ public class BsBadge : ComponentFragment
 		cssc.Add("badge")
 			.Add((Fore ?? BsDefaults.BadgeFore).ToCss("text"))
 			.Add((Back ?? BsDefaults.BadgeBack).ToCss("bg"))
-			.Add((Layout ?? BsDefaults.BadgeLayout) switch
+			.Add((Type ?? BsDefaults.BadgeType) switch
 			{
 				BsBadgeType.Pill => "rounded-pill",
 				BsBadgeType.Circle => "rounded-circle",

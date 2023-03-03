@@ -33,8 +33,8 @@
 </div>
 
 @code {
-	/// <summary>피벗 레이아웃. <see cref="BitsPivotLayout"/></summary>
-	[Parameter] public BitsPivotLayout Layout { get; set; } = BitsPivotLayout.Flat;
+	/// <summary>피벗 레이아웃. <see cref="BitsPivotType"/></summary>
+	[Parameter] public BitsPivotType Type { get; set; } = BitsPivotType.Flat;
 	/// <summary>피벗 위치. <see cref="BsPlacement"/></summary>
 	[Parameter] public BsPlacement Placement { get; set; } = BsPlacement.Top;
 	/// <summary>피벗이 범위를 넘어서면 처리할 방법. <see cref="BitsPivotOverflow"/></summary>
@@ -55,10 +55,10 @@
 				BsSize.Large => "hpvt-lg",
 				_ => null
 			})
-			.Add(Layout switch
+			.Add(Type switch
 			{
-				BitsPivotLayout.Flat => "hpvt-lnk",
-				BitsPivotLayout.Box => "hpvt-box",
+				BitsPivotType.Flat => "hpvt-lnk",
+				BitsPivotType.Box => "hpvt-box",
 				_ => null
 			})
 			.Add(Overflow switch

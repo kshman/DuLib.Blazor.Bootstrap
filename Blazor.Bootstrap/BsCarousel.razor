@@ -110,7 +110,7 @@
 
 	//
 	private async ValueTask<IJSObjectReference> PrepareModule() =>
-		_js ??= await JSRuntime.ImportModuleAsync<BsCarousel>();
+		_js ??= await JSRuntime.ImportModuleAsync("carousel");
 
 	//
 	protected override async ValueTask DisposeAsyncCore()

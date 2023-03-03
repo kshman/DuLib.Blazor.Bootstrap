@@ -38,7 +38,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 	/// <summary>ARIA LABEL. 이 값이 없으면 브라우저가 싫어함</summary>
 	[Parameter] public string? AriaLabel { get; set; }
 	/// <summary>토글 모양 <see cref="BsToggleType"/></summary>
-	[Parameter] public BsToggleType Layout { get; set; } = BsToggleType.Button;
+	[Parameter] public BsToggleType Type { get; set; } = BsToggleType.Button;
 	/// <summary>드랍다운일 때 자동으로 닫기 방법 <see cref="BsDropAutoClose"/></summary>
 	[Parameter] public BsDropAutoClose AutoClose { get; set; } = BsDropAutoClose.True;
 	/// <summary>버튼 모양일 때 색깔 <see cref="BsVariant"/></summary>
@@ -83,7 +83,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 			if (DropDown is not null)
 			{
 				// 이럴 때는 링크만사용
-				Layout = BsToggleType.A;
+				Type = BsToggleType.A;
 			}
 			// 드랍이 없고, 나브바엔 토글이 없음 
 			else if (NavBar.ToggleId.IsWhiteSpace())
@@ -123,13 +123,13 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 			ThrowIf.ContainerIsNull(this, DropDown);
 		}
 
-		if (Split && Layout is not BsToggleType.Button)
+		if (Split && Type is not BsToggleType.Button)
 		{
 			Logger.LogError(Settings.UseLocaleMesg
 				? "{name}: 스플릿 모드를 쓰려거든 레이아웃을 반드시 버튼으로 하세요."
 				: "{name}: Layout must be button when split mode.",
 				nameof(Split));
-			Layout = BsToggleType.Button;
+			Type = BsToggleType.Button;
 		}
 
 		Logger.LogTrace(Settings.UseLocaleMesg
@@ -154,13 +154,13 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 		{
 			Variant ??= BsVariant.None;
 
-			if (Layout is not BsToggleType.Button) // 버튼만 됨
+			if (Type is not BsToggleType.Button) // 버튼만 됨
 			{
 				Logger.LogCritical(Settings.UseLocaleMesg
 						? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
 						: "{name}: Must be {type} when contained within NavBar.",
-					nameof(Layout), nameof(BsToggleType.Button));
-				Layout = BsToggleType.Button;
+					nameof(Type), nameof(BsToggleType.Button));
+				Type = BsToggleType.Button;
 			}
 		}
 
@@ -184,7 +184,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 			}
 		}
 
-		if (Layout == BsToggleType.Button)
+		if (Type == BsToggleType.Button)
 		{
 			if (NavBar is null)
 			{
@@ -226,7 +226,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 
 	//
 	private async ValueTask<IJSObjectReference> PrepareModule() =>
-		_js ??= await JSRuntime.ImportModuleAsync<BsToggle>();
+		_js ??= await JSRuntime.ImportModuleAsync("toggle");
 
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
@@ -244,11 +244,11 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 		 * 	</TAG>
 		 */
 
-		var tag = Tag ?? Layout.ToTag();
+		var tag = Tag ?? Type.ToTag();
 
 		builder.OpenElement(0, tag);
 
-		builder.AddAttribute(1, Layout == BsToggleType.Button ? "type" : "role", "button");
+		builder.AddAttribute(1, Type == BsToggleType.Button ? "type" : "role", "button");
 		builder.AddAttribute(2, "class", CssClass);
 
 		switch (_mode)

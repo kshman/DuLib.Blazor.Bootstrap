@@ -118,10 +118,10 @@ namespace Du.Blazor.Bootstrap.Supp
 			_ => "button",
 		};
 
-		internal static string? ToCss(this BsNavLayout bsNav) => bsNav switch
+		internal static string? ToCss(this BsNavType bsNav) => bsNav switch
 		{
-			BsNavLayout.Pills => "nav-pills",
-			BsNavLayout.Tabs => "nav-tabs",
+			BsNavType.Pills => "nav-pills",
+			BsNavType.Tabs => "nav-tabs",
 			_ => null,
 		};
 
@@ -193,13 +193,6 @@ namespace Du.Blazor.Bootstrap.Supp
 		{
 			var path = "./_content/DuLib.Blazor.Bootstrap/module_" + moduleName + ".js";
 			return js.InvokeAsync<IJSObjectReference>("import", path);
-		}
-
-		//
-		internal static ValueTask<IJSObjectReference> ImportModuleAsync<TType>(this IJSRuntime js)
-		{
-			var name = typeof(TType).Name.ToLowerInvariant();
-			return ImportModuleAsync(js, name);
 		}
 
 		//

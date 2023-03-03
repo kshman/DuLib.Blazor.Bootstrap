@@ -6,14 +6,14 @@
 public  class BsButtonGroup : ComponentFragment
 {
 	/// <summary>버튼 그룹 형식</summary>
-	[Parameter] public BsGroupType Layout { get; set; }
+	[Parameter] public BsGroupType Type { get; set; }
 	/// <summary>컴포넌트 크기. <see cref="BsSize" /> 참고</summary>
 	[Parameter] public BsSize Size { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(Layout switch
+		cssc.Add(Type switch
 			{
 				BsGroupType.Button => "btn-group",
 				BsGroupType.Vertical => "btn-group-vertical",
@@ -33,7 +33,7 @@ public  class BsButtonGroup : ComponentFragment
 		 */
 
 		builder.OpenElement(0, "div");
-		builder.AddAttribute(1, "role", Layout.ToCss());
+		builder.AddAttribute(1, "role", Type.ToCss());
 		builder.AddAttribute(2, "class", CssClass);
 		builder.AddAttribute(3, "id", Id);
 		builder.AddMultipleAttributes(4, UserAttrs);

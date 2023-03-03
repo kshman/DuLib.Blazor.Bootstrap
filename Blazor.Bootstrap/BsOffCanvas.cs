@@ -85,7 +85,7 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 
 	//
 	private async ValueTask<IJSObjectReference> PrepareModule() =>
-		_js ??= await JSRuntime.ImportModuleAsync<BsOffCanvas>();
+		_js ??= await JSRuntime.ImportModuleAsync("offcanvas");
 
 	/// <inheritdoc />
 	protected override void BuildRenderTree(RenderTreeBuilder builder)

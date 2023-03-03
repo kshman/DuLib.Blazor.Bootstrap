@@ -71,7 +71,7 @@ public class BsCollapse : ComponentFragment, IAsyncDisposable
 
 	//
 	private async ValueTask<IJSObjectReference> PrepareModule() =>
-		_js ??= await JSRuntime.ImportModuleAsync<BsCollapse>();
+		_js ??= await JSRuntime.ImportModuleAsync("collapse");
 
 	//
 	protected override bool ShouldRender() =>

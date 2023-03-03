@@ -12,7 +12,7 @@ public static class BsDefaults
 	#region 뺏지
 	public static BsVariant BadgeFore { get; set; } = BsVariant.Light;
 	public static BsVariant BadgeBack { get; set; } = BsVariant.Primary;
-	public static BsBadgeType BadgeLayout { get; set; } = BsBadgeType.None;
+	public static BsBadgeType BadgeType { get; set; } = BsBadgeType.None;
 	public static string? BadgeAdditionalCss { get; set; } = null;
 	#endregion
 

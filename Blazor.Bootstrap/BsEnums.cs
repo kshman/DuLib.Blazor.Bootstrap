@@ -177,7 +177,7 @@ public enum BsDropAutoClose
 }
 
 /// <summary>NAV 레이아웃 (탭)</summary>
-public enum BsNavLayout
+public enum BsNavType
 {
 	None,
 	Tabs,
@@ -216,7 +216,7 @@ public enum BitsPivotOverflow
 }
 
 /// <summary>Bit's 피벗 타이틀 레이아웃</summary>
-public enum BitsPivotLayout
+public enum BitsPivotType
 {
 	Flat,
 	Box,
