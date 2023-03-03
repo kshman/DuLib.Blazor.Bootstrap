@@ -71,18 +71,18 @@ namespace Du.Blazor.Bootstrap.Supp
 			_ => null,
 		};
 
-		internal static string ToHtml(this BsButton button) => button switch
+		internal static string ToHtml(this BsButtonType button) => button switch
 		{
-			BsButton.Submit => "submit",
-			BsButton.Reset => "reset",
+			BsButtonType.Submit => "submit",
+			BsButtonType.Reset => "reset",
 			_ => "button",
 		};
 
-		internal static string? ToCss(this BsButtonGroup layout) => layout switch
+		internal static string? ToCss(this BsGroupType layout) => layout switch
 		{
-			BsButtonGroup.Button or
-			BsButtonGroup.Vertical => "group",
-			BsButtonGroup.Toolbar => "toolbar",
+			BsGroupType.Button or
+			BsGroupType.Vertical => "group",
+			BsGroupType.Toolbar => "toolbar",
 			_ => null,
 		};
 
@@ -110,11 +110,11 @@ namespace Du.Blazor.Bootstrap.Supp
 			_ => null
 		};
 
-		internal static string ToTag(this BsToggle layout) => layout switch
+		internal static string ToTag(this BsToggleType layout) => layout switch
 		{
-			BsToggle.Div => "div",
-			BsToggle.Span => "span",
-			BsToggle.A => "a",
+			BsToggleType.Div => "div",
+			BsToggleType.Span => "span",
+			BsToggleType.A => "a",
 			_ => "button",
 		};
 

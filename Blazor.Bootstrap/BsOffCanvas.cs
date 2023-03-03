@@ -6,7 +6,7 @@
 public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 {
 	/// <summary>윗단에 놓이는 나브바</summary>
-	[CascadingParameter] public NavBar? NavBar { get; set; }
+	[CascadingParameter] public BsNavBar? NavBar { get; set; }
 
 	/// <summary>닫기 버튼 표시. 기본값: 표시</summary>
 	[Parameter] public bool? CloseButton { get; set; }
@@ -64,7 +64,7 @@ public class OffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
 		cssc
 			.Add(ActualResponsive.ToOffCanvasCss())
 			.Add(ActualPlacement.ToOffCanvasCss())
-			.Add(NavBar?.Mode == BsNavBar.OffCanvas, "flex-grow-1")
+			.Add(NavBar?.Mode == BsNavBarType.OffCanvas, "flex-grow-1")
 			.Add(Class is null, BsDefaults.OffCanvasClass)
 			.Register(() => Expanded.IfTrue("show"));
 	}

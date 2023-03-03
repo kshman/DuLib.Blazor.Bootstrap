@@ -10,7 +10,7 @@ public partial class Accordion
 internal class AcnExtend
 {
 	internal bool Expanded { get; set; }
-	internal Collapse? Collapse { get; set; }
+	internal BsCollapse? Collapse { get; set; }
 }
 
 
@@ -26,6 +26,6 @@ internal static class AcnSupp
 	internal static void SetAcnExpanded(this AddendumItem item, bool value) =>
 		(item.ExtendObject as AcnExtend)!.Expanded = value;
 
-	internal static Collapse? GetAcnCollapse(this AddendumItem item) =>
+	internal static BsCollapse? GetAcnCollapse(this AddendumItem item) =>
 		(item.ExtendObject as AcnExtend)!.Collapse;
 }

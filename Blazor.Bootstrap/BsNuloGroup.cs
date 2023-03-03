@@ -12,7 +12,7 @@ public class ButtonGroup : NuloGroup
 public  class NuloGroup : ComponentFragment
 {
 	/// <summary>버튼 그룹 형식</summary>
-	[Parameter] public BsButtonGroup Layout { get; set; }
+	[Parameter] public BsGroupType Layout { get; set; }
 	/// <summary>컴포넌트 크기. <see cref="BsSize" /> 참고</summary>
 	[Parameter] public BsSize Size { get; set; }
 
@@ -21,9 +21,9 @@ public  class NuloGroup : ComponentFragment
 	{
 		cssc.Add(Layout switch
 			{
-				BsButtonGroup.Button => "btn-group",
-				BsButtonGroup.Vertical => "btn-group-vertical",
-				BsButtonGroup.Toolbar => "btn-toolbar",
+				BsGroupType.Button => "btn-group",
+				BsGroupType.Vertical => "btn-group-vertical",
+				BsGroupType.Toolbar => "btn-toolbar",
 				_ => null,
 			})
 			.Add(Size.ToCss("btn-group"));

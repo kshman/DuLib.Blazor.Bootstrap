@@ -12,8 +12,8 @@ public class NavBar : ComponentFragment
 	[Parameter] public BsVariant Variant { get; set; } = BsVariant.None;
 	/// <summary>nav 대신 header 태그를 사용합니다.</summary>
 	[Parameter] public bool AsHeader { get; set; }
-	/// <summary>나브바 모드 <see cref="BsNavBar"/> </summary>
-	[Parameter] public BsNavBar Mode { get; set; } = BsNavBar.OffCanvas;
+	/// <summary>나브바 모드 <see cref="BsNavBarType"/> </summary>
+	[Parameter] public BsNavBarType Mode { get; set; } = BsNavBarType.OffCanvas;
 	#endregion
 
 	#region 컨테이너
@@ -54,8 +54,8 @@ public class NavBar : ComponentFragment
 
 		_css_container
 			.Add(ContainerLayout.ToContainerCss())
-			.Add(Mode == BsNavBar.OffCanvas, "flex-wrap")
-			.Add(Mode == BsNavBar.OffCanvas, ContainerNoWrap.ToCss("flex", "nowrap"))
+			.Add(Mode == BsNavBarType.OffCanvas, "flex-wrap")
+			.Add(Mode == BsNavBarType.OffCanvas, ContainerNoWrap.ToCss("flex", "nowrap"))
 			.Add(ContainerClass);
 	}
 

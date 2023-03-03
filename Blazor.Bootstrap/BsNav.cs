@@ -26,7 +26,7 @@ public class Nav : ComponentFragment
 				BsDirection.Horizontal or
 					_ => null,
 			})
-			.Add(NavBar?.Mode == BsNavBar.OffCanvas, "flex-row flex-wrap")
+			.Add(NavBar?.Mode == BsNavBarType.OffCanvas, "flex-row flex-wrap")
 			.Add(Layout.ToCss());
 	}
 

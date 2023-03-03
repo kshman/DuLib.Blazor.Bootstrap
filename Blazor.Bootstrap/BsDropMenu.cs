@@ -1,7 +1,7 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>드랍 콘텐트</summary>
-/// <remarks>원래 <see cref="DropDown"/> 아래 콘텐트 구성용이지만, 단독으로 쓸 수 있음</remarks>
+/// <remarks>원래 <see cref="BsDropDown"/> 아래 콘텐트 구성용이지만, 단독으로 쓸 수 있음</remarks>
 /// <seealso cref="DropMenu"/>
 public class DropContent : DropMenu
 {
@@ -23,7 +23,7 @@ public class DropContent : DropMenu
 /// <item><term><see cref="TagSpan"/></term><description>SPAN 태그 제공</description></item>
 /// <item><term><see cref="TagDiv"/></term><description>DIV 태그 제공</description></item>
 /// <item><term><see cref="Nulo"/></term><description>버튼/링크</description></item>
-/// <item><term><see cref="Divider"/></term><description>구분 가로줄</description></item>
+/// <item><term><see cref="BsDivider"/></term><description>구분 가로줄</description></item>
 /// <item><term><see cref="NavNulo"/></term><description>나브 링크</description></item>
 /// </list>
 /// </para>
@@ -31,7 +31,7 @@ public class DropContent : DropMenu
 public class DropMenu : ComponentFragment, ITagItemHandler, ITagListAgent
 {
 	/// <summary>드랍다운. 이게 캐스케이딩되면 드랍다운에 맞게 콤포넌트가 동작한다</summary>
-	[CascadingParameter] public DropDown? DropDown { get; set; }
+	[CascadingParameter] public BsDropDown? DropDown { get; set; }
 
 	/// <summary>정렬 방법 <see cref="BsDropAlignment"/></summary>
 	[Parameter] public BsDropAlignment Alignment { get; set; }

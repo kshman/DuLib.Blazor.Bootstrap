@@ -89,7 +89,7 @@ public enum BsPlacement
 }
 
 /// <summary>배지 레이아웃</summary>
-public enum BsBadge
+public enum BsBadgeType
 {
 	None,
 	Pill,
@@ -97,7 +97,7 @@ public enum BsBadge
 }
 
 /// <summary>버튼 기능</summary>
-public enum BsButton
+public enum BsButtonType
 {
 	Button,
 	Submit,
@@ -105,7 +105,7 @@ public enum BsButton
 }
 
 /// <summary>버튼 그룹</summary>
-public enum BsButtonGroup
+public enum BsGroupType
 {
 	Nulo,
 	Vertical,
@@ -123,7 +123,7 @@ public enum BsCarouselPlay
 }
 
 /// <summary>토글 레이아웃</summary>
-public enum BsToggle
+public enum BsToggleType
 {
 	Button,
 	Div,
@@ -182,7 +182,7 @@ public enum BsBackDrop
 }
 
 /// <summary>NAVBAR 모드</summary>
-public enum BsNavBar
+public enum BsNavBarType
 {
 	OffCanvas,
 	Collapse,

@@ -22,7 +22,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	}
 
 	/// <summary>드랍다운</summary>
-	[CascadingParameter] public DropDown? DropDown { get; set; }
+	[CascadingParameter] public BsDropDown? DropDown { get; set; }
 	/// <summary>나브바</summary>
 	[CascadingParameter] public NavBar? NavBar { get; set; }
 	/// <summary>붕괴 아이디. 나브바가 붕괴면 나브바에서 가져옴</summary>
@@ -37,8 +37,8 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 	[Parameter] public string? Text { get; set; }
 	/// <summary>ARIA LABEL. 이 값이 없으면 브라우저가 싫어함</summary>
 	[Parameter] public string? AriaLabel { get; set; }
-	/// <summary>토글 모양 <see cref="BsToggle"/></summary>
-	[Parameter] public BsToggle Layout { get; set; } = BsToggle.Button;
+	/// <summary>토글 모양 <see cref="BsToggleType"/></summary>
+	[Parameter] public BsToggleType Layout { get; set; } = BsToggleType.Button;
 	/// <summary>드랍다운일 때 자동으로 닫기 방법 <see cref="BsDropAutoClose"/></summary>
 	[Parameter] public BsDropAutoClose AutoClose { get; set; } = BsDropAutoClose.True;
 	/// <summary>버튼 모양일 때 색깔 <see cref="BsVariant"/></summary>
@@ -83,7 +83,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 			if (DropDown is not null)
 			{
 				// 이럴 때는 링크만사용
-				Layout = BsToggle.A;
+				Layout = BsToggleType.A;
 			}
 			// 드랍이 없고, 나브바엔 토글이 없음 
 			else if (NavBar.ToggleId.IsWhiteSpace())
@@ -93,12 +93,12 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 				NavBar.ToggleId = Id;
 
 				// 나브바에서 아이디 셋팅
-				if (NavBar.Mode == BsNavBar.Collapse)
+				if (NavBar.Mode == BsNavBarType.Collapse)
 				{
 					// 나브바가 컬랩스 모드
 					CollapseId ??= '#' + NavBar.TargetId;
 				}
-				else  /*if (NavBar.Mode == BsNavBar.OffCanvas)*/
+				else  /*if (NavBar.Mode == BsNavBarType.OffCanvas)*/
 				{
 					// 나브바가 오프캔바스 모드
 					// 오프캔바스가 기본이니깐 걍.. 검사 안함
@@ -123,13 +123,13 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 			ThrowIf.ContainerIsNull(this, DropDown);
 		}
 
-		if (Split && Layout is not BsToggle.Button)
+		if (Split && Layout is not BsToggleType.Button)
 		{
 			Logger.LogError(Settings.UseLocaleMesg
 				? "{name}: 스플릿 모드를 쓰려거든 레이아웃을 반드시 버튼으로 하세요."
 				: "{name}: Layout must be button when split mode.",
 				nameof(Split));
-			Layout = BsToggle.Button;
+			Layout = BsToggleType.Button;
 		}
 
 		Logger.LogTrace(Settings.UseLocaleMesg
@@ -154,13 +154,13 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 		{
 			Variant ??= BsVariant.None;
 
-			if (Layout is not BsToggle.Button) // 버튼만 됨
+			if (Layout is not BsToggleType.Button) // 버튼만 됨
 			{
 				Logger.LogCritical(Settings.UseLocaleMesg
 						? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
 						: "{name}: Must be {type} when contained within NavBar.",
-					nameof(Layout), nameof(BsToggle.Button));
-				Layout = BsToggle.Button;
+					nameof(Layout), nameof(BsToggleType.Button));
+				Layout = BsToggleType.Button;
 			}
 		}
 
@@ -184,7 +184,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 			}
 		}
 
-		if (Layout == BsToggle.Button)
+		if (Layout == BsToggleType.Button)
 		{
 			if (NavBar is null)
 			{
@@ -248,7 +248,7 @@ public class Toggle : ComponentFragment, IAsyncDisposable
 
 		builder.OpenElement(0, tag);
 
-		builder.AddAttribute(1, Layout == BsToggle.Button ? "type" : "role", "button");
+		builder.AddAttribute(1, Layout == BsToggleType.Button ? "type" : "role", "button");
 		builder.AddAttribute(2, "class", CssClass);
 
 		switch (_mode)
