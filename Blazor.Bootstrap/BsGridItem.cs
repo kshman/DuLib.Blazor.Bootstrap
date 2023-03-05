@@ -9,11 +9,25 @@ public abstract class BsGridItem : ComponentFragment
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(Fore is not null, (((BsVariant)Fore!)).ToCss("text"))
-			.Add(Back is not null, ((BsVariant)Back!).ToCss("bg"));
+		cssc.Add(Fore?.ToCss("text"))
+			.Add(Back?.ToCss("bg"));
 	}
 }
 
+public class BsContainer : ComponentFragment
+{
+	[Parameter] public BsExpand Container { get; set; } = BsExpand.None;
+
+	/// <inheritdoc />
+	protected override void OnComponentClass(CssCompose cssc)
+	{
+		cssc.Add(Container.ToContainerCss());
+	}
+
+	/// <inheritdoc />
+	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
+		ComponentRenderer.TagFragment(this, builder);
+}
 
 /// <summary>Grid Row</summary>
 public class BsRow : BsGridItem
@@ -24,15 +38,13 @@ public class BsRow : BsGridItem
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc.Add("row")
-			.Add(Align is not null, ((BsItemAlignment)Align!).ToCss("align-items"))
-			.Add(Justify is not null, ((BsJustify)Justify!).ToCss("justify-content"));
+			.Add(Align?.ToCss("align-items"))
+			.Add(Justify?.ToCss("justify-content"));
 	}
 
 	/// <inheritdoc />
-	protected override void BuildRenderTree(RenderTreeBuilder builder)
-		=> ComponentRenderer.TagFragment(this, builder);
+	protected override void BuildRenderTree(RenderTreeBuilder builder) => ComponentRenderer.TagFragment(this, builder);
 }
-
 
 public abstract class BsColBase : BsGridItem
 {
@@ -46,26 +58,28 @@ public abstract class BsColBase : BsGridItem
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(Sm is not null, SizeToString("sm", Sm))
-			.Add(Md is not null, SizeToString("md", Md))
-			.Add(Lg is not null, SizeToString("lg", Lg))
-			.Add(Xl is not null, SizeToString("xl", Xl))
-			.Add(Xxl is not null, SizeToString("xxl", Xxl))
-			.Add(Order is not null, $"order-{Order}")
-			.Add(Align is not null, ((BsItemAlignment)Align!).ToCss("align-self"));
+		cssc.Add(SizeToString("sm", Sm))
+			.Add(SizeToString("md", Md))
+			.Add(SizeToString("lg", Lg))
+			.Add(SizeToString("xl", Xl))
+			.Add(SizeToString("xxl", Xxl))
+			.Add(OrderToString(Order))
+			.Add(Align?.ToCss("align-self"));
 
 		base.OnComponentClass(cssc);
 	}
 
 	/// <inheritdoc />
-	protected override void BuildRenderTree(RenderTreeBuilder builder)
-		=> ComponentRenderer.TagFragment(this, builder);
+	protected override void BuildRenderTree(RenderTreeBuilder builder) => ComponentRenderer.TagFragment(this, builder);
 
 	//
-	private static string SizeToString(string expand, string? count) =>
-		$"col-{expand}-{count}";
-}
+	private static string? SizeToString(string expand, string? count) =>
+		count is null ? null : $"col-{expand}-{count}";
 
+	//
+	private static string? OrderToString(string? order) =>
+		order is null ? null : $"order-{order}";
+}
 
 /// <summary>Grid Column</summary>
 public class BsCol : BsColBase
@@ -86,12 +100,10 @@ public class BsColAuto : BsColBase
 	private readonly string _col;
 
 	//
-	public BsColAuto() =>
-		_col = "auto";
+	public BsColAuto() => _col = "auto";
 
 	//
-	protected BsColAuto(int col) =>
-		_col = col.ToString();
+	protected BsColAuto(int col) => _col = col.ToString();
 
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
@@ -103,37 +115,97 @@ public class BsColAuto : BsColBase
 }
 
 /// <inheritdoc/>
-public class BsCol1 : BsColAuto { public BsCol1() : base(1) { } }
+public class BsCol1 : BsColAuto
+{
+	public BsCol1() : base(1)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol2 : BsColAuto { public BsCol2() : base(2) { } }
+public class BsCol2 : BsColAuto
+{
+	public BsCol2() : base(2)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol3 : BsColAuto { public BsCol3() : base(3) { } }
+public class BsCol3 : BsColAuto
+{
+	public BsCol3() : base(3)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol4 : BsColAuto { public BsCol4() : base(4) { } }
+public class BsCol4 : BsColAuto
+{
+	public BsCol4() : base(4)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol5 : BsColAuto { public BsCol5() : base(5) { } }
+public class BsCol5 : BsColAuto
+{
+	public BsCol5() : base(5)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol6 : BsColAuto { public BsCol6() : base(6) { } }
+public class BsCol6 : BsColAuto
+{
+	public BsCol6() : base(6)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol7 : BsColAuto { public BsCol7() : base(7) { } }
+public class BsCol7 : BsColAuto
+{
+	public BsCol7() : base(7)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol8 : BsColAuto { public BsCol8() : base(8) { } }
+public class BsCol8 : BsColAuto
+{
+	public BsCol8() : base(8)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol9 : BsColAuto { public BsCol9() : base(9) { } }
+public class BsCol9 : BsColAuto
+{
+	public BsCol9() : base(9)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol10 : BsColAuto { public BsCol10() : base(10) { } }
+public class BsCol10 : BsColAuto
+{
+	public BsCol10() : base(10)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol11 : BsColAuto { public BsCol11() : base(11) { } }
+public class BsCol11 : BsColAuto
+{
+	public BsCol11() : base(11)
+	{
+	}
+}
 
 /// <inheritdoc/>
-public class BsCol12 : BsColAuto { public BsCol12() : base(12) { } }
+public class BsCol12 : BsColAuto
+{
+	public BsCol12() : base(12)
+	{
+	}
+}
