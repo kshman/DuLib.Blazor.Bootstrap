@@ -68,7 +68,6 @@ public enum BsDirection
 /// <summary>position 속성</summary>
 public enum BsPosition
 {
-	None,
 	Static,
 	Relative,
 	Absolute,
@@ -162,7 +161,6 @@ public enum BsDropDirection
 /// <summary>드랍 정렬</summary>
 public enum BsDropAlignment
 {
-	None,
 	Start,
 	End,
 }
