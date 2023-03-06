@@ -1,5 +1,5 @@
 ﻿@namespace Du.Blazor.Bootstrap
-@inherits AddendumItemContainer
+@inherits ComponentContainer<TagSubset>
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -73,7 +73,7 @@
 		!_now_transition;
 
 	//
-	protected override async Task OnItemAddedAsync(AddendumItem item)
+	protected override async Task OnItemAddedAsync(TagSubset item)
 	{
 		item.ExtendObject = new AcnExtend();
 
@@ -94,7 +94,7 @@
 		InternalCollapseAsync(GetItem(id));
 
 	// 열려라
-	private Task InternalExpandAsync(AddendumItem? item)
+	private Task InternalExpandAsync(TagSubset? item)
 	{
 		var collapse = item?.GetAcnCollapse();
 
@@ -106,7 +106,7 @@
 	}
 
 	// 닫아라
-	private Task InternalCollapseAsync(AddendumItem? item)
+	private Task InternalCollapseAsync(TagSubset? item)
 	{
 		var collapse = item?.GetAcnCollapse();
 

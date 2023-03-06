@@ -1,5 +1,5 @@
 ﻿@namespace Du.Blazor.Bootstrap
-@inherits AddendumItemContainer
+@inherits ComponentContainer<TagSubset>
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -47,6 +47,6 @@
 	}
 
 	//
-	protected Task HandleOnClickAsync(AddendumItem tab) =>
+	protected Task HandleOnClickAsync(TagSubset tab) =>
 		SelectItemAsync(tab);
 }

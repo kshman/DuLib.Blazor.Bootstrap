@@ -1,12 +1,12 @@
 [
   {
-    "outputFile": "wwwroot/DuLib.Blazor.Bootstrap.css",
-    "inputFile": "Blazor/Styles/_styles.scss",
+    "outputFile": "wwwroot/content.css",
+    "inputFile": "Styles/_styles.scss",
     "style": "Compressed"
   },
   {
-    "outputFile": "wwwroot/ref/DuLib.Blazor.Bootstrap.nested.css",
-    "inputFile": "Blazor/Styles/_styles.scss",
+    "outputFile": "wwwroot/ref/content.nested.css",
+    "inputFile": "Styles/_styles.scss",
     "style": "Nested"
   }
 ]

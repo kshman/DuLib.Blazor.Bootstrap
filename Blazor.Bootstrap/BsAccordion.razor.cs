@@ -17,15 +17,15 @@ internal class AcnExtend
 //
 internal static class AcnSupp
 {
-	internal static AcnExtend? GetAcnObject(this AddendumItem item) =>
+	internal static AcnExtend? GetAcnObject(this TagSubset item) =>
 		item.ExtendObject as AcnExtend;
 
-	internal static bool GetAcnExpanded(this AddendumItem item) =>
+	internal static bool GetAcnExpanded(this TagSubset item) =>
 		(item.ExtendObject as AcnExtend)!.Expanded;
 
-	internal static void SetAcnExpanded(this AddendumItem item, bool value) =>
+	internal static void SetAcnExpanded(this TagSubset item, bool value) =>
 		(item.ExtendObject as AcnExtend)!.Expanded = value;
 
-	internal static BsCollapse? GetAcnCollapse(this AddendumItem item) =>
+	internal static BsCollapse? GetAcnCollapse(this TagSubset item) =>
 		(item.ExtendObject as AcnExtend)!.Collapse;
 }

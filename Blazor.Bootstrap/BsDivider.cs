@@ -29,7 +29,7 @@ public class BsDivider : ComponentObject
 		/*
 		 * @if (ListAgency is not null)
 		 * {
-		 * 	<li class="@ListClass">
+		 * 	<li class="@WrapClass">
 		 * 		<hr class="@CssClass" @attributes="UserAttrs" />
 		 * 	</li>
 		 * }

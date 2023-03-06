@@ -1,6 +1,5 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-
 /// <summary>
 /// 드랍다운 메뉴 제공 컴포넌트
 /// </summary>
@@ -36,7 +35,7 @@ public class BsDropMenu : BsDropContent, ITagItemHandler, ITagListAgent
 	#region ITagItemHandler
 	//
 	void ITagItemHandler.OnClass(TagItem item, CssCompose cssc) =>
-		cssc.Add(item.TextMode, "dropdown-item-text", "dropdown-item");
+		cssc.Add(item.WrapRepresent, "dropdown-item-text", "dropdown-item");
 
 	//
 	void ITagItemHandler.OnRender(TagItem item, RenderTreeBuilder builder) =>
