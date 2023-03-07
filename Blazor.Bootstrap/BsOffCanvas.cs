@@ -36,7 +36,7 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 	private bool ActualCloseButton => CloseButton ?? BsDefaults.OffCanvasCloseButton;
 	private bool ActualScrollable => Scrollable ?? BsDefaults.OffCanvasScrollable;
 	private BsBackDrop? ActualBackDrop => BackDrop ?? BsDefaults.OffCanvasBackDrop;
-	private BsExpand ActualResponsive => Responsive ?? BsDefaults.OffCanvasResponsive;
+	private BsExpand? ActualResponsive => Responsive ?? BsDefaults.OffCanvasResponsive;
 	private BsPlacement ActualPlacement => Placement ?? BsDefaults.OffCanvasPlacement;
 
 	//
@@ -64,9 +64,9 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc
-			.Add(ActualResponsive.ToOffCanvasCss())
+			.Add(ActualResponsive is null ? "offcanvas" : ((BsExpand)ActualResponsive).ToCss("offcanvas"))
 			.Add(ActualPlacement.ToOffCanvasCss())
-			.Add(NavBar?.Mode == BsNavBarType.OffCanvas, "flex-grow-1")
+			.Add(NavBar?.Type == BsNavBarType.OffCanvas, "flex-grow-1")
 			.Add(Class is null, BsDefaults.OffCanvasClass)
 			.Register(() => Expanded.IfTrue("show"));
 	}
@@ -120,7 +120,7 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 
 		builder.AddElementReferenceCapture(6, (p) => _self = p);
 
-		if (Expanded || Always || responsive != BsExpand.None)
+		if (Expanded || Always || responsive is not null)
 		{
 			builder.OpenComponent<CascadingValue<BsOffCanvas>>(7);
 			builder.AddAttribute(8, "Value", this);

@@ -16,12 +16,12 @@ public abstract class BsGridItem : ComponentFragment
 
 public class BsContainer : ComponentFragment
 {
-	[Parameter] public BsExpand Container { get; set; } = BsExpand.None;
+	[Parameter] public BsExpand? Container { get; set; }
 
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(Container.ToContainerCss());
+		cssc.Add(Container is null ? "container" : Container.Value.ToCss("container"));
 	}
 
 	/// <inheritdoc />

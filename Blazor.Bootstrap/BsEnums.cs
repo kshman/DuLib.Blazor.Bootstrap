@@ -11,7 +11,6 @@ public enum BsSize
 /// <summary>크기(브라우저의 사이즈)</summary>
 public enum BsExpand
 {
-	None,
 	Small,
 	Medium,
 	Large,
@@ -21,8 +20,8 @@ public enum BsExpand
 	/// <summary>나브용 Fluid, 그외에는 Medium으로 대체</summary>
 	NavFluid,
 
-	/// <summary>리스트 그룹용, 그외에는 Medium으로 대체</summary>
-	AutoList
+	/// <summary>기본값을 써야할 때. 예) 리스트 그룹</summary>
+	Default,
 }
 
 /// <summary>컴포넌트 색깔</summary>
@@ -46,7 +45,6 @@ public enum BsExpand
 /// </remarks>
 public enum BsVariant
 {
-	None,
 	Primary,
 	Secondary,
 	Success,
@@ -56,6 +54,9 @@ public enum BsVariant
 	Light,
 	Dark,
 	Link,
+
+	//
+	None = 255,
 }
 
 /// <summary>방향</summary>
@@ -90,7 +91,6 @@ public enum BsPlacement
 /// <summary>배지 레이아웃</summary>
 public enum BsBadgeType
 {
-	None,
 	Pill,
 	Circle,
 }
@@ -106,11 +106,9 @@ public enum BsButtonType
 /// <summary>버튼 그룹</summary>
 public enum BsGroupType
 {
-	Nulo,
+	Button,
 	Vertical,
 	Toolbar,
-
-	Button = Nulo,
 }
 
 /// <summary>carousel 재생 방법</summary>
@@ -177,7 +175,6 @@ public enum BsDropAutoClose
 /// <summary>NAV 레이아웃 (탭)</summary>
 public enum BsNavType
 {
-	None,
 	Tabs,
 	Pills,
 }
@@ -208,7 +205,6 @@ public enum BsNavBarType
 /// <summary>오버플로우 일때 처리</summary>
 public enum BitsPivotOverflow
 {
-	None,
 	Menu,
 	Scroll,
 }

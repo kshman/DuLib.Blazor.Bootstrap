@@ -59,6 +59,14 @@ public class BsDropContent : ComponentFragment
 	[Parameter] public BsPosition? Position { get; set; }
 
 	//
+	/// <inheritdoc />
+	protected override void OnInitialized()
+	{
+		if (DropDown is null)
+			Position ??= BsPosition.Static;
+	}
+
+	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc.Add("dropdown-menu")

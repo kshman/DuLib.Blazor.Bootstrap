@@ -12,7 +12,7 @@ public static class BsDefaults
 	#region 뺏지
 	public static BsVariant BadgeFore { get; set; } = BsVariant.Light;
 	public static BsVariant BadgeBack { get; set; } = BsVariant.Primary;
-	public static BsBadgeType BadgeType { get; set; } = BsBadgeType.None;
+	public static BsBadgeType? BadgeType { get; set; } = null;
 	public static string? BadgeAdditionalCss { get; set; } = null;
 	#endregion
 
@@ -27,7 +27,7 @@ public static class BsDefaults
 	public static bool OffCanvasCloseButton { get; set; } = true;
 	public static bool OffCanvasScrollable { get; set; } = false;
 	public static BsBackDrop? OffCanvasBackDrop { get; set; } = null;
-	public static BsExpand OffCanvasResponsive { get; set; } = BsExpand.None;
+	public static BsExpand? OffCanvasResponsive { get; set; } = null;
 	public static BsPlacement OffCanvasPlacement { get; set; } = BsPlacement.Right;
 	public static string? OffCanvasClass { get; set; } = null;
 	public static string? OffCanvasHeaderClass { get; set; } = null;

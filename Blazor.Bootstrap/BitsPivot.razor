@@ -38,7 +38,7 @@
 	/// <summary>피벗 위치. <see cref="BsPlacement"/></summary>
 	[Parameter] public BsPlacement Placement { get; set; } = BsPlacement.Top;
 	/// <summary>피벗이 범위를 넘어서면 처리할 방법. <see cref="BitsPivotOverflow"/></summary>
-	[Parameter] public BitsPivotOverflow Overflow { get; set; } = BitsPivotOverflow.None;
+	[Parameter] public BitsPivotOverflow? Overflow { get; set; }
 	/// <summary>피벗 크기. <see cref="BsSize"/></summary>
 	[Parameter] public BsSize Size { get; set; } = BsSize.Medium;
 	/// <summary>피벗만 보이고 콘텐트는 보이지 않게함</summary>
@@ -48,6 +48,14 @@
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc.Add("hpvt")
+			.Add(Placement switch
+			{
+				BsPlacement.Top => "ff-column",
+				BsPlacement.Right => "ff-row-reverse",
+				BsPlacement.Bottom => "ff-column-reverse",
+				BsPlacement.Left => "ff-row",
+				_ => null
+			})
 			.Add(Size switch
 			{
 				BsSize.Medium or
@@ -61,21 +69,7 @@
 				BitsPivotType.Box => "hpvt-box",
 				_ => null
 			})
-			.Add(Overflow switch
-			{
-				BitsPivotOverflow.None => null,
-				BitsPivotOverflow.Menu => null,
-				BitsPivotOverflow.Scroll => "hpvt-scrl",
-				_ => null
-			})
-			.Add(Placement switch
-			{
-				BsPlacement.Top => "ff-column",
-				BsPlacement.Right => "ff-row-reverse",
-				BsPlacement.Bottom => "ff-column-reverse",
-				BsPlacement.Left => "ff-row",
-				_ => null
-			});
+			.Add(Overflow is BitsPivotOverflow.Scroll, "hpvt-scrl");
 	}
 
 	//

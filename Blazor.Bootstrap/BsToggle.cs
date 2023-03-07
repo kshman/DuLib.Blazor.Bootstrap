@@ -93,7 +93,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 				NavBar.ToggleRef = this;
 
 				// 나브바에서 아이디 셋팅
-				if (NavBar.Mode == BsNavBarType.Collapse)
+				if (NavBar.Type == BsNavBarType.Collapse)
 				{
 					// 나브바가 컬랩스 모드
 					CollapseId ??= '#' + NavBar.TargetId;

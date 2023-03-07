@@ -35,7 +35,7 @@
 
 @code {
 	/// <summary>탭을 표현할 레이아웃. <see cref="BsNavType"/></summary>
-	[Parameter] public BsNavType Type { get; set; } = BsNavType.None;
+	[Parameter] public BsNavType? Type { get; set; }
 	/// <summary>탭만 보이고 내용은 표시하지 않는다</summary>
 	[Parameter] public bool TabOnly { get; set; } //= false;
 
@@ -43,7 +43,7 @@
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc.Add("nav")
-			.Add(Type.ToCss());
+			.Add(Type?.ToCss());
 	}
 
 	//

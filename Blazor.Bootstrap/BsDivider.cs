@@ -7,9 +7,9 @@ public class BsDivider : ComponentObject
 	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
 
 	/// <summary>색깔</summary>
-	[Parameter] public BsVariant Color { get; set; } = BsVariant.None;
+	[Parameter] public BsVariant? Color { get; set; }
 	/// <summary>리스트(li)로 출력할 때 사용하는 css클래스</summary>
-	[Parameter] public string? ListClass { get; set; }
+	[Parameter] public string? WrapClass { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -20,7 +20,7 @@ public class BsDivider : ComponentObject
 				BsDropMenu => "dropdown-divider",
 				_ => null,
 			})
-			.Add(Color.ToCss("text"));
+			.Add(Color?.ToCss("text"));
 	}
 
 	// 
@@ -45,8 +45,8 @@ public class BsDivider : ComponentObject
 		{
 			builder.OpenElement(0, list);
 
-			if (ListClass.IsHave())
-				builder.AddAttribute(1, ListClass);
+			if (WrapClass.IsHave())
+				builder.AddAttribute(1, WrapClass);
 		}
 
 		builder.OpenElement(2, "hr");

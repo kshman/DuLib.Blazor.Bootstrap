@@ -44,7 +44,7 @@ public class BsNavLink : ComponentFragment, IDisposable
 			.Register(() => _is_active ? ActiveClass : null);
 
 		// 오프캔버스에 맞춰 컬럼 옵션을 추가
-		if (NavBar?.Mode == BsNavBarType.OffCanvas && !cssc.TestAny("col-"))
+		if (NavBar?.Type == BsNavBarType.OffCanvas && !cssc.TestAny("col-"))
 		{
 			cssc.Add("col-12")
 				.Add(NavBar.Expand.ToCss("col", "auto"));

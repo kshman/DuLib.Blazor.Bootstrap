@@ -6,9 +6,9 @@
 public  class BsButtonGroup : ComponentFragment
 {
 	/// <summary>버튼 그룹 형식</summary>
-	[Parameter] public BsGroupType Type { get; set; }
+	[Parameter] public BsGroupType Type { get; set; } = BsGroupType.Button;
 	/// <summary>컴포넌트 크기. <see cref="BsSize" /> 참고</summary>
-	[Parameter] public BsSize Size { get; set; }
+	[Parameter] public BsSize? Size { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -20,7 +20,7 @@ public  class BsButtonGroup : ComponentFragment
 				BsGroupType.Toolbar => "btn-toolbar",
 				_ => null,
 			})
-			.Add(Size.ToCss("btn-group"));
+			.Add(Size?.ToCss("btn-group"));
 	}
 
 	//
