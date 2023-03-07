@@ -86,14 +86,14 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 				Type = BsToggleType.A;
 			}
 			// 드랍이 없고, 나브바엔 토글이 없음 
-			else if (NavBar.ToggleId.IsWhiteSpace())
+			else if (NavBar.ToggleRef is null)
 			{
 				// 토글이 여러개면 곤란하다 하나만
 				// 아니면, 토글 내 드랍에서 캐치하는 것도 곤란
-				NavBar.ToggleId = Id;
+				NavBar.ToggleRef = this;
 
 				// 나브바에서 아이디 셋팅
-				if (NavBar.Mode == BsNavBarType.Collapse)
+				if (NavBar.Type == BsNavBarType.Collapse)
 				{
 					// 나브바가 컬랩스 모드
 					CollapseId ??= '#' + NavBar.TargetId;

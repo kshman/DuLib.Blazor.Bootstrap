@@ -12,22 +12,17 @@ public class BsNav : ComponentFragment
 	[Parameter] public string? Name { get; set; }
 
 	/// <summary>표시 방향 <see cref="BsDirection"/></summary>
-	[Parameter] public BsDirection Direction { get; set; } = BsDirection.Horizontal;
+	[Parameter] public BsDirection? Direction { get; set; }
 	/// <summary>표시 레이아웃 <see cref="BsNavType"/></summary>
-	[Parameter] public BsNavType Type { get; set; } = BsNavType.None;
+	[Parameter] public BsNavType? Type { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
 	{
 		cssc.Add(NavBar is null, "nav", "navbar-nav")
-			.Add(Direction switch
-			{
-				BsDirection.Vertical => "flex-column",
-				BsDirection.Horizontal or
-					_ => null,
-			})
-			.Add(NavBar?.Mode == BsNavBarType.OffCanvas, "flex-row flex-wrap")
-			.Add(Type.ToCss());
+			.Add(Direction is BsDirection.Vertical, "flex-column")
+			.Add(NavBar?.Type == BsNavBarType.OffCanvas, "flex-row flex-wrap")
+			.Add(Type?.ToCss());
 	}
 
 	//

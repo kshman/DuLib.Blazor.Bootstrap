@@ -12,7 +12,7 @@ public class BsButton : NuloBase
 	[Parameter] public string? Target { get; set; }
 
 	/// <summary>리스트 에이전시가 있을 때 리스트(li)의 CSS클래스</summary>
-	[Parameter] public string? ListClass { get; set; }
+	[Parameter] public string? WrapClass { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -30,15 +30,15 @@ public class BsButton : NuloBase
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
 	{
 		if (ListAgency?.Tag != null)
-			InternalRenderTreeListedButton(builder, ListAgency.Tag);
+			InternalRenderTreeWrapButton(builder, ListAgency.Tag);
 		else
 			InternalRenderTreeButton(builder);
 	}
 
-	private void InternalRenderTreeListedButton(RenderTreeBuilder builder, string tag)
+	private void InternalRenderTreeWrapButton(RenderTreeBuilder builder, string wrapTag)
 	{
 		/*
-		 * <li class="@ListClass">
+		 * <li class="@WrapClass">
 		 *     @if (Href.IsHave())
 		 *     {
 		 *         <a class="@CssClass" href="@Href" target="@Target" id="@Id" @attributes="UserAttrs">
@@ -56,8 +56,8 @@ public class BsButton : NuloBase
 		 *     }
 		 * </li>
 		 */
-		builder.OpenElement(0, tag); // li
-		builder.AddAttribute(1, "class", ListClass);
+		builder.OpenElement(0, wrapTag); // li
+		builder.AddAttribute(1, "class", WrapClass);
 
 		builder.OpenElement(2, "a"); // a
 		builder.AddAttribute(3, "class", CssClass);

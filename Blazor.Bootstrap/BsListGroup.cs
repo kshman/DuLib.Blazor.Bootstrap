@@ -21,7 +21,7 @@ public class BsListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
 {
 	[Parameter] public bool Flush { get; set; }
 	[Parameter] public bool Numbered { get; set; }
-	[Parameter] public BsExpand Horizontal { get; set; } = BsExpand.None;
+	[Parameter] public BsExpand? Horizontal { get; set; }
 
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
@@ -29,7 +29,7 @@ public class BsListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
 		cssc.Add("list-group")
 			.Add(Flush, "list-group-flush")
 			.Add(Numbered, "list-group-numbered")
-			.Add(Horizontal.ToListGroupCss());
+			.Add(Horizontal?.ToCss("list-group-horizontal"));
 	}
 
 	/// <inheritdoc />
@@ -49,7 +49,7 @@ public class BsListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
 	{
 		cssc.Add("list-group-item")
 			.Add(item.OnClick.HasDelegate, "list-group-item-action")
-			.Add(((item as BsTagItem)?.Variant ?? BsVariant.None).ToCss("list-group-item"));
+			.Add((item as BsTagItem)?.Variant?.ToCss("list-group-item"));
 	}
 
 	/// <inheritdoc />

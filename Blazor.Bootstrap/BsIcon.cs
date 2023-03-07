@@ -6,7 +6,7 @@ public class BsIcon : ComponentObject
 	/// <summary>아이콘 이름</summary>
 	[Parameter] public string Name { get; set; } = string.Empty;
 	/// <summary>색깔</summary>
-	[Parameter] public BsVariant Color { get; set; } = BsVariant.None;
+	[Parameter] public BsVariant? Color { get; set; }
 
 	//
 	protected override void OnComponentClass(CssCompose cssc)
@@ -31,7 +31,7 @@ public class BsIcon : ComponentObject
 			cssc.Add("oi oi-warning");
 		}
 
-		cssc.Add(Color.ToCss("text"));
+		cssc.Add(Color?.ToCss("text"));
 	}
 
 	//

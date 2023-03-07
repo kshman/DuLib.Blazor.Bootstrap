@@ -30,7 +30,7 @@ public class BsDropDown : ComponentFragment
 	[CascadingParameter] public BsNavBar? NavBar { get; set; }
 
 	/// <summary>드랍 방향 <see cref="BsDropDirection"/></summary>
-	[Parameter] public BsDropDirection Direction { get; set; }
+	[Parameter] public BsDropDirection Direction { get; set; } = BsDropDirection.Down;
 
 	/// <summary>확장 여부</summary>
 	[Parameter] public bool Expanded { get; set; }
@@ -44,7 +44,7 @@ public class BsDropDown : ComponentFragment
 			.Add(NavBar is null, "btn-group");
 
 		// 오프캔버스에 맞춰 컬럼 옵션을 추가
-		if (NavBar?.Mode == BsNavBarType.OffCanvas && !cssc.TestAny("col-"))
+		if (NavBar?.Type == BsNavBarType.OffCanvas && !cssc.TestAny("col-"))
 		{
 			cssc.Add("col-12")
 				.Add(NavBar.Expand.ToCss("col", "auto"));

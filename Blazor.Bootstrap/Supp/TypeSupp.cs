@@ -132,10 +132,11 @@ namespace Du.Blazor.Bootstrap.Supp
 			BsExpand.Large => "lg",
 			BsExpand.ExtraLarge => "xl",
 			BsExpand.ExtraExtraLarge => "xxl",
+			BsExpand.NavFluid => "fluid",
 			_ => null,
 		};
 
-		private static string ToCss(this BsExpand expand, string lead)
+		internal static string ToCss(this BsExpand expand, string lead)
 		{
 			var ds = expand.ToCssName();
 			return ds is null ? lead : $"{lead}-{ds}";
@@ -146,18 +147,6 @@ namespace Du.Blazor.Bootstrap.Supp
 			var ds = expand.ToCssName();
 			return ds is null ? null : $"{lead}-{ds}-{tail}";
 		}
-
-		internal static string ToContainerCss(this BsExpand layout) =>
-			layout == BsExpand.NavFluid ? "container-fluid" : layout.ToCss("container");
-
-		internal static string ToNavBarCss(this BsExpand expand) =>
-			expand.ToCss("navbar-expand");
-
-		internal static string ToOffCanvasCss(this BsExpand responsive) =>
-			responsive.ToCss("offcanvas");
-
-		internal static string? ToListGroupCss(this BsExpand horizontal) =>
-			horizontal == BsExpand.None ? null : horizontal.ToCss("list-group-horizontal");
 
 		internal static string ToOffCanvasCss(this BsPlacement replacement) => replacement switch
 		{

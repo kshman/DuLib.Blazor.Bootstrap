@@ -44,7 +44,7 @@ public class BsNavLink : ComponentFragment, IDisposable
 			.Register(() => _is_active ? ActiveClass : null);
 
 		// 오프캔버스에 맞춰 컬럼 옵션을 추가
-		if (NavBar?.Mode == BsNavBarType.OffCanvas && !cssc.TestAny("col-"))
+		if (NavBar?.Type == BsNavBarType.OffCanvas && !cssc.TestAny("col-"))
 		{
 			cssc.Add("col-12")
 				.Add(NavBar.Expand.ToCss("col", "auto"));
@@ -74,7 +74,20 @@ public class BsNavLink : ComponentFragment, IDisposable
 		builder.AddAttribute(11, "class", CssClass);
 		builder.AddAttribute(12, "href", Link);
 
-		if (OnClick.HasDelegate)
+		if (NavBar is not null)
+		{
+			builder.AddAttribute(13, "role", "button");
+			builder.AddAttribute(14, "data-bs-target", '#' + NavBar.TargetId);
+
+			if (NavBar.Type == BsNavBarType.OffCanvas)
+				builder.AddAttribute(15, "data-bs-dismiss", "offcanvas");
+
+			builder.AddAttribute(16, "aria-label", "Close");
+			builder.AddAttribute(17, "onclick", HandleNavBarOnClick);
+			builder.AddEventPreventDefaultAttribute(18, "onclick", true);
+			builder.AddEventStopPropagationAttribute(19, "onclick", true);
+		}
+		else if (OnClick.HasDelegate)
 		{
 			builder.AddAttribute(13, "role", "button");
 			builder.AddAttribute(14, "onclick", OnClick);
@@ -82,14 +95,24 @@ public class BsNavLink : ComponentFragment, IDisposable
 			builder.AddEventStopPropagationAttribute(16, "onclick", true);
 		}
 
-		builder.AddMultipleAttributes(17, UserAttrs);
+		builder.AddMultipleAttributes(20, UserAttrs);
 
-		builder.AddContent(18, ChildContent);
+		builder.AddContent(21, ChildContent);
 
 		builder.CloseElement();
 
 		if (list is not null)
 			builder.CloseElement(); // li
+	}
+
+	//
+	private async Task HandleNavBarOnClick(MouseEventArgs e)
+	{
+		if (OnClick.HasDelegate)
+			await OnClick.InvokeAsync(e);
+
+		if (Link is not null && Link != "#")
+			NavMan.NavigateTo(Link);
 	}
 
 	//
