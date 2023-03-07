@@ -9,9 +9,9 @@
 /// 내부에서 쓸수 있는 컴포넌트:
 /// <list type="table">
 /// <listheader><term>컴포넌트</term><description>설명</description></listheader>
-/// <item><term><see cref="BsTagItem"/></term><description>P 태그 제공</description></item>
-/// <item><term><see cref="BsTagSpan"/></term><description>SPAN 태그 제공</description></item>
-/// <item><term><see cref="BsTagDiv"/></term><description>DIV 태그 제공</description></item>
+/// <item><term><see cref="BsTag"/></term><description>P 태그 제공</description></item>
+/// <item><term><see cref="BsSpan"/></term><description>SPAN 태그 제공</description></item>
+/// <item><term><see cref="BsDiv"/></term><description>DIV 태그 제공</description></item>
 /// <item><term><see cref="BsButton"/></term><description>버튼/링크</description></item>
 /// <item><term><see cref="BsDivider"/></term><description>구분 가로줄</description></item>
 /// <item><term><see cref="BsNavLink"/></term><description>나브 링크</description></item>

@@ -1,6 +1,7 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-public abstract class BsGridItem : ComponentFragment
+/// <summary>그리드용 태그</summary>
+public abstract class BsGridTag : ComponentFragment
 {
 	[Parameter] public BsVariant? Fore { get; set; }
 	[Parameter] public BsVariant? Back { get; set; }
@@ -14,6 +15,8 @@ public abstract class BsGridItem : ComponentFragment
 	}
 }
 
+
+/// <summary>컨테이너. 보통 그리드용</summary>
 public class BsContainer : ComponentFragment
 {
 	[Parameter] public BsExpand? Container { get; set; }
@@ -29,8 +32,8 @@ public class BsContainer : ComponentFragment
 		ComponentRenderer.TagFragment(this, builder);
 }
 
-/// <summary>Grid Row</summary>
-public class BsRow : BsGridItem
+/// <summary>그리드 줄</summary>
+public class BsRow : BsGridTag
 {
 	[Parameter] public BsJustify? Justify { get; set; }
 
@@ -46,7 +49,8 @@ public class BsRow : BsGridItem
 	protected override void BuildRenderTree(RenderTreeBuilder builder) => ComponentRenderer.TagFragment(this, builder);
 }
 
-public abstract class BsColBase : BsGridItem
+/// <summary>그리드 열</summary>
+public abstract class BsColBase : BsGridTag
 {
 	[Parameter] public string? Sm { get; set; }
 	[Parameter] public string? Md { get; set; }
@@ -81,7 +85,7 @@ public abstract class BsColBase : BsGridItem
 		order is null ? null : $"order-{order}";
 }
 
-/// <summary>Grid Column</summary>
+/// <inheritdoc />
 public class BsCol : BsColBase
 {
 	[Parameter] public string? Count { get; set; }
@@ -95,6 +99,7 @@ public class BsCol : BsColBase
 	}
 }
 
+/// <inheritdoc />
 public class BsColAuto : BsColBase
 {
 	private readonly string _col;

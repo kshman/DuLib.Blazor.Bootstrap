@@ -7,9 +7,9 @@
 /// 내부에서 쓸수 있는 컴포넌트:
 /// <list type="table">
 /// <listheader><term>컴포넌트</term><description>설명</description></listheader>
-/// <item><term><see cref="BsTagItem"/></term><description>P 태그 제공</description></item>
-/// <item><term><see cref="BsTagSpan"/></term><description>SPAN 태그 제공</description></item>
-/// <item><term><see cref="BsTagDiv"/></term><description>DIV 태그 제공</description></item>
+/// <item><term><see cref="BsTag"/></term><description>P 태그 제공</description></item>
+/// <item><term><see cref="BsSpan"/></term><description>SPAN 태그 제공</description></item>
+/// <item><term><see cref="BsDiv"/></term><description>DIV 태그 제공</description></item>
 /// <item><term><see cref="TagItem"/></term><description>P 태그 제공</description></item>
 /// <item><term><see cref="TagSpan"/></term><description>SPAN 태그 제공</description></item>
 /// <item><term><see cref="TagDiv"/></term><description>DIV 태그 제공</description></item>
@@ -49,7 +49,7 @@ public class BsListGroup : ComponentFragment, ITagItemHandler, ITagListAgent
 	{
 		cssc.Add("list-group-item")
 			.Add(item.OnClick.HasDelegate, "list-group-item-action")
-			.Add((item as BsTagItem)?.Variant?.ToCss("list-group-item"));
+			.Add((item as BsTag)?.Variant?.ToCss("list-group-item"));
 	}
 
 	/// <inheritdoc />
