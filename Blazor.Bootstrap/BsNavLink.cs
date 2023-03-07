@@ -83,13 +83,9 @@ public class BsNavLink : ComponentFragment, IDisposable
 				builder.AddAttribute(15, "data-bs-dismiss", "offcanvas");
 
 			builder.AddAttribute(16, "aria-label", "Close");
-
-			if (OnClick.HasDelegate)
-			{
-				builder.AddAttribute(17, "onclick", OnClick);
-				builder.AddEventPreventDefaultAttribute(18, "onclick", true);
-				builder.AddEventStopPropagationAttribute(19, "onclick", true);
-			}
+			builder.AddAttribute(17, "onclick", HandleNavBarOnClick);
+			builder.AddEventPreventDefaultAttribute(18, "onclick", true);
+			builder.AddEventStopPropagationAttribute(19, "onclick", true);
 		}
 		else if (OnClick.HasDelegate)
 		{
@@ -107,6 +103,16 @@ public class BsNavLink : ComponentFragment, IDisposable
 
 		if (list is not null)
 			builder.CloseElement(); // li
+	}
+
+	//
+	private async Task HandleNavBarOnClick(MouseEventArgs e)
+	{
+		if (OnClick.HasDelegate)
+			await OnClick.InvokeAsync(e);
+
+		if (Link is not null && Link != "#")
+			NavMan.NavigateTo(Link);
 	}
 
 	//
