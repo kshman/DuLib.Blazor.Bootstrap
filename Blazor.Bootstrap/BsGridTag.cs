@@ -93,7 +93,7 @@ public class BsCol : BsColBase
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
 	{
-		cssc.Add(Count is not null ? Count.Length == 0 ? "col" : $"col-{Count}" : null);
+		cssc.Add(Count is null ? "col" : $"col-{Count}");
 
 		base.OnComponentClass(cssc);
 	}
