@@ -34,4 +34,18 @@ public static class BsDefaults
 	public static string? OffCanvasContentClass { get; set; } = null;
 	public static string? OffCanvasFooterClass { get; set; } = null;
 	#endregion
+
+	#region 모달
+	public static bool ModalCloseButton { get; set; } = true;
+	public static bool ModalScrollable { get; set; } = false;
+	public static bool ModalMiddle { get; set; } = true;
+	public static BsBackDrop? ModalBackDrop { get; set; } = null;
+	public static BsExpand? ModalSize { get; set; } = null;
+	public static BsExpand? ModalFullScreen { get; set; } = null;
+	public static string? ModalClass { get; set; } = null;
+	public static string? ModalDialogClass { get; set; } = null;
+	public static string? ModalHeaderClass { get; set; } = null;
+	public static string? ModalContentClass { get; set; } = null;
+	public static string? ModalFooterClass { get; set; } = null; 
+	#endregion
 }

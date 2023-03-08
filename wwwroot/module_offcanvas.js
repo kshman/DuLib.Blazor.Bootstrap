@@ -15,7 +15,7 @@ export function hide(e) {
 export function dispose(e) {
   if (!e) return;
   e.removeEventListener('shown.bs.offcanvas', onShown);
-  e.removeEventListener('hidden.bs.offcanvas', onHiddenh);
+  e.removeEventListener('hidden.bs.offcanvas', onHidden);
   e.orf = null;
   e.c?.dispose();
   if (window.efofcs === e) window.efofcs = null;

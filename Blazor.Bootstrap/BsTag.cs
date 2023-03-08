@@ -5,6 +5,25 @@ public class BsSubset : TagSubset
 {
 }
 
+
+/// <inheritdoc />
+public class BsHeader : TagHeader
+{
+}
+
+
+/// <inheritdoc />
+public class BsFooter : TagFooter
+{
+}
+
+
+/// <inheritdoc />
+public class BsContent : TagContent
+{
+}
+
+
 /// <summary>태그 DIV 아이템</summary>
 public class BsDiv : BsTag
 {

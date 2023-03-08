@@ -48,15 +48,15 @@ public class BsCard : ComponentFragment, ITagContentHandler, ITagItemHandler
 		{
 			case TagContentRole.Header:
 				cssc.Add("card-header")
-					.Add(Class is null, BsDefaults.CardHeaderClass);
+					.Add(content.Class is null, BsDefaults.CardHeaderClass);
 				break;
 			case TagContentRole.Footer:
 				cssc.Add("card-footer")
-					.Add(Class is null, BsDefaults.CardFooterClass);
+					.Add(content.Class is null, BsDefaults.CardFooterClass);
 				break;
 			case TagContentRole.Content:
 				cssc.Add(Location is BsCardImage.Overlay ? "card-img-overlay" : "card-body")
-					.Add(Class is null, BsDefaults.CardContentClass);
+					.Add(content.Class is null, BsDefaults.CardContentClass);
 				break;
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(role), role);

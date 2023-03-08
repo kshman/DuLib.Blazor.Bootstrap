@@ -1,15 +1,10 @@
-﻿@inherits ComponentFragment
-@implements ITagContentHandler
+﻿namespace Du.Blazor.Bootstrap;
 
-<div @ref="_self" class="@CssClass" tabindex="-1" data-bs-backdrop="@ActualBackDrop?.ToBootStrap()">
-	<div class="@_css_dialog.Class">
-		<div class="modal-content">
-			@ChildContent
-		</div>
-	</div>
-</div>
-
-@code {
+/// <summary>
+/// 모달
+/// </summary>
+public class BsModal : ComponentFragment, ITagContentHandler, IAsyncDisposable
+{
 	[Parameter] public bool? CloseButton { get; set; }
 	[Parameter] public bool? Scrollable { get; set; }
 	[Parameter] public bool? Middle { get; set; }
@@ -17,12 +12,16 @@
 	[Parameter] public BsExpand? Size { get; set; }
 	[Parameter] public BsExpand? FullScreen { get; set; }
 	[Parameter] public string? DialogClass { get; set; }
-
-	[Parameter] public string? HeadTitle { get; set; }
-	[Parameter] public RenderFragment? HeadChild { get; set; }
-	[Parameter] public RenderFragment? CtntChild { get; set; }
-	[Parameter] public RenderFragment? FootChild { get; set; }
+	/// <summary>확장 여부</summary>
+	[Parameter] public bool Expanded { get; set; }
 	
+	/// <summary>확장된 다음 이벤트</summary>
+	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	/// <summary>확장 여부 변경 이벤트</summary>
+	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
+
+	[Inject] private IJSRuntime JSRuntime { get; set; } = default!;
+
 	private bool ActualCloseButton => CloseButton ?? BsDefaults.ModalCloseButton;
 	private bool ActualScrollable => Scrollable ?? BsDefaults.ModalScrollable;
 	private bool ActualMiddle => Middle ?? BsDefaults.ModalMiddle;
@@ -32,7 +31,11 @@
 	private string? ActualDialogClass => DialogClass ?? BsDefaults.ModalDialogClass;
 
 	private ElementReference _self;
+	private IJSObjectReference? _js;
+	private DotNetObjectReference<BsModal>? _drf;
+
 	private readonly CssCompose _css_dialog = new();
+	private bool _expanded;
 
 	/// <inheritdoc />
 	protected override void OnComponentClass(CssCompose cssc)
@@ -48,6 +51,128 @@
 			.Add(ActualMiddle, "modal-dialog-centered")
 			.Add(ActualDialogClass);
 	}
+
+	/// <inheritdoc />
+	protected override void OnParametersSet()
+	{
+		_expanded = Expanded;
+	}
+
+	/// <inheritdoc />
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (!firstRender)
+			return;
+
+		_drf ??= DotNetObjectReference.Create(this);
+
+		if (Expanded)
+		{
+			await (await PrepareModule())
+			.InvokeVoidAsync("show", _self, _drf);
+		}
+	}
+
+	//
+	private async ValueTask<IJSObjectReference> PrepareModule() =>
+		_js ??= await JSRuntime.ImportModuleAsync("modal");
+
+	/// <inheritdoc />
+	protected override void BuildRenderTree(RenderTreeBuilder builder)
+	{
+		/*
+		 * <div @ref="_self" class="@CssClass" tabindex="-1" data-bs-backdrop="@ActualBackDrop?.ToBootStrap()">
+		 * 	<div class="@_css_dialog.Class">
+		 * 		<div class="modal-content">
+		 * 			@ChildContent
+		 * 		</div>
+		 * 	</div>
+		 * </div>
+		 */
+
+		if (!_expanded)
+			return;
+
+		builder.OpenElement(0, "div");
+		builder.AddAttribute(1, "class", CssClass);
+		builder.AddAttribute(2, "tabindex", "-1");
+		builder.AddAttribute(3, "data-bs-backdrop", ActualBackDrop?.ToBootStrap());
+		builder.AddElementReferenceCapture(4, p => _self = p);
+
+		builder.OpenElement(5, "div");
+		builder.AddAttribute(6, "class", _css_dialog.Class);
+
+		builder.OpenElement(7, "div");
+		builder.AddAttribute(8, "class", "modal-content");
+		builder.AddContent(9, ChildContent);
+		builder.CloseElement(); // div
+
+		builder.CloseElement(); // div
+
+		builder.CloseElement(); // div
+	}
+
+	//
+	public Task ExpandAsync()
+	{
+		_expanded = true;
+		Expanded = true;
+		StateHasChanged();
+		return Task.CompletedTask;
+	}
+
+	//
+	public async Task CollapseAsync()
+	{
+		await (await PrepareModule())
+			.InvokeVoidAsync("hide", _self);
+	}
+
+	//
+	[JSInvokable("ivk_mdl_os")]
+	public async Task InternalHandleShownAsync()
+	{
+		if (_js is null)
+			return;
+
+		_expanded = true;
+		await InvokeExpandedChanged(true);
+		await InvokeOnExpanded(Id, true);
+	}
+
+	//
+	[JSInvokable("ivk_mdl_oh")]
+	public async Task InternalHandleHiddenAsync()
+	{
+		if (_js is null)
+			return;
+
+		_expanded = false;
+		await InvokeExpandedChanged(false);
+		await InvokeOnExpanded(Id, false);
+		StateHasChanged();
+	}
+
+	//
+	public async ValueTask DisposeAsync()
+	{
+		await DisposeAsyncCore().ConfigureAwait(false);
+		GC.SuppressFinalize(this);
+	}
+
+	//
+	private async ValueTask DisposeAsyncCore()
+	{
+		if (_js is not null)
+			await _js.DisposeModuleAsync(_self);
+
+		_drf?.Dispose();
+	}
+
+	//
+	private Task InvokeOnExpanded(string id, bool expanded) =>
+		OnExpanded.InvokeAsync(new ExpandedEventArgs(id, expanded));
+	private Task InvokeExpandedChanged(bool e) => ExpandedChanged.InvokeAsync(e);
 
 	#region ITagContentHandler
 	/// <inheritdoc />
@@ -90,7 +215,7 @@
 				break;
 		}
 	}
-	
+
 	//
 	private void InternalRenderTreeHeader(TagContent content, RenderTreeBuilder builder)
 	{
