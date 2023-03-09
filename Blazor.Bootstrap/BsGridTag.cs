@@ -1,14 +1,14 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>그리드용 태그</summary>
-public abstract class BsGridTag : ComponentFragment
+public abstract class BsGridTag : BsComponent
 {
 	[Parameter] public BsVariant? Fore { get; set; }
 	[Parameter] public BsVariant? Back { get; set; }
 	[Parameter] public BsItemAlignment? Align { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(Fore?.ToCss("text"))
 			.Add(Back?.ToCss("bg"));
@@ -17,12 +17,12 @@ public abstract class BsGridTag : ComponentFragment
 
 
 /// <summary>컨테이너. 보통 그리드용</summary>
-public class BsContainer : ComponentFragment
+public class BsContainer : BsComponent
 {
 	[Parameter] public BsExpand? Container { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(Container is null ? "container" : Container.Value.ToCss("container"));
 	}
@@ -38,7 +38,7 @@ public class BsRow : BsGridTag
 	[Parameter] public BsJustify? Justify { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("row")
 			.Add(Align?.ToCss("align-items"))
@@ -60,7 +60,7 @@ public abstract class BsColBase : BsGridTag
 	[Parameter] public string? Order { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(SizeToString("sm", Sm))
 			.Add(SizeToString("md", Md))
@@ -91,7 +91,7 @@ public class BsCol : BsColBase
 	[Parameter] public string? Count { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(Count is null ? "col" : $"col-{Count}");
 
@@ -111,7 +111,7 @@ public class BsColAuto : BsColBase
 	protected BsColAuto(int col) => _col = col.ToString();
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("col-" + _col);
 

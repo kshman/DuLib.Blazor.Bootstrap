@@ -1,10 +1,10 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>가로 줄 그리기</summary>
-public class BsDivider : ComponentObject
+public class BsDivider : BsComponent
 {
 	/// <summary>드랍메뉴. 이 내용이 캐스케이딩되면 리스트(li)를 추가한다</summary>
-	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
+	[CascadingParameter] public IBsListAgent? ListAgency { get; set; }
 
 	/// <summary>색깔</summary>
 	[Parameter] public BsVariant? Color { get; set; }
@@ -12,7 +12,7 @@ public class BsDivider : ComponentObject
 	[Parameter] public string? WrapClass { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc
 			.Add(ListAgency switch

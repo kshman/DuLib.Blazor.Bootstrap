@@ -1,5 +1,5 @@
 ﻿@namespace Du.Blazor.Bootstrap
-@inherits ComponentContainer<TagSubset>
+@inherits BsSubsetContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -11,7 +11,7 @@
 		var current = item == SelectedItem;
 		<a 
 			role="button" 
-			class="@CssCompose.Join("nav-link", current.IfTrue("active"), item.DisplayClass)" 
+			class="@BsCss.Join("nav-link", current.IfTrue("active"), item.DisplayClass)" 
 			id="@item.Id"
 			@onclick="async () => await HandleOnClickAsync(item)">
 			@item.Text
@@ -26,7 +26,7 @@
 		@foreach (var item in Items)
 		{
 			var current = item == SelectedItem;
-			<div class="@CssCompose.Join("tab-pane", current.IfTrue("active"), item.CssClass)">
+			<div class="@BsCss.Join("tab-pane", current.IfTrue("active"), item.CssClass)">
 				@(item.Content ?? item.ChildContent)
 			</div>
 		}
@@ -40,13 +40,13 @@
 	[Parameter] public bool TabOnly { get; set; } //= false;
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("nav")
 			.Add(Type?.ToCss());
 	}
 
 	//
-	protected Task HandleOnClickAsync(TagSubset tab) =>
+	private Task HandleOnClickAsync(BsSubset tab) =>
 		SelectItemAsync(tab);
 }

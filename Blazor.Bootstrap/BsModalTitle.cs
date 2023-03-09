@@ -3,12 +3,12 @@
 /// <summary>
 /// 모달용 타이틀
 /// </summary>
-public class BsModalTitle : ComponentFragment
+public class BsModalTitle : BsComponent
 {
 	[Parameter] public string Tag { get; set; } = "h5";
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("modal-title");
 	}

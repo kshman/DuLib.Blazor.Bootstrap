@@ -1,7 +1,19 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-public static class BsDefaults
+public static class BsSettings
 {
+	#region 런타임 설정
+	/// <summary>로컬 메시지를 표시하능가</summary>
+	public static bool UseLocaleMesg { get; set; } = true;
+	/// <summary>로그 출력할 때 예외 처리하는가</summary>
+	public static bool ThrowOnLog { get; set; }
+#if DEBUG
+		= true;
+#else
+		= false;
+#endif
+	#endregion
+
 	#region 버튼
 	public static BsButtonType ButtonType { get; set; } = BsButtonType.Button;
 	public static BsVariant ButtonVariant { get; set; } = BsVariant.Primary;
@@ -39,13 +51,14 @@ public static class BsDefaults
 	public static bool ModalCloseButton { get; set; } = true;
 	public static bool ModalScrollable { get; set; } = false;
 	public static bool ModalMiddle { get; set; } = true;
+	public static bool ModalFade { get; set; } = true;
 	public static BsBackDrop? ModalBackDrop { get; set; } = null;
-	public static BsExpand? ModalSize { get; set; } = null;
+	public static BsExpand? ModalExpand { get; set; } = null;
 	public static BsExpand? ModalFullScreen { get; set; } = null;
 	public static string? ModalClass { get; set; } = null;
 	public static string? ModalDialogClass { get; set; } = null;
 	public static string? ModalHeaderClass { get; set; } = null;
 	public static string? ModalContentClass { get; set; } = null;
-	public static string? ModalFooterClass { get; set; } = null; 
+	public static string? ModalFooterClass { get; set; } = null;
 	#endregion
 }

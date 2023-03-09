@@ -18,27 +18,27 @@
 /// </list>
 /// </para>
 /// </remarks>
-public class BsDropMenu : BsDropContent, ITagItemHandler, ITagListAgent
+public class BsDropMenu : BsDropContent, IBsTagHandler, IBsListAgent
 {
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
 		ComponentRenderer.CascadingTagFragment<BsDropMenu>(this, builder, "ul");
 
-	#region ITagListAgency
+	#region IBsListAgent
 	//
-	string ITagListAgent.Tag => "li";
+	string IBsListAgent.Tag => "li";
 
 	//
-	string ITagListAgent.Class => "dropdown-item";
+	string IBsListAgent.Class => "dropdown-item";
 	#endregion
 
-	#region ITagItemHandler
+	#region IBsTagHandler
 	//
-	void ITagItemHandler.OnClass(TagItem item, CssCompose cssc) =>
+	void IBsTagHandler.OnClass(BsTag item, BsCss cssc) =>
 		cssc.Add(item.WrapRepresent, "dropdown-item-text", "dropdown-item");
 
 	//
-	void ITagItemHandler.OnRender(TagItem item, RenderTreeBuilder builder) =>
+	void IBsTagHandler.OnRender(BsTag item, RenderTreeBuilder builder) =>
 		ComponentRenderer.SurroundTagText(item, builder, "li");
 	#endregion
 }
@@ -48,7 +48,7 @@ public class BsDropMenu : BsDropContent, ITagItemHandler, ITagListAgent
 /// <summary>드랍 콘텐트</summary>
 /// <remarks>원래 <see cref="BsDropDown"/> 아래 콘텐트 구성용이지만, 단독으로 쓸 수 있음</remarks>
 /// <seealso cref="BsDropMenu"/>
-public class BsDropContent : ComponentFragment
+public class BsDropContent : BsComponent
 {
 	/// <summary>드랍다운. 이게 캐스케이딩되면 드랍다운에 맞게 콤포넌트가 동작한다</summary>
 	[CascadingParameter] public BsDropDown? DropDown { get; set; }
@@ -67,7 +67,7 @@ public class BsDropContent : ComponentFragment
 	}
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("dropdown-menu")
 			.Add(Align?.ToCss());

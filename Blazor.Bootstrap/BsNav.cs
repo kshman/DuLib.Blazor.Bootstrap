@@ -3,7 +3,7 @@
 /// <summary>
 /// 나브 컴포넌트
 /// </summary>
-public class BsNav : ComponentFragment
+public class BsNav : BsComponent
 {
 	/// <summary>나브바. 이게 캐스케이딩되면 나브바에 맞춰 컴포넌트를 설정</summary>
 	[CascadingParameter] public BsNavBar? NavBar { get; set; }
@@ -17,7 +17,7 @@ public class BsNav : ComponentFragment
 	[Parameter] public BsNavType? Type { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(NavBar is null, "nav", "navbar-nav")
 			.Add(Direction is BsDirection.Vertical, "flex-column")

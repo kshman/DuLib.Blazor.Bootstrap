@@ -2,21 +2,21 @@
 
 /// <summary>
 /// 카드 컴포넌트<br/>
-/// 이미지를 출력하려면 반드시 <see cref="TagContent"/> 태그를 포함해야한다
+/// 이미지를 출력하려면 반드시 <see cref="BsContent"/> 태그를 포함해야한다
 /// </summary>
 /// <remarks>
 /// 내부에서 쓸 수 있는 컴포넌트:
 /// <list type="table">
 /// <listheader><term>컴포넌트</term><description>설명</description></listheader>
-/// <item><term><see cref="TagItem"/></term><description>P 태그 제공</description></item>
-/// <item><term><see cref="TagSpan"/></term><description>SPAN 태그 제공</description></item>
-/// <item><term><see cref="TagDiv"/></term><description>DIV 태그 제공</description></item>
-/// <item><term><see cref="TagHeader"/></term><description>헤더</description></item>
-/// <item><term><see cref="TagFooter"/></term><description>푸터</description></item>
-/// <item><term><see cref="TagContent"/></term><description>콘텐트</description></item>
+/// <item><term><see cref="BsTag"/></term><description>P 태그 제공</description></item>
+/// <item><term><see cref="BsSpan"/></term><description>SPAN 태그 제공</description></item>
+/// <item><term><see cref="BsDiv"/></term><description>DIV 태그 제공</description></item>
+/// <item><term><see cref="BsHeader"/></term><description>헤더</description></item>
+/// <item><term><see cref="BsFooter"/></term><description>푸터</description></item>
+/// <item><term><see cref="BsContent"/></term><description>콘텐트</description></item>
 /// </list>
 /// </remarks>
-public class BsCard : ComponentFragment, ITagContentHandler, ITagItemHandler
+public class BsCard : BsComponent, IBsContentHandler, IBsTagHandler
 {
 	/// <summary>카드에 넣을 이미지 URL</summary>
 	[Parameter] public string? Image { get; set; }
@@ -30,33 +30,33 @@ public class BsCard : ComponentFragment, ITagContentHandler, ITagItemHandler
 	[Parameter] public BsCardImage Location { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("card")
-			.Add(Class is null, BsDefaults.CardClass);
+			.Add(Class is null, BsSettings.CardClass);
 	}
 
 	//
 	protected override void BuildRenderTree(RenderTreeBuilder builder) =>
 		ComponentRenderer.CascadingTagFragment<BsCard>(this, builder);
 
-	#region ITagContentHandler
+	#region IBsContentHandler
 	/// <inheritdoc />
-	void ITagContentHandler.OnClass(TagContentRole role, TagContent content, CssCompose cssc)
+	void IBsContentHandler.OnClass(BsContentRole role, BsContent content, BsCss cssc)
 	{
 		switch (role)
 		{
-			case TagContentRole.Header:
+			case BsContentRole.Header:
 				cssc.Add("card-header")
-					.Add(content.Class is null, BsDefaults.CardHeaderClass);
+					.Add(content.Class is null, BsSettings.CardHeaderClass);
 				break;
-			case TagContentRole.Footer:
+			case BsContentRole.Footer:
 				cssc.Add("card-footer")
-					.Add(content.Class is null, BsDefaults.CardFooterClass);
+					.Add(content.Class is null, BsSettings.CardFooterClass);
 				break;
-			case TagContentRole.Content:
+			case BsContentRole.Content:
 				cssc.Add(Location is BsCardImage.Overlay ? "card-img-overlay" : "card-body")
-					.Add(content.Class is null, BsDefaults.CardContentClass);
+					.Add(content.Class is null, BsSettings.CardContentClass);
 				break;
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(role), role);
@@ -65,15 +65,15 @@ public class BsCard : ComponentFragment, ITagContentHandler, ITagItemHandler
 	}
 
 	/// <inheritdoc />
-	void ITagContentHandler.OnRender(TagContentRole role, TagContent content, RenderTreeBuilder builder)
+	void IBsContentHandler.OnRender(BsContentRole role, BsContent content, RenderTreeBuilder builder)
 	{
 		switch (role)
 		{
-			case TagContentRole.Header:
-			case TagContentRole.Footer:
+			case BsContentRole.Header:
+			case BsContentRole.Footer:
 				ComponentRenderer.TagFragment(content, builder);
 				break;
-			case TagContentRole.Content:
+			case BsContentRole.Content:
 				InternalRenderTreeContent(content, builder);
 				break;
 			default:
@@ -83,10 +83,10 @@ public class BsCard : ComponentFragment, ITagContentHandler, ITagItemHandler
 	}
 
 	//
-	private void InternalRenderTreeContent(TagContent content, RenderTreeBuilder builder)
+	private void InternalRenderTreeContent(BsContent content, RenderTreeBuilder builder)
 	{
 		/*
-		 * @if (Image.IsHave(true) && istop)
+		 * @if (Image.IsHave(true) && is_top)
 		 * {
 		 *     <img src="@Image" alt="@Alt" width="@Width" height="@Height" 
 		 *         class="@(Location== BsCardImage.Top ? "card-img-top" : "card-img")" />
@@ -94,7 +94,7 @@ public class BsCard : ComponentFragment, ITagContentHandler, ITagItemHandler
 		 * <div class="@CssClass" @attributes="UserAttrs">
 		 *     @ChildContent
 		 * </div>
-		 * @if (Image.IsHave(true) && isbottom)
+		 * @if (Image.IsHave(true) && is_bottom)
 		 * {
 		 *     <img src="@Image" alt="@Alt" width="@Width" height="@Height" class="card-img-bottom" />
 		 * }
@@ -132,13 +132,13 @@ public class BsCard : ComponentFragment, ITagContentHandler, ITagItemHandler
 	}
 	#endregion
 
-	#region ITagItemHandler
+	#region IBsTagHandler
 	/// <inheritdoc />
-	void ITagItemHandler.OnClass(TagItem item, CssCompose cssc) =>
+	void IBsTagHandler.OnClass(BsTag item, BsCss cssc) =>
 		cssc.Add("card-text");
 
 	/// <inheritdoc />
-	void ITagItemHandler.OnRender(TagItem item, RenderTreeBuilder builder) =>
+	void IBsTagHandler.OnRender(BsTag item, RenderTreeBuilder builder) =>
 		ComponentRenderer.TagText(item, builder);
 	#endregion
 }

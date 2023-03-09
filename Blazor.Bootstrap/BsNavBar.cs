@@ -3,7 +3,7 @@
 /// <summary>
 /// 나브바 컴포넌트
 /// </summary>
-public class BsNavBar : ComponentFragment
+public class BsNavBar : BsComponent
 {
 	#region 나브
 	/// <summary>나브 크기 <see cref="BsExpand"/></summary>
@@ -41,7 +41,7 @@ public class BsNavBar : ComponentFragment
 	private string? ContainerCssClass => _css_container.Class;
 
 	//
-	private readonly CssCompose _css_container = new();
+	private readonly BsCss _css_container = new();
 
 	/// <inheritdoc />
 	protected override void OnInitialized()
@@ -50,7 +50,7 @@ public class BsNavBar : ComponentFragment
 	}
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("navbar")
 			.Add(Expand.ToCss("navbar-expand"))

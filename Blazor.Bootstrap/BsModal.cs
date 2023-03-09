@@ -3,59 +3,63 @@
 /// <summary>
 /// 모달
 /// </summary>
-public class BsModal : ComponentFragment, ITagContentHandler, IAsyncDisposable
+public class BsModal : BsComponent, IBsContentHandler, IAsyncDisposable
 {
 	[Parameter] public bool? CloseButton { get; set; }
 	[Parameter] public bool? Scrollable { get; set; }
 	[Parameter] public bool? Middle { get; set; }
+	[Parameter] public bool? Fade { get; set; }
 	[Parameter] public BsBackDrop? BackDrop { get; set; }
-	[Parameter] public BsExpand? Size { get; set; }
+	[Parameter] public BsExpand? Expand { get; set; }
 	[Parameter] public BsExpand? FullScreen { get; set; }
 	[Parameter] public string? DialogClass { get; set; }
 	/// <summary>확장 여부</summary>
 	[Parameter] public bool Expanded { get; set; }
-	
+
 	/// <summary>확장된 다음 이벤트</summary>
-	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	[Parameter] public EventCallback<BsExpandedEventArgs> OnExpanded { get; set; }
 	/// <summary>확장 여부 변경 이벤트</summary>
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
 	[Inject] private IJSRuntime JSRuntime { get; set; } = default!;
 
-	private bool ActualCloseButton => CloseButton ?? BsDefaults.ModalCloseButton;
-	private bool ActualScrollable => Scrollable ?? BsDefaults.ModalScrollable;
-	private bool ActualMiddle => Middle ?? BsDefaults.ModalMiddle;
-	private BsBackDrop? ActualBackDrop => BackDrop ?? BsDefaults.ModalBackDrop;
-	private BsExpand? ActualSize => Size ?? BsDefaults.ModalSize;
-	private BsExpand? ActualFullScreen => FullScreen ?? BsDefaults.ModalFullScreen;
-	private string? ActualDialogClass => DialogClass ?? BsDefaults.ModalDialogClass;
+	private bool ActualCloseButton => CloseButton ?? BsSettings.ModalCloseButton;
+	private bool ActualScrollable => Scrollable ?? BsSettings.ModalScrollable;
+	private bool ActualMiddle => Middle ?? BsSettings.ModalMiddle;
+	private bool ActualFade => Fade ?? BsSettings.ModalFade;
+	private BsBackDrop? ActualBackDrop => BackDrop ?? BsSettings.ModalBackDrop;
+	private BsExpand? ActualExpand => Expand ?? BsSettings.ModalExpand;
+	private BsExpand? ActualFullScreen => FullScreen ?? BsSettings.ModalFullScreen;
+	private string? ActualDialogClass => DialogClass ?? BsSettings.ModalDialogClass;
 
 	private ElementReference _self;
 	private IJSObjectReference? _js;
 	private DotNetObjectReference<BsModal>? _drf;
 
-	private readonly CssCompose _css_dialog = new();
+	private readonly BsCss _css_dialog = new();
 	private bool _expanded;
-
-	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
-	{
-		cssc.Add("modal fade")
-			.Add(Class is null, BsDefaults.ModalClass);
-
-		_css_dialog
-			.Add("modal-dialog")
-			.Add(ActualSize?.ToCss("modal"))
-			.Add(ActualFullScreen?.ToCss("modal-fullscreen", "down", true))
-			.Add(ActualScrollable, "modal-dialog-scrollable")
-			.Add(ActualMiddle, "modal-dialog-centered")
-			.Add(ActualDialogClass);
-	}
 
 	/// <inheritdoc />
 	protected override void OnParametersSet()
 	{
 		_expanded = Expanded;
+	}
+
+	/// <inheritdoc />
+	protected override void OnComponentClass(BsCss cssc)
+	{
+		cssc.Add("modal")
+			.Add(ActualFade, "fade")
+			.Add(_expanded, "show")
+			.Add(Class is null, BsSettings.ModalClass);
+
+		_css_dialog
+			.Add("modal-dialog")
+			.Add(ActualExpand?.ToCss("modal"))
+			.Add(ActualFullScreen?.ToCss("modal-fullscreen", "down", true))
+			.Add(ActualScrollable, "modal-dialog-scrollable")
+			.Add(ActualMiddle, "modal-dialog-centered")
+			.Add(ActualDialogClass);
 	}
 
 	/// <inheritdoc />
@@ -66,11 +70,8 @@ public class BsModal : ComponentFragment, ITagContentHandler, IAsyncDisposable
 
 		_drf ??= DotNetObjectReference.Create(this);
 
-		if (Expanded)
-		{
-			await (await PrepareModule())
-			.InvokeVoidAsync("show", _self, _drf);
-		}
+		await (await PrepareModule())
+			.InvokeVoidAsync("initialize", _self, _drf, Expanded);
 	}
 
 	//
@@ -90,9 +91,6 @@ public class BsModal : ComponentFragment, ITagContentHandler, IAsyncDisposable
 		 * </div>
 		 */
 
-		if (!_expanded)
-			return;
-
 		builder.OpenElement(0, "div");
 		builder.AddAttribute(1, "class", CssClass);
 		builder.AddAttribute(2, "tabindex", "-1");
@@ -104,53 +102,19 @@ public class BsModal : ComponentFragment, ITagContentHandler, IAsyncDisposable
 
 		builder.OpenElement(7, "div");
 		builder.AddAttribute(8, "class", "modal-content");
-		builder.AddContent(9, ChildContent);
-		builder.CloseElement(); // div
+
+		builder.OpenComponent<CascadingValue<BsModal>>(9);
+		builder.AddAttribute(10, "Value", this);
+		builder.AddAttribute(11, "IsFixed", true);
+		builder.AddAttribute(12, "ChildContent", (RenderFragment)((b) =>
+				b.AddContent(13, ChildContent)));
+		builder.CloseComponent(); // CascadingValue<BsModal>
 
 		builder.CloseElement(); // div
 
 		builder.CloseElement(); // div
-	}
 
-	//
-	public Task ExpandAsync()
-	{
-		_expanded = true;
-		Expanded = true;
-		StateHasChanged();
-		return Task.CompletedTask;
-	}
-
-	//
-	public async Task CollapseAsync()
-	{
-		await (await PrepareModule())
-			.InvokeVoidAsync("hide", _self);
-	}
-
-	//
-	[JSInvokable("ivk_mdl_os")]
-	public async Task InternalHandleShownAsync()
-	{
-		if (_js is null)
-			return;
-
-		_expanded = true;
-		await InvokeExpandedChanged(true);
-		await InvokeOnExpanded(Id, true);
-	}
-
-	//
-	[JSInvokable("ivk_mdl_oh")]
-	public async Task InternalHandleHiddenAsync()
-	{
-		if (_js is null)
-			return;
-
-		_expanded = false;
-		await InvokeExpandedChanged(false);
-		await InvokeOnExpanded(Id, false);
-		StateHasChanged();
+		builder.CloseElement(); // div
 	}
 
 	//
@@ -169,28 +133,76 @@ public class BsModal : ComponentFragment, ITagContentHandler, IAsyncDisposable
 		_drf?.Dispose();
 	}
 
+	/// <summary>
+	/// 모달 열기
+	/// </summary>
+	/// <returns></returns>
+	public async Task ExpandAsync()
+	{
+		if (_expanded)
+			return;
+
+		await (await PrepareModule())
+			.InvokeVoidAsync("show", _self);
+	}
+
+	/// <summary>
+	/// 모달 닫기. 이 메소드는 쓰지 말고 BsButton Close="true"로 만들것
+	/// </summary>
+	/// <returns></returns>
+	public async Task CollapseAsync()
+	{
+		if (_expanded is false)
+			return;
+
+		await (await PrepareModule())
+			.InvokeVoidAsync("hide", _self);
+	}
+
+	//
+	[JSInvokable("ivk_mdl_os")]
+	public async Task InternalHandleShownAsync()
+	{
+		_expanded = true;
+		Expanded = true;
+
+		await InvokeExpandedChanged(true);
+		await InvokeOnExpanded(Id, true);
+	}
+
+	//
+	[JSInvokable("ivk_mdl_oh")]
+	public async Task InternalHandleHiddenAsync()
+	{
+		_expanded = false;
+		Expanded = true;
+
+		await InvokeExpandedChanged(false);
+		await InvokeOnExpanded(Id, false);
+	}
+
 	//
 	private Task InvokeOnExpanded(string id, bool expanded) =>
-		OnExpanded.InvokeAsync(new ExpandedEventArgs(id, expanded));
+		OnExpanded.InvokeAsync(new BsExpandedEventArgs(id, expanded));
 	private Task InvokeExpandedChanged(bool e) => ExpandedChanged.InvokeAsync(e);
 
-	#region ITagContentHandler
+	#region IBsContentHandler
 	/// <inheritdoc />
-	void ITagContentHandler.OnClass(TagContentRole role, TagContent content, CssCompose cssc)
+	void IBsContentHandler.OnClass(BsContentRole role, BsContent content, BsCss cssc)
 	{
 		switch (role)
 		{
-			case TagContentRole.Header:
+			case BsContentRole.Header:
 				cssc.Add("modal-header")
-					.Add(content.Class is null, BsDefaults.ModalHeaderClass);
+					.Add(content.Class is null, BsSettings.ModalHeaderClass);
 				break;
-			case TagContentRole.Footer:
+			case BsContentRole.Footer:
 				cssc.Add("modal-footer")
-					.Add(content.Class is null, BsDefaults.ModalFooterClass);
+					.Add(content.Class is null, BsSettings.ModalFooterClass);
 				break;
-			case TagContentRole.Content:
+			case BsContentRole.Content:
 				cssc.Add("modal-body")
-					.Add(content.Class is null, BsDefaults.ModalContentClass);
+					.Add(content.Class is null, BsSettings.ModalContentClass);
 				break;
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(role), role);
@@ -199,15 +211,15 @@ public class BsModal : ComponentFragment, ITagContentHandler, IAsyncDisposable
 	}
 
 	/// <inheritdoc />
-	void ITagContentHandler.OnRender(TagContentRole role, TagContent content, RenderTreeBuilder builder)
+	void IBsContentHandler.OnRender(BsContentRole role, BsContent content, RenderTreeBuilder builder)
 	{
 		switch (role)
 		{
-			case TagContentRole.Header:
+			case BsContentRole.Header:
 				InternalRenderTreeHeader(content, builder);
 				break;
-			case TagContentRole.Footer:
-			case TagContentRole.Content:
+			case BsContentRole.Footer:
+			case BsContentRole.Content:
 				ComponentRenderer.TagFragment(content, builder);
 				break;
 			default:
@@ -217,7 +229,7 @@ public class BsModal : ComponentFragment, ITagContentHandler, IAsyncDisposable
 	}
 
 	//
-	private void InternalRenderTreeHeader(TagContent content, RenderTreeBuilder builder)
+	private void InternalRenderTreeHeader(BsContent content, RenderTreeBuilder builder)
 	{
 		/*
 		 * <div class="modal-header">

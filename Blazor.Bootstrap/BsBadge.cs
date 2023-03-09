@@ -1,9 +1,7 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-/// <summary>
-/// 뺏지
-/// </summary>
-public class BsBadge : ComponentFragment
+/// <summary> 뺏지 </summary>
+public class BsBadge : BsComponent
 {
 	/// <summary>글자색</summary>
 	[Parameter] public BsVariant? Fore { get; set; }
@@ -13,18 +11,18 @@ public class BsBadge : ComponentFragment
 	[Parameter] public BsBadgeType? Type { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("badge")
-			.Add((Fore ?? BsDefaults.BadgeFore).ToCss("text"))
-			.Add((Back ?? BsDefaults.BadgeBack).ToCss("bg"))
-			.Add((Type ?? BsDefaults.BadgeType) switch
+			.Add((Fore ?? BsSettings.BadgeFore).ToCss("text"))
+			.Add((Back ?? BsSettings.BadgeBack).ToCss("bg"))
+			.Add((Type ?? BsSettings.BadgeType) switch
 			{
 				BsBadgeType.Pill => "rounded-pill",
 				BsBadgeType.Circle => "rounded-circle",
 				_ => null
 			})
-			.Add(BsDefaults.BadgeAdditionalCss);
+			.Add(BsSettings.BadgeAdditionalCss);
 	}
 
 	//

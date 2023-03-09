@@ -5,7 +5,7 @@
 ///   <para>드랍다운의 펼치기/닫기 버튼으로 쓰이며, NavBar 버튼으로도 쓸 수 있음</para>
 /// </summary>
 /// <seealso cref="DropDown" />
-public class BsToggle : ComponentFragment, IAsyncDisposable
+public class BsToggle : BsComponent, IAsyncDisposable
 {
 	// 우선순위
 	//	1. 드랍다운			=> nav-link dropdown-toggle
@@ -54,7 +54,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 	[Parameter] public bool Split { get; set; } // 당분간 안만듬
 
 	/// <summary>확장되면 처리하는 이벤트</summary>
-	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	[Parameter] public EventCallback<BsExpandedEventArgs> OnExpanded { get; set; }
 	// OnClick 구현해야하나?
 	//[Parameter] public EventCallback<MouseEventArgs> OnClick { get; set; }
 
@@ -63,9 +63,9 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 	[Inject] private ILogger<BsToggle> Logger { get; set; } = default!;
 
 	//
-	private BsVariant ActualVariant => Variant ?? BsDefaults.ButtonVariant;
-	private BsSize ActualSize => Size ?? BsDefaults.ButtonSize;
-	private bool ActualOutline => Outline ?? BsDefaults.ButtonOutline;
+	private BsVariant ActualVariant => Variant ?? BsSettings.ButtonVariant;
+	private BsSize ActualSize => Size ?? BsSettings.ButtonSize;
+	private bool ActualOutline => Outline ?? BsSettings.ButtonOutline;
 
 	//
 	private ElementReference _self;
@@ -125,14 +125,14 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 
 		if (Split && Type is not BsToggleType.Button)
 		{
-			Logger.LogError(Settings.UseLocaleMesg
+			Logger.LogError(BsSettings.UseLocaleMesg
 				? "{name}: 스플릿 모드를 쓰려거든 레이아웃을 반드시 버튼으로 하세요."
 				: "{name}: Layout must be button when split mode.",
 				nameof(Split));
 			Type = BsToggleType.Button;
 		}
 
-		Logger.LogTrace(Settings.UseLocaleMesg
+		Logger.LogTrace(BsSettings.UseLocaleMesg
 			? "{name}: 성공적으로 초기화 했어요."
 			: "{name}: initialized successfully.",
 			nameof(BsToggle));
@@ -143,7 +143,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 	{
 		if (Split)
 		{
-			Logger.LogCritical(Settings.UseLocaleMesg
+			Logger.LogCritical(BsSettings.UseLocaleMesg
 					? "{name}: 오프캔바스와 분리는 함께 쑬 수 없어요."
 					: "{name}: Invalid usage in OffCanvas mode.",
 				nameof(Split));
@@ -156,7 +156,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 
 			if (Type is not BsToggleType.Button) // 버튼만 됨
 			{
-				Logger.LogCritical(Settings.UseLocaleMesg
+				Logger.LogCritical(BsSettings.UseLocaleMesg
 						? "{name}: 나브바 안에서 쓸 때는 반드시 {type} 이어야 해요."
 						: "{name}: Must be {type} when contained within NavBar.",
 					nameof(Type), nameof(BsToggleType.Button));
@@ -168,7 +168,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 	}
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		if (NavBar is not null)
 		{
@@ -220,8 +220,15 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 			return;
 
 		_drf ??= DotNetObjectReference.Create(this);
-		await (await PrepareModule())
-			.InvokeVoidAsync("initialize", _self, _drf);
+		try
+		{
+			await (await PrepareModule())
+				.InvokeVoidAsync("initialize", _self, _drf);
+		}
+		catch (JSDisconnectedException)
+		{
+			_js = null;
+		}
 	}
 
 	//
@@ -339,7 +346,7 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 		if (DropDown is not null)
 			await DropDown.InternalExpandedChangedAsync(true);
 
-		await InvokeOnExpandedAsync(new ExpandedEventArgs(Id, true));
+		await InvokeOnExpandedAsync(new BsExpandedEventArgs(Id, true));
 	}
 
 	//
@@ -349,9 +356,9 @@ public class BsToggle : ComponentFragment, IAsyncDisposable
 		if (DropDown is not null)
 			await DropDown.InternalExpandedChangedAsync(false);
 
-		await InvokeOnExpandedAsync(new ExpandedEventArgs(Id, false));
+		await InvokeOnExpandedAsync(new BsExpandedEventArgs(Id, false));
 	}
 
 	//
-	private Task InvokeOnExpandedAsync(ExpandedEventArgs e) => OnExpanded.InvokeAsync(e);
+	private Task InvokeOnExpandedAsync(BsExpandedEventArgs e) => OnExpanded.InvokeAsync(e);
 }
