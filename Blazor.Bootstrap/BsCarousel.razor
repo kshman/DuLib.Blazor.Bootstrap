@@ -1,5 +1,5 @@
 ﻿@namespace Du.Blazor.Bootstrap
-@inherits ComponentContainer<TagSubset>
+@inherits BsSubsetContainer
 @inject IJSRuntime JSRuntime
 
 <CascadingValue Value="this" IsFixed="true">
@@ -32,7 +32,7 @@
 		@foreach (var item in Items)
 		{
 			var selected = item == SelectedItem;
-			<div class="@CssCompose.Join("carousel-item", selected.IfTrue("active"), item.CssClass, item.DisplayClass)"
+			<div class="@BsCss.Join("carousel-item", selected.IfTrue("active"), item.CssClass, item.DisplayClass)"
 				 id="@item.Id"
 				 @attributes="item.UserAttrs">
 				@item.Text
@@ -72,9 +72,9 @@
 	[Parameter] public BsCarouselPlay Play { get; set; }
 
 	/// <summary>이벤트: 슬라이드가 시작될 때</summary>
-	[Parameter] public EventCallback<SlideEventArgs> OnBeginSlide { get; set; }
+	[Parameter] public EventCallback<BsSlideEventArgs> OnBeginSlide { get; set; }
 	/// <summary>이벤트: 슬라이드가 끝날 때</summary>
-	[Parameter] public EventCallback<SlideEventArgs> OnEndSlide { get; set; }
+	[Parameter] public EventCallback<BsSlideEventArgs> OnEndSlide { get; set; }
 
 	//
 	private ElementReference _self;
@@ -82,7 +82,7 @@
 	private DotNetObjectReference<BsCarousel>? _drf;
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("carousel")
 			.Add("slide")
@@ -160,17 +160,17 @@
 	[JSInvokable("ivk_cars_bs")]
 	public Task InternalHandleBeginSlideAsync(int from, int to, string isLeft) =>
 		_js is not null 
-			? InvokeOnBeginSlideAsync(new SlideEventArgs(from, to)) 
+			? InvokeOnBeginSlideAsync(new BsSlideEventArgs(from, to)) 
 			: Task.CompletedTask;
 
 	// 반드시 public
 	[JSInvokable("ivk_cars_es")]
 	public Task InternalHandleEndSlideAsync(int from, int to, string isLeft) =>
 		_js is not null 
-			? InvokeOnEndSlideAsync(new SlideEventArgs(from, to)) 
+			? InvokeOnEndSlideAsync(new BsSlideEventArgs(from, to)) 
 			: Task.CompletedTask;
 
 	//
-	protected virtual Task InvokeOnBeginSlideAsync(SlideEventArgs e) => OnBeginSlide.InvokeAsync(e);
-	protected virtual Task InvokeOnEndSlideAsync(SlideEventArgs e) => OnEndSlide.InvokeAsync(e);
+	protected virtual Task InvokeOnBeginSlideAsync(BsSlideEventArgs e) => OnBeginSlide.InvokeAsync(e);
+	protected virtual Task InvokeOnEndSlideAsync(BsSlideEventArgs e) => OnEndSlide.InvokeAsync(e);
 }

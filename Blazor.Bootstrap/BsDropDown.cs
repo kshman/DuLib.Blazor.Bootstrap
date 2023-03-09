@@ -24,7 +24,7 @@
 /// </code>
 /// </para>
 /// </remarks>
-public class BsDropDown : ComponentFragment
+public class BsDropDown : BsComponent
 {
 	/// <summary>나브바. 캐스케이딩되면 아래 딸려오는 컴포넌트가 나브바를 지원하게 동작한다</summary>
 	[CascadingParameter] public BsNavBar? NavBar { get; set; }
@@ -38,7 +38,7 @@ public class BsDropDown : ComponentFragment
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(Direction.ToCss())
 			.Add(NavBar is null, "btn-group");

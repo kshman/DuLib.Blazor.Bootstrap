@@ -42,6 +42,9 @@
 .pos-sticky {
   position: sticky; }
 
+.cursor-pointer {
+  cursor: pointer; }
+
 .block-flat {
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);

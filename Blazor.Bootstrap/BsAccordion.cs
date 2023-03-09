@@ -1,17 +1,17 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>아코디언</summary>
-public class BsAccordion : ComponentContainer<TagSubset>
+public class BsAccordion : BsSubsetContainer
 {
-		/// <summary>모서리 없는 모양</summary>
+	/// <summary>모서리 없는 모양</summary>
 	[Parameter] public bool Flush { get; set; }
 	/// <summary>언제나 열려있음</summary>
 	[Parameter] public bool AlwaysOpen { get; set; }
 
 	/// <summary>열리려고 할 때 이벤트</summary>
-	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanding { get; set; }
+	[Parameter] public EventCallback<BsExpandedEventArgs> OnExpanding { get; set; }
 	/// <summary>열리고 나서 이벤트</summary>
-	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	[Parameter] public EventCallback<BsExpandedEventArgs> OnExpanded { get; set; }
 
 	//
 	protected override bool SelectFirst => false; // 처음 아이템이 열리지 않게 함
@@ -21,7 +21,7 @@ public class BsAccordion : ComponentContainer<TagSubset>
 	//private int _transition_delay = 50;
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("accordion")
 			.Add(Flush, "accordion-flush");
@@ -36,8 +36,7 @@ public class BsAccordion : ComponentContainer<TagSubset>
 	}
 
 	//
-	protected override bool ShouldRender() =>
-		!_now_transition;
+	protected override bool ShouldRender() => !_now_transition;
 
 	/// <inheritdoc />
 	protected override void BuildRenderTree(RenderTreeBuilder builder)
@@ -103,9 +102,9 @@ public class BsAccordion : ComponentContainer<TagSubset>
 
 			builder.OpenElement(25, "button");
 			builder.AddAttribute(26, "type", "button");
-			builder.AddAttribute(27, "class", CssCompose.Join(
-				"accordion-button", 
-				expanded.IfFalse("collapsed"), 
+			builder.AddAttribute(27, "class", BsCss.Join(
+				"accordion-button",
+				expanded.IfFalse("collapsed"),
 				item.DisplayClass));
 			builder.AddAttribute(28, "data-bs-toggle", "collapse");
 			builder.AddAttribute(29, "data-bs-target", '#' + item.Id);
@@ -118,15 +117,15 @@ public class BsAccordion : ComponentContainer<TagSubset>
 			builder.CloseElement(); // h2
 
 			builder.OpenComponent<BsCollapse>(40);
-			builder.AddAttribute(41, "Class", CssCompose.Join("accordion-collapse", expanded.IfTrue("show")));
+			builder.AddAttribute(41, "Class", BsCss.Join("accordion-collapse", expanded.IfTrue("show")));
 			builder.AddAttribute(42, "ParentId", AlwaysOpen ? null : '#' + Id);
 			builder.AddAttribute(43, "Id", item.Id);
-			builder.AddAttribute(44, "OnExpanding", new EventCallback<ExpandedEventArgs>(this, HandleOnExpandingAsync));
-			builder.AddAttribute(45, "OnExpanded", new EventCallback<ExpandedEventArgs>(this, HandleOnExpandedAsync));
+			builder.AddAttribute(44, "OnExpanding", new EventCallback<BsExpandedEventArgs>(this, HandleOnExpandingAsync));
+			builder.AddAttribute(45, "OnExpanded", new EventCallback<BsExpandedEventArgs>(this, HandleOnExpandedAsync));
 			builder.AddAttribute(46, "ChildContent", (RenderFragment)((b) =>
 			{
 				b.OpenElement(47, "div");
-				b.AddAttribute(48, "class", CssCompose.Join("accordion-body", item.CssClass));
+				b.AddAttribute(48, "class", BsCss.Join("accordion-body", item.CssClass));
 				b.AddContent(49, item.Content ?? item.ChildContent);
 				b.CloseElement();
 			}));
@@ -140,7 +139,7 @@ public class BsAccordion : ComponentContainer<TagSubset>
 	}
 
 	//
-	protected override async Task OnItemAddedAsync(TagSubset item)
+	protected override async Task OnItemAddedAsync(BsSubset item)
 	{
 		item.ExtendObject = new BsAcnExtend();
 
@@ -151,17 +150,15 @@ public class BsAccordion : ComponentContainer<TagSubset>
 	/// <summary>엽니다</summary>
 	/// <param name="id"></param>
 	/// <returns></returns>
-	public Task ExpandAsync(string id) =>
-		InternalExpandAsync(GetItem(id));
+	public Task ExpandAsync(string id) => InternalExpandAsync(GetItem(id));
 
 	/// <summary>닫아요</summary>
 	/// <param name="id"></param>
 	/// <returns></returns>
-	public Task CollapseAsync(string id) =>
-		InternalCollapseAsync(GetItem(id));
+	public Task CollapseAsync(string id) => InternalCollapseAsync(GetItem(id));
 
 	// 열려라
-	private Task InternalExpandAsync(TagSubset? item)
+	private Task InternalExpandAsync(BsSubset? item)
 	{
 		var collapse = item?.GetAcnCollapse();
 
@@ -173,7 +170,7 @@ public class BsAccordion : ComponentContainer<TagSubset>
 	}
 
 	// 닫아라
-	private Task InternalCollapseAsync(TagSubset? item)
+	private Task InternalCollapseAsync(BsSubset? item)
 	{
 		var collapse = item?.GetAcnCollapse();
 
@@ -185,7 +182,7 @@ public class BsAccordion : ComponentContainer<TagSubset>
 	}
 
 	// 열릴때
-	private async Task HandleOnExpandingAsync(ExpandedEventArgs e)
+	private async Task HandleOnExpandingAsync(BsExpandedEventArgs e)
 	{
 		//await Task.Delay(_transition_delay);
 		_now_transition = true;
@@ -194,11 +191,11 @@ public class BsAccordion : ComponentContainer<TagSubset>
 	}
 
 	// 열린다음
-	private async Task HandleOnExpandedAsync(ExpandedEventArgs e)
+	private async Task HandleOnExpandedAsync(BsExpandedEventArgs e)
 	{
 		//await Task.Delay(_transition_delay);
 		_now_transition = false;
-		
+
 		var item = GetItem(e.Id);
 		if (item?.ExtendObject is null)
 		{
@@ -220,10 +217,9 @@ public class BsAccordion : ComponentContainer<TagSubset>
 	}
 
 	//
-	private Task InvokeOnExpanding(ExpandedEventArgs e) => OnExpanding.InvokeAsync(e);
-	private Task InvokeOnExpanded(ExpandedEventArgs e) => OnExpanded.InvokeAsync(e);
+	private Task InvokeOnExpanding(BsExpandedEventArgs e) => OnExpanding.InvokeAsync(e);
+	private Task InvokeOnExpanded(BsExpandedEventArgs e) => OnExpanded.InvokeAsync(e);
 }
-
 
 //
 internal class BsAcnExtend
@@ -232,19 +228,16 @@ internal class BsAcnExtend
 	internal BsCollapse? Collapse { get; set; }
 }
 
-
 //
 internal static class BsAcnSupp
 {
-	internal static bool GetAcnExpanded(this TagSubset item) =>
-		(item.ExtendObject as BsAcnExtend)!.Expanded;
+	internal static bool GetAcnExpanded(this BsSubset item) => (item.ExtendObject as BsAcnExtend)!.Expanded;
 
-	internal static void SetAcnExpanded(this TagSubset item, bool value) =>
+	internal static void SetAcnExpanded(this BsSubset item, bool value) =>
 		(item.ExtendObject as BsAcnExtend)!.Expanded = value;
 
-	internal static BsCollapse? GetAcnCollapse(this TagSubset item) =>
-		(item.ExtendObject as BsAcnExtend)!.Collapse;
+	internal static BsCollapse? GetAcnCollapse(this BsSubset item) => (item.ExtendObject as BsAcnExtend)!.Collapse;
 
-	internal static void SetAcnCollapse(this TagSubset item, BsCollapse collapse) =>
+	internal static void SetAcnCollapse(this BsSubset item, BsCollapse collapse) =>
 		(item.ExtendObject as BsAcnExtend)!.Collapse = collapse;
 }

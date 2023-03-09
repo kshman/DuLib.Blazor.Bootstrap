@@ -1,7 +1,7 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>아이콘을 표시합니다. oi/bi/fa 같은데 쓸 수 있음</summary>
-public class BsIcon : ComponentObject
+public class BsIcon : BsComponent
 {
 	/// <summary>아이콘 이름</summary>
 	[Parameter] public string Name { get; set; } = string.Empty;
@@ -9,7 +9,7 @@ public class BsIcon : ComponentObject
 	[Parameter] public BsVariant? Color { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		if (Name.Length > 3)
 		{

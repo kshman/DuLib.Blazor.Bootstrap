@@ -1,7 +1,7 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
 /// <summary>카드 타이틀</summary>
-public class BsCardTitle : ComponentFragment
+public class BsCardTitle : BsComponent
 {
 	/// <summary>타이틀 주 이름</summary>
 	[Parameter] public RenderFragment? MainText { get; set; }
@@ -28,13 +28,13 @@ public class BsCardTitle : ComponentFragment
 	{
 		if (MainText is null)
 			InternalBuildRender(builder, ChildContent, 0, MainTag,
-				CssCompose.Join("card-title", Class, MainClass), UserAttrs);
+				BsCss.Join("card-title", Class, MainClass), UserAttrs);
 		else
 		{
 			InternalBuildRender(builder, MainText, 0, MainTag,
-				CssCompose.Join("card-title", Class, MainClass), UserAttrs);
+				BsCss.Join("card-title", Class, MainClass), UserAttrs);
 			InternalBuildRender(builder, SubText, 10, SubTag,
-				CssCompose.Join("card-subtitle", SubClass), null);
+				BsCss.Join("card-subtitle", SubClass), null);
 		}
 	}
 

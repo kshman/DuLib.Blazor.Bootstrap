@@ -4,24 +4,53 @@
 public class BsButton : NuloBase
 {
 	/// <summary>리스트 에이전시, 이게 있으면 리스트 메뉴용으로 처리함</summary>
-	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
+	[CascadingParameter] public IBsListAgent? ListAgency { get; set; }
+	[CascadingParameter] public IBsContentHandler? ContentHandler { get; set; }
 
 	/// <summary>URL 링크 지정.</summary>
 	[Parameter] public string? Link { get; set; }
 	/// <summary>타겟 지정.</summary>
 	[Parameter] public string? Target { get; set; }
+	/// <summary>링크로만 사용.</summary>
+	[Parameter] public bool LinkOnly { get; set; }
+	/// <summary>닫기 기능.</summary>
+	[Parameter] public bool Close { get; set; }
 
 	/// <summary>리스트 에이전시가 있을 때 리스트(li)의 CSS클래스</summary>
 	[Parameter] public string? WrapClass { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	private bool _is_for_close;
+	private string? _parent_id;
+
+	/// <inheritdoc />
+	protected override void OnInitialized()
 	{
-		if (ListAgency is null)
+		if (Close && ContentHandler is BsComponent parent)
+		{
+			_is_for_close = true;
+			_parent_id = '#' + parent.Id;
+		}
+
+		if (Link.IsHave())
+			LinkOnly = true;
+	}
+
+	//
+	protected override void OnComponentClass(BsCss cssc)
+	{
+		if (ListAgency is not null)
+			cssc.Add(ListAgency.Class);
+		else if (LinkOnly)
+			cssc.Add("cursor-pointer");
+		else
+		{
 			cssc.Add("btn")
 				.Add(ActualVariant.ToButtonCss(ActualOutline));
-		else
-			cssc.Add(ListAgency.Class);
+		}
+
+		if (_is_for_close && Text.IsWhiteSpace() && ChildContent is null)
+			cssc.Add("btn-close");
 
 		cssc.Add(ActualSize.ToCss("btn"));
 	}
@@ -74,10 +103,18 @@ public class BsButton : NuloBase
 		}
 
 		builder.AddAttribute(8, "id", Id);
-		builder.AddMultipleAttributes(9, UserAttrs);
+
+		if (_is_for_close)
+		{
+			builder.AddAttribute(9, "data-bs-target", _parent_id);
+			builder.AddAttribute(10, "data-bs-dismiss", GetCloseTarget());
+			builder.AddAttribute(11, "aria-label", "Close");
+		}
+
+		builder.AddMultipleAttributes(12, UserAttrs);
 		if (Text.IsHave())
-			builder.AddContent(10, Text);
-		builder.AddContent(11, ChildContent);
+			builder.AddContent(13, Text);
+		builder.AddContent(14, ChildContent);
 		builder.CloseElement(); // a
 
 		builder.CloseElement(); // li
@@ -102,15 +139,16 @@ public class BsButton : NuloBase
 		 *     </button>
 		 *     }
 		 */
-		var link = Link.IsHave();
-
-		builder.OpenElement(0, link ? "a" : "button"); // a or button
+		builder.OpenElement(0, LinkOnly ? "a" : "button"); // a or button
 		builder.AddAttribute(1, "class", CssClass);
 
-		if (link)
+		if (LinkOnly)
 		{
-			builder.AddAttribute(2, "href", Link);
-			builder.AddAttribute(3, "target", Target);
+			if (Link.IsHave())
+			{
+				builder.AddAttribute(2, "href", Link);
+				builder.AddAttribute(3, "target", Target);
+			}
 		}
 		else
 		{
@@ -120,18 +158,34 @@ public class BsButton : NuloBase
 		}
 
 		builder.AddAttribute(7, "id", Id);
-		builder.AddMultipleAttributes(8, UserAttrs);
+
+		if (_is_for_close)
+		{
+			builder.AddAttribute(8, "data-bs-target", _parent_id);
+			builder.AddAttribute(9, "data-bs-dismiss", GetCloseTarget());
+			builder.AddAttribute(10, "aria-label", "Close");
+		}
+
+		builder.AddMultipleAttributes(11, UserAttrs);
 		if (Text.IsHave())
-			builder.AddContent(9, Text);
-		builder.AddContent(10, ChildContent);
+			builder.AddContent(12, Text);
+		builder.AddContent(13, ChildContent);
 		builder.CloseElement(); // a or button
 	}
+
+	//
+	private string? GetCloseTarget() => ContentHandler switch
+	{
+		BsOffCanvas => "offcanvas",
+		BsModal => "modal",
+		_ => null,
+	};
 }
 
 
 /// <summary>버튼 베이스</summary>
-/// <seealso cref="ComponentFragment" />
-public abstract class NuloBase : ComponentFragment
+/// <seealso cref="BsComponent" />
+public abstract class NuloBase : BsComponent
 {
 	/// <summary>에디트 컨텍스트</summary>
 	[CascadingParameter] public EditContext? EditContext { get; set; }
@@ -155,10 +209,10 @@ public abstract class NuloBase : ComponentFragment
 	[Parameter] public EventCallback<MouseEventArgs> OnInvalidClick { get; set; }
 
 	//
-	protected BsButtonType Actual => Type ?? BsDefaults.ButtonType;
-	protected BsVariant ActualVariant => Variant ?? BsDefaults.ButtonVariant;
-	protected BsSize ActualSize => Size ?? BsDefaults.ButtonSize;
-	protected bool ActualOutline => Outline ?? BsDefaults.ButtonOutline;
+	protected BsButtonType Actual => Type ?? BsSettings.ButtonType;
+	protected BsVariant ActualVariant => Variant ?? BsSettings.ButtonVariant;
+	protected BsSize ActualSize => Size ?? BsSettings.ButtonSize;
+	protected bool ActualOutline => Outline ?? BsSettings.ButtonOutline;
 
 	//
 	private bool _handle_click;

@@ -3,7 +3,7 @@
 /// <summary>
 /// 오프캔바스
 /// </summary>
-public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandler
+public class BsOffCanvas : BsComponent, IAsyncDisposable, IBsContentHandler
 {
 	/// <summary>윗단에 놓이는 나브바</summary>
 	[CascadingParameter] public BsNavBar? NavBar { get; set; }
@@ -25,7 +25,7 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 	[Parameter] public bool Expanded { get; set; }
 
 	/// <summary>열림 이벤트</summary>
-	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	[Parameter] public EventCallback<BsExpandedEventArgs> OnExpanded { get; set; }
 	/// <summary>열림 상태 변경 이벤트</summary>
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
@@ -33,11 +33,11 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 	[Inject] private IJSRuntime JSRuntime { get; set; } = default!;
 
 	//
-	private bool ActualCloseButton => CloseButton ?? BsDefaults.OffCanvasCloseButton;
-	private bool ActualScrollable => Scrollable ?? BsDefaults.OffCanvasScrollable;
-	private BsBackDrop? ActualBackDrop => BackDrop ?? BsDefaults.OffCanvasBackDrop;
-	private BsExpand? ActualResponsive => Responsive ?? BsDefaults.OffCanvasResponsive;
-	private BsPlacement ActualPlacement => Placement ?? BsDefaults.OffCanvasPlacement;
+	private bool ActualCloseButton => CloseButton ?? BsSettings.OffCanvasCloseButton;
+	private bool ActualScrollable => Scrollable ?? BsSettings.OffCanvasScrollable;
+	private BsBackDrop? ActualBackDrop => BackDrop ?? BsSettings.OffCanvasBackDrop;
+	private BsExpand? ActualResponsive => Responsive ?? BsSettings.OffCanvasResponsive;
+	private BsPlacement ActualPlacement => Placement ?? BsSettings.OffCanvasPlacement;
 
 	//
 	private ElementReference _self;
@@ -61,13 +61,13 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 	}
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc
 			.Add(ActualResponsive is null ? "offcanvas" : ((BsExpand)ActualResponsive).ToCss("offcanvas"))
 			.Add(ActualPlacement.ToOffCanvasCss())
 			.Add(NavBar?.Type == BsNavBarType.OffCanvas, "flex-grow-1")
-			.Add(Class is null, BsDefaults.OffCanvasClass)
+			.Add(Class is null, BsSettings.OffCanvasClass)
 			.Register(() => Expanded.IfTrue("show"));
 	}
 
@@ -180,7 +180,7 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 	public async Task InternalHandleShown()
 	{
 		await InvokeExpandedChanged(true);
-		await InvokeOnExpanded(new ExpandedEventArgs(Id, true));
+		await InvokeOnExpanded(new BsExpandedEventArgs(Id, true));
 	}
 
 	//
@@ -189,31 +189,31 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 	{
 		Expanded = false;
 		await InvokeExpandedChanged(false);
-		await InvokeOnExpanded(new ExpandedEventArgs(Id, false));
+		await InvokeOnExpanded(new BsExpandedEventArgs(Id, false));
 		StateHasChanged();
 	}
 
 	//
-	private Task InvokeOnExpanded(ExpandedEventArgs e) => OnExpanded.InvokeAsync(e);
+	private Task InvokeOnExpanded(BsExpandedEventArgs e) => OnExpanded.InvokeAsync(e);
 	private Task InvokeExpandedChanged(bool e) => ExpandedChanged.InvokeAsync(e);
 
-	#region ITagContentHandler
+	#region IBsContentHandler
 	//
-	void ITagContentHandler.OnClass(TagContentRole role, TagContent content, CssCompose cssc)
+	void IBsContentHandler.OnClass(BsContentRole role, BsContent content, BsCss cssc)
 	{
 		switch (role)
 		{
-			case TagContentRole.Header:
+			case BsContentRole.Header:
 				cssc.Add("offcanvas-header")
-					.Add(content.Class is null, BsDefaults.OffCanvasHeaderClass);
+					.Add(content.Class is null, BsSettings.OffCanvasHeaderClass);
 				break;
-			case TagContentRole.Footer:
+			case BsContentRole.Footer:
 				cssc.Add("offcanvas-footer")
-					.Add(content.Class is null, BsDefaults.OffCanvasFooterClass);
+					.Add(content.Class is null, BsSettings.OffCanvasFooterClass);
 				break;
-			case TagContentRole.Content:
+			case BsContentRole.Content:
 				cssc.Add("offcanvas-body")
-					.Add(content.Class is null, BsDefaults.OffCanvasContentClass);
+					.Add(content.Class is null, BsSettings.OffCanvasContentClass);
 				break;
 			default:
 				ThrowIf.ArgumentOutOfRange(nameof(role), role);
@@ -222,15 +222,15 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 	}
 
 	//
-	void ITagContentHandler.OnRender(TagContentRole role, TagContent content, RenderTreeBuilder builder)
+	void IBsContentHandler.OnRender(BsContentRole role, BsContent content, RenderTreeBuilder builder)
 	{
 		switch (role)
 		{
-			case TagContentRole.Header:
+			case BsContentRole.Header:
 				InternalRenderTreeHeader(content, builder);
 				break;
-			case TagContentRole.Footer:
-			case TagContentRole.Content:
+			case BsContentRole.Footer:
+			case BsContentRole.Content:
 				ComponentRenderer.TagFragment(content, builder);
 				break;
 			default:
@@ -239,7 +239,7 @@ public class BsOffCanvas : ComponentFragment, IAsyncDisposable, ITagContentHandl
 		}
 	}
 
-	private void InternalRenderTreeHeader(TagContent content, RenderTreeBuilder builder)
+	private void InternalRenderTreeHeader(BsContent content, RenderTreeBuilder builder)
 	{
 		builder.OpenElement(0, "div");
 		builder.AddAttribute(1, "class", content.CssClass);

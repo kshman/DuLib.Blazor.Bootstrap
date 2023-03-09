@@ -3,10 +3,10 @@
 namespace Du.Blazor.Bootstrap;
 
 /// <summary>나브 링크 제공.</summary>
-public class BsNavLink : ComponentFragment, IDisposable
+public class BsNavLink : BsComponent, IDisposable
 {
 	/// <summary>리스트 에이전시. 이게 캐스케이딩되어 있으면 리스트(li)를 추가한다</summary>
-	[CascadingParameter] public ITagListAgent? ListAgency { get; set; }
+	[CascadingParameter] public IBsListAgent? ListAgency { get; set; }
 	/// <summary>나브바. 이게 캐스케이딩되면 나브바에 맞춰 컴포넌트를 설정</summary>
 	[CascadingParameter] public BsNavBar? NavBar { get; set; }
 
@@ -38,7 +38,7 @@ public class BsNavLink : ComponentFragment, IDisposable
 	}
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(ListAgency?.Class ?? "nav-link")
 			.Register(() => _is_active ? ActiveClass : null);

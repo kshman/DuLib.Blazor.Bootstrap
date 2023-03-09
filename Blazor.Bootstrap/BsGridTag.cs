@@ -1,25 +1,28 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-public abstract class BsGridItem : ComponentFragment
+/// <summary>그리드용 태그</summary>
+public abstract class BsGridTag : BsComponent
 {
 	[Parameter] public BsVariant? Fore { get; set; }
 	[Parameter] public BsVariant? Back { get; set; }
 	[Parameter] public BsItemAlignment? Align { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(Fore?.ToCss("text"))
 			.Add(Back?.ToCss("bg"));
 	}
 }
 
-public class BsContainer : ComponentFragment
+
+/// <summary>컨테이너. 보통 그리드용</summary>
+public class BsContainer : BsComponent
 {
 	[Parameter] public BsExpand? Container { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(Container is null ? "container" : Container.Value.ToCss("container"));
 	}
@@ -29,13 +32,13 @@ public class BsContainer : ComponentFragment
 		ComponentRenderer.TagFragment(this, builder);
 }
 
-/// <summary>Grid Row</summary>
-public class BsRow : BsGridItem
+/// <summary>그리드 줄</summary>
+public class BsRow : BsGridTag
 {
 	[Parameter] public BsJustify? Justify { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("row")
 			.Add(Align?.ToCss("align-items"))
@@ -46,7 +49,8 @@ public class BsRow : BsGridItem
 	protected override void BuildRenderTree(RenderTreeBuilder builder) => ComponentRenderer.TagFragment(this, builder);
 }
 
-public abstract class BsColBase : BsGridItem
+/// <summary>그리드 열</summary>
+public abstract class BsColBase : BsGridTag
 {
 	[Parameter] public string? Sm { get; set; }
 	[Parameter] public string? Md { get; set; }
@@ -56,7 +60,7 @@ public abstract class BsColBase : BsGridItem
 	[Parameter] public string? Order { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(SizeToString("sm", Sm))
 			.Add(SizeToString("md", Md))
@@ -81,20 +85,21 @@ public abstract class BsColBase : BsGridItem
 		order is null ? null : $"order-{order}";
 }
 
-/// <summary>Grid Column</summary>
+/// <inheritdoc />
 public class BsCol : BsColBase
 {
 	[Parameter] public string? Count { get; set; }
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
-		cssc.Add(Count is not null ? Count.Length == 0 ? "col" : $"col-{Count}" : null);
+		cssc.Add(Count is null ? "col" : $"col-{Count}");
 
 		base.OnComponentClass(cssc);
 	}
 }
 
+/// <inheritdoc />
 public class BsColAuto : BsColBase
 {
 	private readonly string _col;
@@ -106,7 +111,7 @@ public class BsColAuto : BsColBase
 	protected BsColAuto(int col) => _col = col.ToString();
 
 	/// <inheritdoc />
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("col-" + _col);
 

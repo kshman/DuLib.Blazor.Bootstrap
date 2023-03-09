@@ -20,6 +20,9 @@ public enum BsExpand
 	/// <summary>나브용 Fluid, 그외에는 Medium으로 대체</summary>
 	NavFluid,
 
+	/// <summary>모달용, 언제나 풀스크린</summary>
+	ModalFullScreen,
+
 	/// <summary>기본값을 써야할 때. 예) 리스트 그룹</summary>
 	Default,
 }

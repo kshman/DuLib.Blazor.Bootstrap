@@ -1,5 +1,5 @@
 ﻿@namespace Du.Blazor.Bootstrap
-@inherits ComponentContainer<TagSubset>
+@inherits BsSubsetContainer
 
 <CascadingValue Value="this" IsFixed="true">
 	@ChildContent
@@ -13,7 +13,7 @@
 			<button 
 				type="button" 
 				role="tab"
-				class="@CssCompose.Join("hpvt-item", current.IfTrue("hpvt-sel"), item.CssClass)"
+				class="@BsCss.Join("hpvt-item", current.IfTrue("hpvt-sel"), item.CssClass)"
 				tabindex="@(current ? 0 : -1)"
 				aria-selected="@current"
 				id="@Id" @attributes="UserAttrs"
@@ -26,7 +26,7 @@
 
 	@if (PivotOnly is false && SelectedItem is not null)
 	{
-		<div role="tabpanel" class="@CssCompose.Join("hpvt-ctx", SelectedItem.CssClass)" aria-hidden="false" aria-labelledby="@Id">
+		<div role="tabpanel" class="@BsCss.Join("hpvt-ctx", SelectedItem.CssClass)" aria-hidden="false" aria-labelledby="@Id">
 			@(SelectedItem.Content ?? SelectedItem.ChildContent)
 		</div>
 	}
@@ -45,7 +45,7 @@
 	[Parameter] public bool PivotOnly { get; set; } //= false;
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add("hpvt")
 			.Add(Placement switch
@@ -73,6 +73,6 @@
 	}
 
 	//
-	protected Task HandleOnClickAsync(TagSubset item) =>
+	private Task HandleOnClickAsync(BsSubset item) =>
 		SelectItemAsync(item);
 }

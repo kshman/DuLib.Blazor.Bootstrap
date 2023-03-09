@@ -142,10 +142,10 @@ namespace Du.Blazor.Bootstrap.Supp
 			return ds is null ? lead : $"{lead}-{ds}";
 		}
 
-		internal static string? ToCss(this BsExpand expand, string lead, string tail)
+		internal static string? ToCss(this BsExpand expand, string lead, string tail, bool failRetLead = false)
 		{
 			var ds = expand.ToCssName();
-			return ds is null ? null : $"{lead}-{ds}-{tail}";
+			return ds is null ? failRetLead ? lead : null : $"{lead}-{ds}-{tail}";
 		}
 
 		internal static string ToOffCanvasCss(this BsPlacement replacement) => replacement switch

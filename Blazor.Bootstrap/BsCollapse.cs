@@ -4,7 +4,7 @@
 /// 붕괴?! (콜랩스)<br/>
 /// 기능은... 뻔하져
 /// </summary>
-public class BsCollapse : ComponentFragment, IAsyncDisposable
+public class BsCollapse : BsComponent, IAsyncDisposable
 {
 	/// <summary>윗단에 놓이는 나브바</summary>
 	[CascadingParameter] public BsNavBar? NavBar { get; set; }
@@ -17,9 +17,9 @@ public class BsCollapse : ComponentFragment, IAsyncDisposable
 	[Parameter] public bool Expanded { get; set; }
 
 	/// <summary>확장될 때 이벤트</summary>
-	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanding { get; set; }
+	[Parameter] public EventCallback<BsExpandedEventArgs> OnExpanding { get; set; }
 	/// <summary>확장된 다음 이벤트</summary>
-	[Parameter] public EventCallback<ExpandedEventArgs> OnExpanded { get; set; }
+	[Parameter] public EventCallback<BsExpandedEventArgs> OnExpanded { get; set; }
 	/// <summary>확장 여부 변경 이벤트</summary>
 	[Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
 
@@ -52,7 +52,7 @@ public class BsCollapse : ComponentFragment, IAsyncDisposable
 		_expanded = Expanded;
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(NavBar is not null, "navbar-collapse")
 			.Add("collapse")
@@ -206,8 +206,8 @@ public class BsCollapse : ComponentFragment, IAsyncDisposable
 
 	//
 	private Task InvokeOnExpanding(string id, bool expanded) =>
-		OnExpanding.InvokeAsync(new ExpandedEventArgs(id, expanded));
+		OnExpanding.InvokeAsync(new BsExpandedEventArgs(id, expanded));
 	private Task InvokeOnExpanded(string id, bool expanded) =>
-		OnExpanded.InvokeAsync(new ExpandedEventArgs(id, expanded));
+		OnExpanded.InvokeAsync(new BsExpandedEventArgs(id, expanded));
 	private Task InvokeExpandedChanged(bool e) => ExpandedChanged.InvokeAsync(e);
 }

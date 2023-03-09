@@ -1,9 +1,7 @@
 ﻿namespace Du.Blazor.Bootstrap;
 
-/// <summary>
-/// 버튼 그룹 
-/// </summary>
-public  class BsButtonGroup : ComponentFragment
+/// <summary>버튼 그룹</summary>
+public  class BsButtonGroup : BsComponent
 {
 	/// <summary>버튼 그룹 형식</summary>
 	[Parameter] public BsGroupType Type { get; set; } = BsGroupType.Button;
@@ -11,7 +9,7 @@ public  class BsButtonGroup : ComponentFragment
 	[Parameter] public BsSize? Size { get; set; }
 
 	//
-	protected override void OnComponentClass(CssCompose cssc)
+	protected override void OnComponentClass(BsCss cssc)
 	{
 		cssc.Add(Type switch
 			{
